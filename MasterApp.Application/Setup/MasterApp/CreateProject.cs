@@ -75,6 +75,7 @@ public class CreateProject
         }
     }
 
+
     private bool IsValidImageFile(IFormFile file)
     {
         if (file == null || file.Length == 0)

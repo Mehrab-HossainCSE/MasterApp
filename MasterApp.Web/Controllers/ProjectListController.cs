@@ -1,8 +1,6 @@
-﻿using MasterApp.Application.Interface;
-using MasterApp.Application.MasterAppDto;
+﻿using MasterApp.Application.MasterAppDto;
 using MasterApp.Application.Setup.MasterApp;
 using MasterApp.Web.MasterDto;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MasterApp.Web.Controllers;
@@ -51,7 +49,7 @@ public class ProjectListController : ControllerBase
             }
             else
             {
-                return BadRequest(new { Success = false});
+                return BadRequest(new { Success = false });
             }
         }
         catch (Exception ex)

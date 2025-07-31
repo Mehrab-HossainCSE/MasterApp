@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddSingleton<IDbConnectionFactory, DapperConnectionFactory>();
         services.AddScoped<GetParentNavCloudPosDBKMART>();
         services.AddScoped<GetProjectList>();
+        services.AddScoped<UpdateDatabaseNavCloudPosDBKMART>();
         services.AddScoped<UpdateNavCloudPosDBKMART>();
 
         return services;

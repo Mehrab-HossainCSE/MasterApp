@@ -14,12 +14,14 @@ public class CloudPosDBKMARTController : ControllerBase
     private readonly GetParentNavCloudPosDBKMART _getParentNavCloudPosDBKMART;
     private readonly GetNavCloudPosDBKMART _getNavCloudPosDBKMART;
     private readonly UpdateNavCloudPosDBKMART _updateNavCloudPosDBKMART;
-    public CloudPosDBKMARTController(CreateNavCloudPosDBKMART createNavCloudPosDBKMART, GetParentNavCloudPosDBKMART getParentNavCloudPosDBKMART, GetNavCloudPosDBKMART getNavCloudPosDBKMART, UpdateNavCloudPosDBKMART updateNavCloudPosDBKMART)
+    private readonly UpdateDatabaseNavCloudPosDBKMART _updateDatabaseNavCloudPosDBKMART;
+    public CloudPosDBKMARTController(CreateNavCloudPosDBKMART createNavCloudPosDBKMART, GetParentNavCloudPosDBKMART getParentNavCloudPosDBKMART, GetNavCloudPosDBKMART getNavCloudPosDBKMART, UpdateNavCloudPosDBKMART updateNavCloudPosDBKMART, UpdateDatabaseNavCloudPosDBKMART updateDatabaseNavCloudPosDBKMART)
     {
         _createNavCloudPosDBKMART = createNavCloudPosDBKMART;
         _getParentNavCloudPosDBKMART = getParentNavCloudPosDBKMART;
         _getNavCloudPosDBKMART = getNavCloudPosDBKMART;
         _updateNavCloudPosDBKMART = updateNavCloudPosDBKMART;
+        _updateDatabaseNavCloudPosDBKMART = updateDatabaseNavCloudPosDBKMART;
     }
 
     [HttpPost]
@@ -61,5 +63,16 @@ public class CloudPosDBKMARTController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateDatabaseNavCloudPosDBKMART([FromBody] List<CreateNavInputDto> dto)
+    {
+        var result = await _updateDatabaseNavCloudPosDBKMART.UpdateNavAsync(dto);
+
+        return result.Succeeded
+      ? Ok(result)
+      : BadRequest(result);
+    }
+
 
 }

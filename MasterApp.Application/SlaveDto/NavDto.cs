@@ -20,6 +20,7 @@ namespace MasterApp.Application.SlaveDto
         public int ID { get; set; }
         public string? MENU_TYPE { get; set; }
         public bool SHOW_EDIT_PERMISSION { get; set; }
+        public bool IsChecked { get; set; }
         public ICollection<NavDto>? Children { get; set; }
     }
 }
