@@ -20,5 +20,6 @@ namespace MasterApp.Application.SlaveDto
         public int id { get; set; }
         public string? menU_TYPE { get; set; }
         public bool shoW_EDIT_PERMISSION { get; set; }
+        public List<CreateNavInputDto> children { get; set; }
     }
 }

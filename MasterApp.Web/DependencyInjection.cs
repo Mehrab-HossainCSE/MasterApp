@@ -17,7 +17,9 @@ public static class DependencyInjection
         services.AddScoped<GetProjectList>();
         services.AddScoped<UpdateDatabaseNavCloudPosDBKMART>();
         services.AddScoped<UpdateNavCloudPosDBKMART>();
-
+        services.AddScoped<RoleCreateCloudPosDBKMART>();
+        services.AddScoped<GetRoleCloudPosDBKMART>();
+        services.AddScoped<GetMenuIdToTheRoleCloudPosDBKMART>();
         return services;
     }
 }

@@ -15,13 +15,26 @@ public class CloudPosDBKMARTController : ControllerBase
     private readonly GetNavCloudPosDBKMART _getNavCloudPosDBKMART;
     private readonly UpdateNavCloudPosDBKMART _updateNavCloudPosDBKMART;
     private readonly UpdateDatabaseNavCloudPosDBKMART _updateDatabaseNavCloudPosDBKMART;
-    public CloudPosDBKMARTController(CreateNavCloudPosDBKMART createNavCloudPosDBKMART, GetParentNavCloudPosDBKMART getParentNavCloudPosDBKMART, GetNavCloudPosDBKMART getNavCloudPosDBKMART, UpdateNavCloudPosDBKMART updateNavCloudPosDBKMART, UpdateDatabaseNavCloudPosDBKMART updateDatabaseNavCloudPosDBKMART)
+    private readonly RoleCreateCloudPosDBKMART _roleCreateCloudPosDBKMART;
+    private readonly GetRoleCloudPosDBKMART _getRoleCloudPosDBKMART;
+    private readonly GetMenuIdToTheRoleCloudPosDBKMART _getMenuIdToTheRoleCloudPosDBKMART;
+    public CloudPosDBKMARTController(CreateNavCloudPosDBKMART createNavCloudPosDBKMART,
+        GetParentNavCloudPosDBKMART getParentNavCloudPosDBKMART, 
+        GetNavCloudPosDBKMART getNavCloudPosDBKMART, 
+        UpdateNavCloudPosDBKMART updateNavCloudPosDBKMART, 
+        UpdateDatabaseNavCloudPosDBKMART updateDatabaseNavCloudPosDBKMART,
+        RoleCreateCloudPosDBKMART roleCreateCloudPosDBKMART,
+        GetRoleCloudPosDBKMART getRoleCloudPosDBKMART,
+       GetMenuIdToTheRoleCloudPosDBKMART getMenuIdToTheRoleCloudPosDBKMART)
     {
         _createNavCloudPosDBKMART = createNavCloudPosDBKMART;
         _getParentNavCloudPosDBKMART = getParentNavCloudPosDBKMART;
         _getNavCloudPosDBKMART = getNavCloudPosDBKMART;
         _updateNavCloudPosDBKMART = updateNavCloudPosDBKMART;
         _updateDatabaseNavCloudPosDBKMART = updateDatabaseNavCloudPosDBKMART;
+        _roleCreateCloudPosDBKMART = roleCreateCloudPosDBKMART;
+        _getRoleCloudPosDBKMART = getRoleCloudPosDBKMART;
+        _getMenuIdToTheRoleCloudPosDBKMART = getMenuIdToTheRoleCloudPosDBKMART;
     }
 
     [HttpPost]
@@ -63,16 +76,57 @@ public class CloudPosDBKMARTController : ControllerBase
 
         return Ok(result);
     }
-
     [HttpPost]
-    public async Task<IActionResult> UpdateDatabaseNavCloudPosDBKMART([FromBody] List<CreateNavInputDto> dto)
+    public async Task<IActionResult> GetRoleWiseMenuCloudPosDBKMART([FromBody] int ID)
     {
-        var result = await _updateDatabaseNavCloudPosDBKMART.UpdateNavAsync(dto);
+        var result = await _getMenuIdToTheRoleCloudPosDBKMART.GetMenusByRoleAsync(ID);
 
-        return result.Succeeded
-      ? Ok(result)
-      : BadRequest(result);
+        if (result == null || !result.Any())
+            return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
+    [HttpPost]
+    public async Task<IActionResult> RoleCreateCloudPosDBKMART([FromBody] RoleCreateDto dto)
+    {
+        if (dto == null)
+        {
+            return BadRequest(new
+            {
+                Success = false,
+                Message = "Invalid input data."
+            });
+        }
+
+        var result = await _roleCreateCloudPosDBKMART.CreateRoleAsync(dto);
+
+        if (result.Succeeded)
+        {
+            return Ok(new
+            {
+                Success = true,
+                Message = result.Messages.FirstOrDefault() ?? "Role created successfully.",
+                RoleId = result.Data
+            });
+        }
+
+        return BadRequest(new
+        {
+            Success = false,
+            Message = result.Messages.FirstOrDefault() ?? "Role creation failed.",
+            Errors = result.Messages
+        });
     }
 
+    [HttpPost]
+    public async Task<IActionResult> GetRoleCloudPosDBKMART()
+    {
+        var result = await _getRoleCloudPosDBKMART.GetAllRolesAsync();
+
+        if (result == null || !result.Any())
+            return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
 
 }

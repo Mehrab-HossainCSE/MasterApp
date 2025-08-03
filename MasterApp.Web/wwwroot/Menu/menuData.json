@@ -27,6 +27,21 @@
         "MENU_TYPE": "dd",
         "SHOW_EDIT_PERMISSION": false,
         "CHILDREN": []
+      },
+      {
+        "SERIAL": 110,
+        "PARENT_ID": 1,
+        "DESCRIPTION": "Add to json",
+        "URL": "Add to json",
+        "PER_ROLE": "dd",
+        "ENTRY_BY": "mehrab",
+        "ENTRY_DATE": "2025-08-03T00:00:00+06:00",
+        "ORDER_BY": 1,
+        "FA_CLASS": "ddf",
+        "ID": 0,
+        "MENU_TYPE": "ff",
+        "SHOW_EDIT_PERMISSION": false,
+        "CHILDREN": []
       }
     ]
   },
@@ -347,5 +362,20 @@
         "CHILDREN": []
       }
     ]
+  },
+  {
+    "SERIAL": 111,
+    "PARENT_ID": 0,
+    "DESCRIPTION": "New menu",
+    "URL": "New menu",
+    "PER_ROLE": "New menu",
+    "ENTRY_BY": "New menu",
+    "ENTRY_DATE": "0001-01-01T00:00:00",
+    "ORDER_BY": 2,
+    "FA_CLASS": "New menu",
+    "ID": 0,
+    "MENU_TYPE": null,
+    "SHOW_EDIT_PERMISSION": false,
+    "CHILDREN": []
   }
 ]
