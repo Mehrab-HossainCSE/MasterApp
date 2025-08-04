@@ -18,14 +18,20 @@ public class CloudPosDBKMARTController : ControllerBase
     private readonly RoleCreateCloudPosDBKMART _roleCreateCloudPosDBKMART;
     private readonly GetRoleCloudPosDBKMART _getRoleCloudPosDBKMART;
     private readonly GetMenuIdToTheRoleCloudPosDBKMART _getMenuIdToTheRoleCloudPosDBKMART;
+    private readonly UpdateMenuIdToTheRoleCloudPosDBKMART _updateMenuIdToTheRoleCloudPosDBKMART;
+    private readonly GetUserCloudPosDBKMART _getUserCloudPosDBKMART;
+    private readonly GetRoleDDCloudPosDBKMART _getRoleDDCloudPosDBKMART;
     public CloudPosDBKMARTController(CreateNavCloudPosDBKMART createNavCloudPosDBKMART,
-        GetParentNavCloudPosDBKMART getParentNavCloudPosDBKMART, 
-        GetNavCloudPosDBKMART getNavCloudPosDBKMART, 
-        UpdateNavCloudPosDBKMART updateNavCloudPosDBKMART, 
+        GetParentNavCloudPosDBKMART getParentNavCloudPosDBKMART,
+        GetNavCloudPosDBKMART getNavCloudPosDBKMART,
+        UpdateNavCloudPosDBKMART updateNavCloudPosDBKMART,
         UpdateDatabaseNavCloudPosDBKMART updateDatabaseNavCloudPosDBKMART,
         RoleCreateCloudPosDBKMART roleCreateCloudPosDBKMART,
         GetRoleCloudPosDBKMART getRoleCloudPosDBKMART,
-       GetMenuIdToTheRoleCloudPosDBKMART getMenuIdToTheRoleCloudPosDBKMART)
+        GetMenuIdToTheRoleCloudPosDBKMART getMenuIdToTheRoleCloudPosDBKMART,
+        GetUserCloudPosDBKMART getUserCloudPosDBKMART,
+        GetRoleDDCloudPosDBKMART getRoleDDCloudPosDBKMART,
+        UpdateMenuIdToTheRoleCloudPosDBKMART updateMenuIdToTheRoleCloudPosDBKMART)
     {
         _createNavCloudPosDBKMART = createNavCloudPosDBKMART;
         _getParentNavCloudPosDBKMART = getParentNavCloudPosDBKMART;
@@ -35,6 +41,9 @@ public class CloudPosDBKMARTController : ControllerBase
         _roleCreateCloudPosDBKMART = roleCreateCloudPosDBKMART;
         _getRoleCloudPosDBKMART = getRoleCloudPosDBKMART;
         _getMenuIdToTheRoleCloudPosDBKMART = getMenuIdToTheRoleCloudPosDBKMART;
+        _updateMenuIdToTheRoleCloudPosDBKMART = updateMenuIdToTheRoleCloudPosDBKMART;
+        _getUserCloudPosDBKMART = getUserCloudPosDBKMART;
+        _getRoleDDCloudPosDBKMART = getRoleDDCloudPosDBKMART;
     }
 
     [HttpPost]
@@ -128,5 +137,34 @@ public class CloudPosDBKMARTController : ControllerBase
 
         return Ok(result);
     }
+    [HttpPost]
+    public async Task<IActionResult> UpdateMenuIdToTheRoleCloudPosDBKMART([FromBody] RoleUpdateDto dto)
+    {
+        var result = await _updateMenuIdToTheRoleCloudPosDBKMART.UpdateMenuIdsForRoleAsync(dto);
 
+        if (result.Succeeded)
+            return Ok(new { success = true, message = "Menu IDs updated successfully." });
+
+        return BadRequest(new { success = false, message = "Failed to update menu IDs." });
+    }
+    [HttpPost]
+    public async Task<IActionResult> GetAllUser()
+    {
+        var result = await _getUserCloudPosDBKMART.GetAllUserAsync();
+
+        if (result == null || !result.Any())
+            return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
+    [HttpPost]
+    public async Task<IActionResult> GetAllRole()
+    {
+        var result = await _getRoleDDCloudPosDBKMART.GetAllRolesAsync();
+
+        if (result == null || !result.Any())
+            return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
 }

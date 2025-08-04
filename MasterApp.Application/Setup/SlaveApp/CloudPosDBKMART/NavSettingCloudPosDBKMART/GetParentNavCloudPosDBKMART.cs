@@ -1,11 +1,6 @@
 ﻿using Dapper;
 using MasterApp.Application.Interface;
 using MasterApp.Application.SlaveDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 
@@ -26,7 +21,7 @@ public class GetParentNavCloudPosDBKMART
             WHERE PARENT_ID = 0";
 
         using var connection = _connectionFactory.CreateConnection("CloudPosDBKMART");
-       
+
         return await connection.QueryAsync<ParentCloudPosDBKMARTNavDto>(sql);
     }
 }

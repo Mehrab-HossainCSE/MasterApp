@@ -46,6 +46,6 @@ public class RoleCreateCloudPosDBKMART
             return Result<int>.Fail($"Error creating role: {ex.Message}");
         }
     }
-        
-   
+
+
 }

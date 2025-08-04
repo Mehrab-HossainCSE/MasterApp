@@ -2,12 +2,7 @@
 using MasterApp.Application.Common.Models;
 using MasterApp.Application.Interface;
 using MasterApp.Application.SlaveDto;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 

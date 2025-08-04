@@ -1,6 +1,4 @@
-﻿using Dapper;
-using MasterApp.Application.Interface;
-using MasterApp.Application.SlaveDto;
+﻿using MasterApp.Application.SlaveDto;
 using System.Text.Json;
 
 namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;

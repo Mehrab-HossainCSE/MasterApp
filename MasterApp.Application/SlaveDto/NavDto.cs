@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MasterApp.Application.SlaveDto
+﻿namespace MasterApp.Application.SlaveDto
 {
     public class NavDto
     {
@@ -23,4 +17,5 @@ namespace MasterApp.Application.SlaveDto
         public bool IsChecked { get; set; }
         public ICollection<NavDto>? Children { get; set; }
     }
-}
+
+    }

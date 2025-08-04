@@ -1,12 +1,6 @@
 ﻿using Dapper;
 using MasterApp.Application.Interface;
 using MasterApp.Application.SlaveDto;
-using System;
-using System.Collections.Generic;
-using System.Formats.Asn1;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 

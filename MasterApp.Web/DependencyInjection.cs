@@ -20,6 +20,9 @@ public static class DependencyInjection
         services.AddScoped<RoleCreateCloudPosDBKMART>();
         services.AddScoped<GetRoleCloudPosDBKMART>();
         services.AddScoped<GetMenuIdToTheRoleCloudPosDBKMART>();
+        services.AddScoped<UpdateMenuIdToTheRoleCloudPosDBKMART>();
+        services.AddScoped<GetUserCloudPosDBKMART>();
+        services.AddScoped<GetRoleDDCloudPosDBKMART>();
         return services;
     }
 }

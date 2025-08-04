@@ -1,9 +1,7 @@
-﻿using MasterApp.Application.SlaveDto;
-using System.Text.Json;
-using Microsoft.AspNetCore.Hosting;
-using System.Collections.Generic;
+﻿using Dapper;
 using MasterApp.Application.Interface;
-using Dapper;
+using MasterApp.Application.SlaveDto;
+using System.Text.Json;
 
 namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 
