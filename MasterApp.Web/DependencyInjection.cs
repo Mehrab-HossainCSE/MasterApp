@@ -23,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<UpdateMenuIdToTheRoleCloudPosDBKMART>();
         services.AddScoped<GetUserCloudPosDBKMART>();
         services.AddScoped<GetRoleDDCloudPosDBKMART>();
+        services.AddScoped<AssignUserMenuCloudPosDBKMART>();
         return services;
     }
 }

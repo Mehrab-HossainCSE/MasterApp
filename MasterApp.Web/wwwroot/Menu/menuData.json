@@ -16,16 +16,16 @@
       {
         "SERIAL": 555,
         "PARENT_ID": 1,
-        "DESCRIPTION": "ddnewf",
-        "URL": "dd",
+        "DESCRIPTION": "data come form json",
+        "URL": "wwwww",
         "PER_ROLE": "dddddd",
-        "ENTRY_BY": "ddd",
-        "ENTRY_DATE": "2025-07-30T00:00:00",
+        "ENTRY_BY": "Mehrab",
+        "ENTRY_DATE": "0001-01-01T00:00:00",
         "ORDER_BY": 0,
         "FA_CLASS": "d",
-        "ID": 555,
+        "ID": 0,
         "MENU_TYPE": "dd",
-        "SHOW_EDIT_PERMISSION": false,
+        "SHOW_EDIT_PERMISSION": true,
         "CHILDREN": []
       },
       {
@@ -374,7 +374,6 @@
     "ORDER_BY": 2,
     "FA_CLASS": "New menu",
     "ID": 0,
-    "MENU_TYPE": null,
     "SHOW_EDIT_PERMISSION": false,
     "CHILDREN": []
   }

@@ -21,6 +21,7 @@ public class CloudPosDBKMARTController : ControllerBase
     private readonly UpdateMenuIdToTheRoleCloudPosDBKMART _updateMenuIdToTheRoleCloudPosDBKMART;
     private readonly GetUserCloudPosDBKMART _getUserCloudPosDBKMART;
     private readonly GetRoleDDCloudPosDBKMART _getRoleDDCloudPosDBKMART;
+    private readonly AssignUserMenuCloudPosDBKMART _assignUserMenuCloudPosDBKMART;
     public CloudPosDBKMARTController(CreateNavCloudPosDBKMART createNavCloudPosDBKMART,
         GetParentNavCloudPosDBKMART getParentNavCloudPosDBKMART,
         GetNavCloudPosDBKMART getNavCloudPosDBKMART,
@@ -31,7 +32,8 @@ public class CloudPosDBKMARTController : ControllerBase
         GetMenuIdToTheRoleCloudPosDBKMART getMenuIdToTheRoleCloudPosDBKMART,
         GetUserCloudPosDBKMART getUserCloudPosDBKMART,
         GetRoleDDCloudPosDBKMART getRoleDDCloudPosDBKMART,
-        UpdateMenuIdToTheRoleCloudPosDBKMART updateMenuIdToTheRoleCloudPosDBKMART)
+        UpdateMenuIdToTheRoleCloudPosDBKMART updateMenuIdToTheRoleCloudPosDBKMART,
+        AssignUserMenuCloudPosDBKMART assignUserMenuCloudPosDBKMART)
     {
         _createNavCloudPosDBKMART = createNavCloudPosDBKMART;
         _getParentNavCloudPosDBKMART = getParentNavCloudPosDBKMART;
@@ -44,6 +46,7 @@ public class CloudPosDBKMARTController : ControllerBase
         _updateMenuIdToTheRoleCloudPosDBKMART = updateMenuIdToTheRoleCloudPosDBKMART;
         _getUserCloudPosDBKMART = getUserCloudPosDBKMART;
         _getRoleDDCloudPosDBKMART = getRoleDDCloudPosDBKMART;
+        _assignUserMenuCloudPosDBKMART = assignUserMenuCloudPosDBKMART; 
     }
 
     [HttpPost]
@@ -166,5 +169,16 @@ public class CloudPosDBKMARTController : ControllerBase
             return NotFound("No parent menus found.");
 
         return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AssignUserMenu([FromBody] UserMenuDto dto)
+    {
+        var result = await _assignUserMenuCloudPosDBKMART.AssignUserMenu(dto);
+
+        if (result.Succeeded)
+            return Ok(new { success = true, message = "Menu IDs updated successfully." });
+
+        return BadRequest(new { success = false, message = "Failed to update menu IDs." });
     }
 }
