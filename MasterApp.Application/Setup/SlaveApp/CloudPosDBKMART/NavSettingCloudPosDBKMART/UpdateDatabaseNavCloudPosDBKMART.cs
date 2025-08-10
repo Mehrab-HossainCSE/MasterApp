@@ -55,7 +55,7 @@ public class UpdateDatabaseNavCloudPosDBKMART
                     URL = x.url,
                     PER_ROLE = x.peR_ROLE,
                     ENTRY_BY = x.entrY_BY,
-                    ENTRY_DATE = x.entrY_DATE,
+                    ENTRY_DATE = DateTime.Now.Date,
                     ORDER_BY = x.ordeR_BY,
                     FA_CLASS = x.fA_CLASS,
                     MENU_TYPE = x.menU_TYPE,

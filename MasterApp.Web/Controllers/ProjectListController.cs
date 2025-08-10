@@ -45,17 +45,17 @@ public class ProjectListController : ControllerBase
 
             if (result.Succeeded)
             {
-                return Ok(new { Success = true });
+                return Ok(new { success = true });
             }
             else
             {
-                return BadRequest(new { Success = false });
+                return BadRequest(new { success = false });
             }
         }
         catch (Exception ex)
         {
             // Log the exception here
-            return StatusCode(500, new { Success = false, Message = "An unexpected error occurred." });
+            return StatusCode(500, new { success = false, Message = "An unexpected error occurred." });
         }
     }
     [HttpGet]

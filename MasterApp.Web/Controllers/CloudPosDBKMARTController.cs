@@ -22,6 +22,7 @@ public class CloudPosDBKMARTController : ControllerBase
     private readonly GetUserCloudPosDBKMART _getUserCloudPosDBKMART;
     private readonly GetRoleDDCloudPosDBKMART _getRoleDDCloudPosDBKMART;
     private readonly AssignUserMenuCloudPosDBKMART _assignUserMenuCloudPosDBKMART;
+    private readonly UpdateDatabaseNavCloudPosDBKMART _updateDatabaseNavCloudPosDBKMART1;
     public CloudPosDBKMARTController(CreateNavCloudPosDBKMART createNavCloudPosDBKMART,
         GetParentNavCloudPosDBKMART getParentNavCloudPosDBKMART,
         GetNavCloudPosDBKMART getNavCloudPosDBKMART,
@@ -33,7 +34,8 @@ public class CloudPosDBKMARTController : ControllerBase
         GetUserCloudPosDBKMART getUserCloudPosDBKMART,
         GetRoleDDCloudPosDBKMART getRoleDDCloudPosDBKMART,
         UpdateMenuIdToTheRoleCloudPosDBKMART updateMenuIdToTheRoleCloudPosDBKMART,
-        AssignUserMenuCloudPosDBKMART assignUserMenuCloudPosDBKMART)
+        AssignUserMenuCloudPosDBKMART assignUserMenuCloudPosDBKMART,
+        UpdateDatabaseNavCloudPosDBKMART updateDatabaseNavCloudPosDBKMART1)
     {
         _createNavCloudPosDBKMART = createNavCloudPosDBKMART;
         _getParentNavCloudPosDBKMART = getParentNavCloudPosDBKMART;
@@ -46,7 +48,9 @@ public class CloudPosDBKMARTController : ControllerBase
         _updateMenuIdToTheRoleCloudPosDBKMART = updateMenuIdToTheRoleCloudPosDBKMART;
         _getUserCloudPosDBKMART = getUserCloudPosDBKMART;
         _getRoleDDCloudPosDBKMART = getRoleDDCloudPosDBKMART;
-        _assignUserMenuCloudPosDBKMART = assignUserMenuCloudPosDBKMART; 
+        _assignUserMenuCloudPosDBKMART = assignUserMenuCloudPosDBKMART;
+        _updateDatabaseNavCloudPosDBKMART1 = updateDatabaseNavCloudPosDBKMART1;
+       
     }
 
     [HttpPost]
@@ -57,6 +61,18 @@ public class CloudPosDBKMARTController : ControllerBase
             return Ok(new { success = true, message = "Data inserted successfully" });
 
         return BadRequest(new { success = false, message = "Duplicate SERIAL" });
+    }
+    [HttpPost]
+    public async Task<IActionResult> UpdateDatabaseNavCloudPosDBKMART([FromBody] List<CreateNavInputDto> dto)
+    {
+        var result = await _updateDatabaseNavCloudPosDBKMART1.UpdateNavAsync(dto);
+
+        if (result.Succeeded)
+        {
+            return Ok(new { success = true, message = result.Messages.FirstOrDefault() });
+        }
+
+        return BadRequest(new { success = false, message = result.Messages.FirstOrDefault() });
     }
     [HttpPost]
     public async Task<IActionResult> UpdateNavCloudPosDBKMART([FromForm] CreateNavCloudPosDBKMARTDto dto)
