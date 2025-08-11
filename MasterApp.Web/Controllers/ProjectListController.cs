@@ -1,6 +1,9 @@
-﻿using MasterApp.Application.MasterAppDto;
+﻿using MasterApp.Application.Com.Login;
+using MasterApp.Application.Common.Models;
+using MasterApp.Application.MasterAppDto;
 using MasterApp.Application.Setup.MasterApp;
 using MasterApp.Web.MasterDto;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MasterApp.Web.Controllers;
@@ -13,13 +16,26 @@ public class ProjectListController : ControllerBase
     private readonly GetProjectList _getProjectList;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly CreateProject _createProjectHandler;
+    private readonly LoginCommand _loginCommand;
     public ProjectListController(CreateProject createProjectHandler,
-        IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList)
+        IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
+        LoginCommand loginCommand)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
         _getProjectList = getProjectList;
+        _loginCommand = loginCommand;
     }
+
+
+
+    [HttpPost]
+    public async Task<IActionResult> Authenticate([FromBody] LoginDto model, CancellationToken cancellationToken)
+    {
+        var result = await _loginCommand.ExecuteAsync(model, cancellationToken);
+        return Ok(result);
+    }
+
 
     [HttpPost]
     public async Task<IActionResult> CreateProject([FromForm] CreateProjectDto dto)

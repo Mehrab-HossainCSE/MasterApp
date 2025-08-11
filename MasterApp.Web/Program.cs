@@ -1,4 +1,6 @@
 
+using MasterApp.Application.Common.Models;
+
 namespace MasterApp.Web
 {
     public class Program
@@ -14,6 +16,9 @@ namespace MasterApp.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddWebServices();
+            builder.Services.Configure<JWTSettings>(
+                builder.Configuration.GetSection("JWTSettings")
+            );
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -22,6 +27,7 @@ namespace MasterApp.Web
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseStaticFiles();
             app.UseHttpsRedirection();
 

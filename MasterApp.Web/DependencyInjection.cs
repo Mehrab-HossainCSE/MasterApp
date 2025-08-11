@@ -1,7 +1,9 @@
-﻿using MasterApp.Application.Interface;
+﻿using MasterApp.Application.Com.Login;
+using MasterApp.Application.Interface;
 using MasterApp.Application.Setup.MasterApp;
 using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 using MasterApp.Service.DbContext;
+using MasterApp.Service.Services;
 
 namespace MasterApp.Web;
 
@@ -24,6 +26,9 @@ public static class DependencyInjection
         services.AddScoped<GetUserCloudPosDBKMART>();
         services.AddScoped<GetRoleDDCloudPosDBKMART>();
         services.AddScoped<AssignUserMenuCloudPosDBKMART>();
+        services.AddScoped<LoginCommand>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IPasswordHash, PasswordHash>();
         return services;
     }
 }
