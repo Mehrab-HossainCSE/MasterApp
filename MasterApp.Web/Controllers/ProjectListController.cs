@@ -17,14 +17,18 @@ public class ProjectListController : ControllerBase
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly CreateProject _createProjectHandler;
     private readonly LoginCommand _loginCommand;
+    private readonly UpdateProject _updateProjectList;
+    private readonly DeleteProject _deleteProject;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
-        LoginCommand loginCommand)
+        LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
         _getProjectList = getProjectList;
         _loginCommand = loginCommand;
+        _updateProjectList = updateProjectList;
+        _deleteProject = deleteProject;
     }
 
 
@@ -86,4 +90,59 @@ public class ProjectListController : ControllerBase
 
         return Ok(result);
     }
+    [HttpPost]
+    public async Task<IActionResult> UpdateProject([FromForm] UpdateProjectDto dto)
+    {
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            // Map DTO to Command
+            var command = new UpdateProjectCommand
+            {
+                Id = dto.Id,
+                Title = dto.Title,
+                ApiUrl = dto.ApiUrl,
+                LoginUrl = dto.LoginUrl,
+                LogoFile = dto.LogoFile,
+                WebRootPath = _webHostEnvironment.WebRootPath,
+                IsActive = dto.IsActive
+            };
+
+            // Execute command
+            var result = await _updateProjectList.HandleUpdate(command);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { success = true });
+            }
+            else
+            {
+                return BadRequest(new { success = false });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception here
+            return StatusCode(500, new { success = false, Message = "An unexpected error occurred." });
+        }
+    }
+
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> DeleteProject(int Id)
+    {
+        var result = await _deleteProject.HandleAsync(Id, _webHostEnvironment.WebRootPath);
+
+        if (result.Succeeded)
+        {
+            return Ok(new { success = true });
+        }
+        else
+        {
+            return BadRequest(new { success = false });
+        }
+    }
+
 }

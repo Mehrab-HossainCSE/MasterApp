@@ -4,6 +4,8 @@ using MasterApp.Application.Setup.MasterApp;
 using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 using MasterApp.Service.DbContext;
 using MasterApp.Service.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MasterApp.Web;
 
@@ -29,6 +31,8 @@ public static class DependencyInjection
         services.AddScoped<LoginCommand>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPasswordHash, PasswordHash>();
+        services.AddScoped<UpdateProject>();
+        services.AddScoped<DeleteProject>();
         return services;
     }
 }

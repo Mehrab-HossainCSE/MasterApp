@@ -10,4 +10,14 @@ namespace MasterApp.Application.MasterAppDto
         public string? WebRootPath { get; set; }
         public bool IsActive { get; set; }
     }
+    public class UpdateProjectCommand
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string ApiUrl { get; set; }
+        public string LoginUrl { get; set; }
+        public IFormFile? LogoFile { get; set; }
+        public string? WebRootPath { get; set; }
+        public bool IsActive { get; set; }
+    }
 }

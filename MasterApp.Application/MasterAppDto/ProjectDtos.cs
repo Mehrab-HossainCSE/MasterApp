@@ -2,10 +2,12 @@
 {
     public class ProjectDtos
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public string ApiUrl { get; set; }
+        public string LoginUrl { get; set; }
         public bool IsActive { get; set; }
+        
         public string LogoUrl { get; set; }
     }
 }

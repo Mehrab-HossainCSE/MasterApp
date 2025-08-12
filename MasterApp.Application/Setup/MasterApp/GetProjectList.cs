@@ -25,7 +25,7 @@ public class GetProjectList
         try
         {
             using var connection = _context.CreateConnection("MasterAppDB");
-            var query = "SELECT Id, Title, ApiUrl, IsActive, LogoUrl FROM ProjectList";
+            var query = "SELECT Id, Title, ApiUrl,LoginUrl, LogoUrl,IsActive, LogoUrl FROM ProjectList";
             var projects = (await connection.QueryAsync<ProjectDtos>(query)).ToList();
 
             return Result<List<ProjectDtos>>.Success(projects, "Projects retrieved successfully.");

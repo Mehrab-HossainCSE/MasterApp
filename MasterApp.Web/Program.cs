@@ -1,5 +1,9 @@
 
+using MasterApp.Application.Common.Exceptions;
 using MasterApp.Application.Common.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MasterApp.Web
 {
@@ -19,6 +23,24 @@ namespace MasterApp.Web
             builder.Services.Configure<JWTSettings>(
                 builder.Configuration.GetSection("JWTSettings")
             );
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["JWTSettings:Issuer"],
+                    ValidAudience = builder.Configuration["JWTSettings:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTSettings:Key"]))
+                };
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -30,14 +52,16 @@ namespace MasterApp.Web
 
             app.UseStaticFiles();
             app.UseHttpsRedirection();
+            app.UseMiddleware<ExceptionMiddleware>();
 
-            app.UseAuthorization();
+           
             app.UseCors(x => x
                .AllowAnyMethod()
                .AllowAnyHeader()
                .SetIsOriginAllowed(origin => true)
                .AllowCredentials());
-
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.MapControllers();
 
             app.Run();
