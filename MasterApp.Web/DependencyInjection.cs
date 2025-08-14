@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IPasswordHash, PasswordHash>();
         services.AddScoped<UpdateProject>();
         services.AddScoped<DeleteProject>();
+        services.AddScoped<GetCompanyInfoCloudPosDBKMART>();
         return services;
     }
 }

@@ -1,4 +1,5 @@
-﻿using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
+﻿using MasterApp.Application.Setup.MasterApp;
+using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 using MasterApp.Application.SlaveDto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,7 @@ public class CloudPosDBKMARTController : ControllerBase
     private readonly GetRoleDDCloudPosDBKMART _getRoleDDCloudPosDBKMART;
     private readonly AssignUserMenuCloudPosDBKMART _assignUserMenuCloudPosDBKMART;
     private readonly UpdateDatabaseNavCloudPosDBKMART _updateDatabaseNavCloudPosDBKMART1;
+    private readonly GetCompanyInfoCloudPosDBKMART _getCompanyInfoCloudPosDBKMART;
     public CloudPosDBKMARTController(CreateNavCloudPosDBKMART createNavCloudPosDBKMART,
         GetParentNavCloudPosDBKMART getParentNavCloudPosDBKMART,
         GetNavCloudPosDBKMART getNavCloudPosDBKMART,
@@ -35,7 +37,8 @@ public class CloudPosDBKMARTController : ControllerBase
         GetRoleDDCloudPosDBKMART getRoleDDCloudPosDBKMART,
         UpdateMenuIdToTheRoleCloudPosDBKMART updateMenuIdToTheRoleCloudPosDBKMART,
         AssignUserMenuCloudPosDBKMART assignUserMenuCloudPosDBKMART,
-        UpdateDatabaseNavCloudPosDBKMART updateDatabaseNavCloudPosDBKMART1)
+        UpdateDatabaseNavCloudPosDBKMART updateDatabaseNavCloudPosDBKMART1,
+        GetCompanyInfoCloudPosDBKMART getCompanyInfoCloudPosDBKMART)
     {
         _createNavCloudPosDBKMART = createNavCloudPosDBKMART;
         _getParentNavCloudPosDBKMART = getParentNavCloudPosDBKMART;
@@ -50,7 +53,7 @@ public class CloudPosDBKMARTController : ControllerBase
         _getRoleDDCloudPosDBKMART = getRoleDDCloudPosDBKMART;
         _assignUserMenuCloudPosDBKMART = assignUserMenuCloudPosDBKMART;
         _updateDatabaseNavCloudPosDBKMART1 = updateDatabaseNavCloudPosDBKMART1;
-       
+        _getCompanyInfoCloudPosDBKMART = getCompanyInfoCloudPosDBKMART;
     }
 
     [HttpPost]
@@ -196,5 +199,14 @@ public class CloudPosDBKMARTController : ControllerBase
             return Ok(new { success = true, message = "Menu IDs updated successfully." });
 
         return BadRequest(new { success = false, message = "Failed to update menu IDs." });
+    }
+   
+    [HttpGet]
+    public async Task<IActionResult> getCompanyInfo()
+    {
+        var result = await _getCompanyInfoCloudPosDBKMART.GetCompanyInfoAsync();
+
+        
+        return Ok(result);
     }
 }

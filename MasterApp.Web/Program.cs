@@ -42,8 +42,8 @@ namespace MasterApp.Web
                 };
             });
             var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
+         
+       // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -63,6 +63,8 @@ namespace MasterApp.Web
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
+            app.MapControllers();
+
 
             app.Run();
         }
