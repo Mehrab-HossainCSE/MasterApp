@@ -128,13 +128,13 @@ public class CompanyInfoDto
     public bool? IS_SUB_SUBCAT_WISE_VARIANCE { get; set; }
     [JsonPropertyName("SHOW_SUB_SUBCATEGORY")]
     public bool SHOW_SUB_SUBCATEGORY { get; set; }
-    [JsonPropertyName("COMPANY_CODE")]
+    [JsonPropertyName("DEPARTMENT_LABEL")]
     public string DEPARTMENT_LABEL { get; set; }
     [JsonPropertyName("SUB_DEPARTMENT_LABEL")]
     public string SUB_DEPARTMENT_LABEL { get; set; }
     [JsonPropertyName("CATEGORY_LABEL")]
     public string CATEGORY_LABEL { get; set; }
-    [JsonPropertyName("COMPANY_CODE")]
+    [JsonPropertyName("SUB_CATEGORY_LABEL")]
     public string SUB_CATEGORY_LABEL { get; set; }
     [JsonPropertyName("SUB_SUBCATEGORY_LABEL")]
     public string SUB_SUBCATEGORY_LABEL { get; set; }

@@ -53,7 +53,7 @@ public class ProjectListController : ControllerBase
             var command = new CreateProjectCommand
             {
                 Title = dto.Title,
-                ApiUrl = dto.ApiUrl,
+                NavigateUrl = dto.NavigateUrl,
                 LoginUrl = dto.LoginUrl,
                 LogoFile = dto.LogoFile,
                 WebRootPath = _webHostEnvironment.WebRootPath,
@@ -104,7 +104,7 @@ public class ProjectListController : ControllerBase
             {
                 Id = dto.Id,
                 Title = dto.Title,
-                ApiUrl = dto.ApiUrl,
+                NavigateUrl = dto.NavigateUrl,
                 LoginUrl = dto.LoginUrl,
                 LogoFile = dto.LogoFile,
                 WebRootPath = _webHostEnvironment.WebRootPath,

@@ -51,14 +51,14 @@ public class CreateProject
 
             // Insert into database using Dapper
             var sql = @"
-                    INSERT INTO ProjectList (Title, ApiUrl, LoginUrl, LogoUrl, IsActive)
-                    VALUES (@Title, @ApiUrl, @LoginUrl, @LogoUrl, @IsActive);
+                    INSERT INTO ProjectList (Title, NavigateUrl, LoginUrl, LogoUrl, IsActive)
+                    VALUES (@Title, @NavigateUrl, @LoginUrl, @LogoUrl, @IsActive);
                     SELECT CAST(SCOPE_IDENTITY() as int);";
 
             var parameters = new
             {
                 Title = request.Title,
-                ApiUrl = request.ApiUrl,
+                NavigateUrl = request.NavigateUrl,
                 LoginUrl = request.LoginUrl,
                 LogoUrl = uniqueFileName != null ? $"/ProjectLogo/{uniqueFileName}" : null,
                 IsActive = request.IsActive

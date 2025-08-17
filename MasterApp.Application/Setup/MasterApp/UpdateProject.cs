@@ -59,7 +59,7 @@ public class UpdateProject(IDbConnectionFactory _context)
             var sql = @"
             UPDATE ProjectList
             SET Title = @Title,
-                ApiUrl = @ApiUrl,
+                NavigateUrl = @NavigateUrl,
                 LoginUrl = @LoginUrl,
                 LogoUrl = @LogoUrl,
                 IsActive = @IsActive
@@ -68,7 +68,7 @@ public class UpdateProject(IDbConnectionFactory _context)
             var parameters = new
             {
                 Title = request.Title,
-                ApiUrl = request.ApiUrl,
+                NavigateUrl = request.NavigateUrl,
                 LoginUrl = request.LoginUrl,
                 LogoUrl = uniqueFileName,
                 IsActive = request.IsActive,
