@@ -2,6 +2,9 @@
 using MasterApp.Application.Interface;
 using MasterApp.Application.Setup.MasterApp;
 using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
+using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.NavSettingCloudPosReportHerlanCheck;
+using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.RoleManagementCloudPosReportHerlanCheck;
+using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.UserManagementCloudPosReportHerlanCheck;
 using MasterApp.Service.DbContext;
 using MasterApp.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -34,6 +37,17 @@ public static class DependencyInjection
         services.AddScoped<UpdateProject>();
         services.AddScoped<DeleteProject>();
         services.AddScoped<GetCompanyInfoCloudPosDBKMART>();
+        services.AddScoped<GetNavCloudPosReportHerlanCheck>();
+        services.AddScoped<CreateNavCloudPosReportHerlanCheck>();
+        services.AddScoped<GetParentNavCloudPosReportHerlanCheck>();
+        services.AddScoped<UpdaterNavCloudPosReportHerlanCheck>();
+        services.AddScoped<UpdateDatabaseNavCloudPosReportHerlanCheck>();
+        services.AddScoped<GetUserCloudPosReportHerlanCheck>();
+        services.AddScoped<GetRoleDDCloudPosReportHerlanCheck>();
+        services.AddScoped<RoleCreateCloudPosReportHerlanCheck>();
+        services.AddScoped<GetRoleCloudPosReportHerlanCheck>();
+        services.AddScoped<GetMenuIdToTheRoleCloudPosReportHerlanCheck>();
+        services.AddScoped<UpdateMenuIdToTheRoleCloudPosReportHerlanCheck>();
         return services;
     }
 }

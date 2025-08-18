@@ -13,3 +13,10 @@ public class RoleUpdateDto
    
     public string? MENULISTID { get; set; } = null;
 }
+
+public class RoleUpdateCloudPosReportHerlanCheckDto
+{
+    public string ROLE_NAME { get; set; }
+
+    public string? MENULISTID { get; set; } = null;
+}
