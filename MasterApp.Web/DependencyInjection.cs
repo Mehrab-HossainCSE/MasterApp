@@ -1,6 +1,7 @@
 ﻿using MasterApp.Application.Com.Login;
 using MasterApp.Application.Interface;
 using MasterApp.Application.Setup.MasterApp;
+using MasterApp.Application.Setup.MasterApp.NavMasterApp;
 using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.NavSettingCloudPosReportHerlanCheck;
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.RoleManagementCloudPosReportHerlanCheck;
@@ -48,6 +49,9 @@ public static class DependencyInjection
         services.AddScoped<GetRoleCloudPosReportHerlanCheck>();
         services.AddScoped<GetMenuIdToTheRoleCloudPosReportHerlanCheck>();
         services.AddScoped<UpdateMenuIdToTheRoleCloudPosReportHerlanCheck>();
+        services.AddScoped<AssigUserMenuCloudPosReportHerlanCheck>();
+        services.AddScoped<GetNavProjectByUser>();
+        services.AddScoped<GetAllUser>();
         return services;
     }
 }

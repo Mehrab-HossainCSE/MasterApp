@@ -19,7 +19,8 @@ public class CloudPosReportHerlanCheckController(GetNavCloudPosReportHerlanCheck
     RoleCreateCloudPosReportHerlanCheck _roleCreateCloudPosReportHerlanCheck,
     GetRoleCloudPosReportHerlanCheck _getRoleCloudPosReportHerlanCheck,
     GetMenuIdToTheRoleCloudPosReportHerlanCheck _getMenuIdToTheRoleCloudPosReportHerlanCheck,
-    UpdateMenuIdToTheRoleCloudPosReportHerlanCheck _updateMenuIdToTheRoleCloudPosReportHerlanCheck
+    UpdateMenuIdToTheRoleCloudPosReportHerlanCheck _updateMenuIdToTheRoleCloudPosReportHerlanCheck,
+    AssigUserMenuCloudPosReportHerlanCheck _assigUserMenuCloudPosReportHerlanCheck
     ) : ControllerBase
 {
     
@@ -158,4 +159,16 @@ public class CloudPosReportHerlanCheckController(GetNavCloudPosReportHerlanCheck
 
         return BadRequest(new { success = false, message = "Failed to update menu IDs." });
     }
+
+    [HttpPost]
+    public async Task<IActionResult> AssignUserMenu([FromBody] UserMenuDto dto)
+    {
+        var result = await _assigUserMenuCloudPosReportHerlanCheck.AssignUserMenu(dto);
+
+        if (result.Succeeded)
+            return Ok(new { success = true, message = "Menu IDs updated successfully." });
+
+        return BadRequest(new { success = false, message = "Failed to update menu IDs." });
+    }
+
 }

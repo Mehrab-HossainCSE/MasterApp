@@ -72,7 +72,8 @@ public class LoginCommand
         {
             AccessToken = new JwtSecurityTokenHandler().WriteToken(dbToken),
             RefreshToken = dbRefreshToken,
-            UserName = user.UserName
+            UserName = user.UserName,
+            UserID = user.UserID,
         };
     }
 

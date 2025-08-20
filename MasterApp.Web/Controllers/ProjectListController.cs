@@ -2,9 +2,12 @@
 using MasterApp.Application.Common.Models;
 using MasterApp.Application.MasterAppDto;
 using MasterApp.Application.Setup.MasterApp;
+using MasterApp.Application.Setup.MasterApp.NavMasterApp;
 using MasterApp.Web.MasterDto;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
+using System.Threading;
 
 namespace MasterApp.Web.Controllers;
 
@@ -19,9 +22,11 @@ public class ProjectListController : ControllerBase
     private readonly LoginCommand _loginCommand;
     private readonly UpdateProject _updateProjectList;
     private readonly DeleteProject _deleteProject;
+    private readonly GetNavProjectByUser _getNavProjectByUser;
+    private readonly GetAllUser _getAllUser;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
-        LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject)
+        LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, GetAllUser getAllUser)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -29,8 +34,15 @@ public class ProjectListController : ControllerBase
         _loginCommand = loginCommand;
         _updateProjectList = updateProjectList;
         _deleteProject = deleteProject;
+        _getNavProjectByUser = getNavProjectByUser;
+        _getAllUser = getAllUser;
     }
-
+    [HttpGet]
+    public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
+    {
+        var result = await _getNavProjectByUser.HandleAsync(UserID);
+        return Ok(result);
+    }
 
 
     [HttpPost]
@@ -145,4 +157,16 @@ public class ProjectListController : ControllerBase
         }
     }
 
+    [HttpGet]
+    public async Task<IActionResult> getMasterAppUser()
+    {
+        var result = await _getAllUser.HandleAsync();
+
+        if (result.HasError)
+        {
+            return BadRequest(result.Messages);
+        }
+
+        return Ok(result);
+    }
 }
