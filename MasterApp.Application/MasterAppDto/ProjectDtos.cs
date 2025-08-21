@@ -9,5 +9,7 @@
         public bool IsActive { get; set; }
         
         public string LogoUrl { get; set; }
+
+        public bool IsChecked { get; set; }
     }
 }

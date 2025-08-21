@@ -1,8 +1,10 @@
-﻿namespace MasterApp.Application.MasterAppDto;
+﻿using System.Text.Json.Serialization;
+
+namespace MasterApp.Application.MasterAppDto;
 
 public class UserCreateDto
 {
-    public string UserID { get; set; }
+    public string? UserID { get; set; }
     public string? UserName { get; set; }
     public string? ShopID { get; set; }
     public string? EmployeeID { get; set; }
@@ -16,6 +18,7 @@ public class UserCreateDto
     public string? UpdateBy { get; set; }
     public DateTime? UpdateDate { get; set; }
     public bool? InActive { get; set; }
+    public string? Password { get; set; } 
     public string? PasswordHash { get; set; }
     public string? PasswordSalt { get; set; }
     public string? ProjectListId { get; set; }

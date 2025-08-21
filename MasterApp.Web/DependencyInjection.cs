@@ -52,6 +52,7 @@ public static class DependencyInjection
         services.AddScoped<AssigUserMenuCloudPosReportHerlanCheck>();
         services.AddScoped<GetNavProjectByUser>();
         services.AddScoped<GetAllUser>();
+        services.AddScoped<UserCreate>();
         return services;
     }
 }

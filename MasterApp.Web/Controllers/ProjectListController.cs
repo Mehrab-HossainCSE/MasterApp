@@ -24,9 +24,10 @@ public class ProjectListController : ControllerBase
     private readonly DeleteProject _deleteProject;
     private readonly GetNavProjectByUser _getNavProjectByUser;
     private readonly GetAllUser _getAllUser;
+    private readonly UserCreate _userCreate;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
-        LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, GetAllUser getAllUser)
+        LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, GetAllUser getAllUser, UserCreate userCreate)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -36,6 +37,7 @@ public class ProjectListController : ControllerBase
         _deleteProject = deleteProject;
         _getNavProjectByUser = getNavProjectByUser;
         _getAllUser = getAllUser;
+        _userCreate = userCreate;
     }
     [HttpGet]
     public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
@@ -51,7 +53,12 @@ public class ProjectListController : ControllerBase
         var result = await _loginCommand.ExecuteAsync(model, cancellationToken);
         return Ok(result);
     }
-
+    [HttpPost]
+    public async Task<IActionResult> UserCreate([FromBody] UserCreateDto dto)
+    {
+        var result = await _userCreate.HandleAsync(dto);
+        return Ok(result);
+    }
 
     [HttpPost]
     public async Task<IActionResult> CreateProject([FromForm] CreateProjectDto dto)
@@ -91,9 +98,9 @@ public class ProjectListController : ControllerBase
         }
     }
     [HttpGet]
-    public async Task<IActionResult> getProject()
+    public async Task<IActionResult> getProject(string UserID)
     {
-        var result = await _getProjectList.HandleAsync();
+        var result = await _getProjectList.HandleAsync(UserID);
 
         if (result.HasError)
         {
@@ -169,4 +176,6 @@ public class ProjectListController : ControllerBase
 
         return Ok(result);
     }
+
+
 }

@@ -31,7 +31,8 @@ public class LoginCommand
             var fakeUser = new UserDto
             {
                 UserName = "System User",
-                Email = "systemuser@gmail.com"
+                Email = "systemuser@gmail.com",
+               
             };
 
             // Generate token for the fake user
@@ -42,7 +43,8 @@ public class LoginCommand
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                 RefreshToken = refreshToken,
-                UserName = fakeUser.UserName
+                UserName = fakeUser.UserName,
+                UserID = "0",
             };
         }
 
