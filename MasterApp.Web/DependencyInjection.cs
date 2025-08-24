@@ -2,6 +2,7 @@
 using MasterApp.Application.Interface;
 using MasterApp.Application.Setup.MasterApp;
 using MasterApp.Application.Setup.MasterApp.NavMasterApp;
+using MasterApp.Application.Setup.SlaveApp.BillingSoftware.NavSetting;
 using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.NavSettingCloudPosReportHerlanCheck;
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.RoleManagementCloudPosReportHerlanCheck;
@@ -53,6 +54,9 @@ public static class DependencyInjection
         services.AddScoped<GetNavProjectByUser>();
         services.AddScoped<GetAllUser>();
         services.AddScoped<UserCreate>();
+        services.AddScoped<UserProjectPermission>();
+        services.AddScoped<UpdateUserInfo>();
+        services.AddScoped<GetNav>();
         return services;
     }
 }

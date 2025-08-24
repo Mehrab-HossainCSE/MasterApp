@@ -25,9 +25,12 @@ public class ProjectListController : ControllerBase
     private readonly GetNavProjectByUser _getNavProjectByUser;
     private readonly GetAllUser _getAllUser;
     private readonly UserCreate _userCreate;
+    private readonly UserProjectPermission _userProjectPermission;
+    private readonly UpdateUserInfo _updateUserInfo;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
-        LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, GetAllUser getAllUser, UserCreate userCreate)
+        LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, 
+        GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -38,6 +41,8 @@ public class ProjectListController : ControllerBase
         _getNavProjectByUser = getNavProjectByUser;
         _getAllUser = getAllUser;
         _userCreate = userCreate;
+        _userProjectPermission = userProjectPermission;
+        _updateUserInfo = updateUserInfo;
     }
     [HttpGet]
     public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
@@ -176,6 +181,35 @@ public class ProjectListController : ControllerBase
 
         return Ok(result);
     }
+  
+    [HttpPost]
+    public async Task<IActionResult> UserProjectUpdate([FromBody] ProjectUpdateDto dto)
+    {
+        var result = await _userProjectPermission.UpdateUserMenuListAsync(dto);
+        if (result>0)
+        {
+            return Ok(new { succeeded = true });
+        }
+        else
+        {
+            return BadRequest(new { succeeded = false });
+        }
+       
+    }
 
+    [HttpPost]
+    public async Task<IActionResult> UpdateUserInfo([FromBody] UserCreateDto dto)
+    {
+        var result = await _updateUserInfo.UpdateUserAsync(dto);
+        if (result > 0)
+        {
+            return Ok(new { succeeded = true });
+        }
+        else
+        {
+            return BadRequest(new { succeeded = false });
+        }
+
+    }
 
 }

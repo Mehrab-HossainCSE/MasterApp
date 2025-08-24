@@ -1,4 +1,7 @@
-﻿namespace MasterApp.Application.SlaveDto
+﻿using MasterApp.Application.SlaveDto;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace MasterApp.Application.SlaveDto
 {
     public class NavDto
     {
@@ -19,3 +22,18 @@
     }
 
     }
+
+public class BillingSoftNavDto
+{
+    public int MenuId { get; set; }
+    public int ParentMenuId { get; set; }
+    public string MenuName { get; set; }
+    public string Url { get; set; }
+    public int Sorting { get; set; }
+    public bool IsActive { get; set; }
+    public int ApplicationId { get; set; }
+    public string CreatorId { get; set; }
+    public bool IsChecked { get; set; }
+    public DateOnly CreateDate { get; set; }
+    public List<BillingSoftNavDto>? children { get; set; }
+}

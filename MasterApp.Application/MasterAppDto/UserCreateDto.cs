@@ -23,3 +23,9 @@ public class UserCreateDto
     public string? PasswordSalt { get; set; }
     public string? ProjectListId { get; set; }
 }
+
+public class ProjectUpdateDto
+{
+    public string? UserID { get; set; }
+    public string? ProjectListId { get; set; }
+}
