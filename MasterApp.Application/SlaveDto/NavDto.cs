@@ -34,6 +34,6 @@ public class BillingSoftNavDto
     public int ApplicationId { get; set; }
     public string CreatorId { get; set; }
     public bool IsChecked { get; set; }
-    public DateOnly CreateDate { get; set; }
+    public DateTime CreateDate { get; set; }
     public List<BillingSoftNavDto>? children { get; set; }
 }

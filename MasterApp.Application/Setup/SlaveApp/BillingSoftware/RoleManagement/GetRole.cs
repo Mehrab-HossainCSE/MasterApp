@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Dapper;
+using MasterApp.Application.Interface;
+using MasterApp.Application.SlaveDto;
 
-namespace MasterApp.Application.Setup.SlaveApp.BillingSoftware.RoleManagement
+namespace MasterApp.Application.Setup.SlaveApp.BillingSoftware.RoleManagement;
+
+public class GetRole(IDbConnectionFactory _connectionFactory)
 {
-    internal class GetRole
+    public async Task<List<GetRoleBilling>> GetAllRolesAsync()
     {
+        using var connection = _connectionFactory.CreateConnection("BillingSoft");
+
+        var sql = "SELECT RoleId, RoleName FROM [Management].[Role_1]";
+
+        var result = await connection.QueryAsync<GetRoleBilling>(sql);
+
+        return result.AsList();
     }
 }

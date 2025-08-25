@@ -66,7 +66,7 @@ public class GetNav
                 ApplicationId,
                 CreatorId,
                 CreateDate
-            FROM Menu_1
+            FROM [OBS_O].[Management].[Menu_1]
             ORDER BY Sorting";
 
         var navItems = (await connection.QueryAsync<BillingSoftNavDto>(sql)).ToList();
