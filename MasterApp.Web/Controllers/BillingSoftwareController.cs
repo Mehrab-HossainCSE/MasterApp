@@ -1,5 +1,6 @@
 ﻿using MasterApp.Application.Setup.SlaveApp.BillingSoftware.NavSetting;
 using MasterApp.Application.Setup.SlaveApp.BillingSoftware.RoleManagement;
+using MasterApp.Application.Setup.SlaveApp.BillingSoftware.UserManagement;
 using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 using MasterApp.Application.SlaveDto;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,11 @@ public class BillingSoftwareController(
     CreateNav _createNav,
     UpdateNav updateNav,
     UpdateDatabaseNav updateDatabaseNav,
-    GetRole getRole
+    GetRole getRole,
+    CreateRole createRole,
+    UpdateRole updateRole,
+    GetUser getUser,
+    RoleWiseMenu roleWiseMenu
     ) : ControllerBase
 {
     [HttpPost]
@@ -73,7 +78,7 @@ public class BillingSoftwareController(
 
 
     [HttpPost]
-    public async Task<IActionResult> GetRole()
+    public async Task<IActionResult> GetRoles()
     {
         var result = await getRole.GetAllRolesAsync();
 
@@ -83,5 +88,40 @@ public class BillingSoftwareController(
         return Ok(result);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> CreateRole([FromBody] CreateRoleBilling dto)
+    {
+        var result = await createRole.InsertRoleAsync(dto);
 
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateRole([FromBody] CreateRoleBilling dto)
+    {
+        var result = await updateRole.UpdateRoleAsync(dto);
+
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> GetAllUser()
+    {
+        var result = await getUser.GetAllUserAsync();
+
+        if (result == null || !result.Any())
+            return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
+    [HttpGet]
+    public async Task<IActionResult> RoleWiseMenu([FromQuery] int RoleId)
+    {
+        var result = await roleWiseMenu.GetAllUserAsync(RoleId);
+
+        if (result == null || !result.Any())
+            return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
 }

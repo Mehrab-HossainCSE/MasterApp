@@ -4,6 +4,7 @@ using MasterApp.Application.Setup.MasterApp;
 using MasterApp.Application.Setup.MasterApp.NavMasterApp;
 using MasterApp.Application.Setup.SlaveApp.BillingSoftware.NavSetting;
 using MasterApp.Application.Setup.SlaveApp.BillingSoftware.RoleManagement;
+using MasterApp.Application.Setup.SlaveApp.BillingSoftware.UserManagement;
 using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.NavSettingCloudPosReportHerlanCheck;
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.RoleManagementCloudPosReportHerlanCheck;
@@ -63,6 +64,10 @@ public static class DependencyInjection
         services.AddScoped<UpdateNav>();
         services.AddScoped<UpdateDatabaseNav>();
         services.AddScoped<GetRole>();
+        services.AddScoped<CreateRole>();
+        services.AddScoped<UpdateRole>();
+        services.AddScoped<GetUser>();
+        services.AddScoped<RoleWiseMenu>();
         return services;
     }
 }

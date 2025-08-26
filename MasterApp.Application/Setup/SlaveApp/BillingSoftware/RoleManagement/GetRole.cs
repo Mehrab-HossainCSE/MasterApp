@@ -10,7 +10,7 @@ public class GetRole(IDbConnectionFactory _connectionFactory)
     {
         using var connection = _connectionFactory.CreateConnection("BillingSoft");
 
-        var sql = "SELECT RoleId, RoleName FROM [Management].[Role_1]";
+        var sql = "SELECT RoleId, RoleName ,IsActive,Description FROM [Management].[Role_1]";
 
         var result = await connection.QueryAsync<GetRoleBilling>(sql);
 
