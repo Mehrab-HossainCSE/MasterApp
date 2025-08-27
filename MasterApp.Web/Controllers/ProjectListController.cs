@@ -103,9 +103,9 @@ public class ProjectListController : ControllerBase
         }
     }
     [HttpGet]
-    public async Task<IActionResult> getProject(string UserID)
+    public async Task<IActionResult> getProject()
     {
-        var result = await _getProjectList.HandleAsync(UserID);
+        var result = await _getProjectList.HandleAsync();
 
         if (result.HasError)
         {

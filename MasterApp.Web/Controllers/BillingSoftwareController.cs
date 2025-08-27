@@ -19,7 +19,8 @@ public class BillingSoftwareController(
     CreateRole createRole,
     UpdateRole updateRole,
     GetUser getUser,
-    RoleWiseMenu roleWiseMenu
+    RoleWiseMenu roleWiseMenu,
+    UpdateUserRole updateUserRole
     ) : ControllerBase
 {
     [HttpPost]
@@ -121,6 +122,13 @@ public class BillingSoftwareController(
 
         if (result == null || !result.Any())
             return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
+    [HttpPost]
+    public async Task<IActionResult> UpdateUserRole([FromBody] UpdateRoleBillingDto dto)
+    {
+        var result = await updateUserRole.UpdateRoleAsync(dto);
 
         return Ok(result);
     }

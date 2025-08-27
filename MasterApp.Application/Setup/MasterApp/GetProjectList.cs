@@ -20,7 +20,7 @@ public class GetProjectList
         _context = context;
     }
 
-    public async Task<IResult<List<ProjectDtos>>> HandleAsync(string UserID)
+    public async Task<IResult<List<ProjectDtos>>> HandleAsync()
     {
         try
         {
@@ -37,27 +37,27 @@ public class GetProjectList
 
             // 2. Get the comma-separated list of project IDs for the user
             // Use a parameterized query to prevent SQL injection.
-            var userProjectsQuery = "SELECT ProjectListId FROM Users WHERE UserID = @UserID";
-            var userProjectIdsString = await connection.QueryFirstOrDefaultAsync<string>(userProjectsQuery, new { UserID = UserID });
+            //var userProjectsQuery = "SELECT ProjectListId FROM Users WHERE UserID = @UserID";
+            //var userProjectIdsString = await connection.QueryFirstOrDefaultAsync<string>(userProjectsQuery, new { UserID = UserID });
 
-            // 3. Check if the user has any assigned projects
-            if (!string.IsNullOrEmpty(userProjectIdsString))
-            {
-                // Split the string into a list of individual project IDs
-                var userProjectIds = userProjectIdsString.Split(',')
-                                                         .Select(id => id.Trim())
-                                                         .Where(id => !string.IsNullOrEmpty(id))
-                                                         .ToList();
+            //// 3. Check if the user has any assigned projects
+            //if (!string.IsNullOrEmpty(userProjectIdsString))
+            //{
+            //    // Split the string into a list of individual project IDs
+            //    var userProjectIds = userProjectIdsString.Split(',')
+            //                                             .Select(id => id.Trim())
+            //                                             .Where(id => !string.IsNullOrEmpty(id))
+            //                                             .ToList();
 
-                // 4. Mark projects in the main list that match the user's projects as checked
-                foreach (var project in projects)
-                {
-                    if (userProjectIds.Contains(project.Id.ToString()))
-                    {
-                        project.IsChecked = true;
-                    }
-                }
-            }
+            //    // 4. Mark projects in the main list that match the user's projects as checked
+            //    foreach (var project in projects)
+            //    {
+            //        if (userProjectIds.Contains(project.Id.ToString()))
+            //        {
+            //            project.IsChecked = true;
+            //        }
+            //    }
+            //}
 
             return Result<List<ProjectDtos>>.Success(projects, "Projects retrieved and checked successfully.");
         }
@@ -68,22 +68,6 @@ public class GetProjectList
     }
 }
 
-    //public async Task<IResult<List<ProjectDtos>>> HandleAsync(string userID)
-    //{
-    //    try
-    //    {
-    //        using var connection = _context.CreateConnection("MasterAppDB");
-    //        var query = "SELECT Id, Title, NavigateUrl,LoginUrl, LogoUrl,IsActive FROM ProjectList";
-    //        var query2= "select ProjectListId from Users where UserId="userID"
-
-    //        var projects = (await connection.QueryAsync<ProjectDtos>(query)).ToList();
-
-    //        return Result<List<ProjectDtos>>.Success(projects, "Projects retrieved successfully.");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return Result<List<ProjectDtos>>.Fail($"Failed to retrieve projects: {ex.Message}");
-    //    }
-    //}
+    
 
 

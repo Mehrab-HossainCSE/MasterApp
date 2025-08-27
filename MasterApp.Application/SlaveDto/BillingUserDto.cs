@@ -27,3 +27,10 @@ public class BillingUserMenuDto
 
     public List<BillingUserMenuDto> Children { get; set; } = new();
 }
+
+public record UpdateRoleBillingDto 
+{
+    public int Id { get; set; }
+    public int RoleId { get; set; }
+   
+}

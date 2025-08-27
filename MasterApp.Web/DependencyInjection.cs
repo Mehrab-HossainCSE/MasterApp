@@ -68,6 +68,7 @@ public static class DependencyInjection
         services.AddScoped<UpdateRole>();
         services.AddScoped<GetUser>();
         services.AddScoped<RoleWiseMenu>();
+        services.AddScoped<UpdateUserRole>();
         return services;
     }
 }
