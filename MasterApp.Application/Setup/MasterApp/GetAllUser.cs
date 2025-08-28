@@ -10,7 +10,8 @@ public class GetAllUser(IDbConnectionFactory _dbConnectionFactory)
     public async Task<Result<List<UserCreateDto>>> HandleAsync()
     {
         try
-        {
+        {  
+
             using var connection = _dbConnectionFactory.CreateConnection("MasterAppDB");
             var sql = "SELECT UserID, UserName, EmployeeID, ShopID, FullName, Email,DesignationID,MobileNo,Address  FROM Users";
             var users = await connection.QueryAsync<UserCreateDto>(sql);

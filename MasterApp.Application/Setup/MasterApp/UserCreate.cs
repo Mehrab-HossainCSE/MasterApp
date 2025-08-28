@@ -5,13 +5,15 @@ using MasterApp.Application.MasterAppDto;
 
 namespace MasterApp.Application.Setup.MasterApp;
 
-public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbConnectionFactory)
+public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbConnectionFactory, IEncryption _encryption)
 {
     public async Task<Result<string>> HandleAsync(UserCreateDto userDto)
     {
         try
         {
             using var connection = _dbConnectionFactory.CreateConnection("MasterAppDB");
+
+
 
             // ✅ Step 1: Check if user exists
             var checkUserExists = await connection.ExecuteScalarAsync<int>(

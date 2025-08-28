@@ -8,7 +8,7 @@ using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace MasterApp.Application.Setup.MasterApp;
 
-public class UpdateProject(IDbConnectionFactory _context)
+public class UpdateProject(IDbConnectionFactory _context, IEncryption _encryption)
 {
     public async Task<IResult> HandleUpdate(UpdateProjectCommand request)
     {
@@ -62,8 +62,16 @@ public class UpdateProject(IDbConnectionFactory _context)
                 NavigateUrl = @NavigateUrl,
                 LoginUrl = @LoginUrl,
                 LogoUrl = @LogoUrl,
-                IsActive = @IsActive
+                IsActive = @IsActive,
+                UserName = ISNULL(@UserName, UserName),
+                Password = ISNULL(@Password, Password)
             WHERE Id = @Id";
+
+            string? encryptedPassword = null;
+            if (!string.IsNullOrEmpty(request.Password))
+            {
+                encryptedPassword = _encryption.Encrypt(request.Password);
+            }
 
             var parameters = new
             {
@@ -72,7 +80,9 @@ public class UpdateProject(IDbConnectionFactory _context)
                 LoginUrl = request.LoginUrl,
                 LogoUrl = uniqueFileName,
                 IsActive = request.IsActive,
-                Id = request.Id
+                Id = request.Id,
+                UserName = string.IsNullOrEmpty(request.UserName) ? null : request.UserName,
+                Password = encryptedPassword
             };
 
             await connection.ExecuteAsync(sql, parameters);

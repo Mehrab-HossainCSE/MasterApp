@@ -9,6 +9,8 @@ namespace MasterApp.Application.MasterAppDto
         public IFormFile? LogoFile { get; set; }
         public string? WebRootPath { get; set; }
         public bool IsActive { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
     }
     public class UpdateProjectCommand
     {
@@ -19,5 +21,7 @@ namespace MasterApp.Application.MasterAppDto
         public IFormFile? LogoFile { get; set; }
         public string? WebRootPath { get; set; }
         public bool IsActive { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
     }
 }

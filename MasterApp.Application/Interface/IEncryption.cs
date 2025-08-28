@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MasterApp.Application.Interface
+namespace MasterApp.Application.Interface;
+
+public interface IEncryption
 {
-    internal class IEncryption
-    {
-    }
+    string Encrypt(string plainText);
+    string Decrypt(string cipherText);
 }

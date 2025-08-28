@@ -81,7 +81,9 @@ public class ProjectListController : ControllerBase
                 LoginUrl = dto.LoginUrl,
                 LogoFile = dto.LogoFile,
                 WebRootPath = _webHostEnvironment.WebRootPath,
-                IsActive = dto.IsActive
+                IsActive = dto.IsActive,
+                UserName = dto.UserName,
+                Password = dto.Password
             };
 
             // Execute command
@@ -132,7 +134,9 @@ public class ProjectListController : ControllerBase
                 LoginUrl = dto.LoginUrl,
                 LogoFile = dto.LogoFile,
                 WebRootPath = _webHostEnvironment.WebRootPath,
-                IsActive = dto.IsActive
+                IsActive = dto.IsActive,
+                UserName = dto.UserName,
+                Password = dto.Password
             };
 
             // Execute command

@@ -56,7 +56,7 @@ public class GetNavProjectByUser(IDbConnectionFactory _dbConnectionFactory)
             if (UserID == "0") // ✅ Special condition: return all projects
             {
                 var queryAll = @"
-                    SELECT Id, Title, NavigateUrl, LoginUrl, LogoUrl, IsActive
+                    SELECT Id, Title, NavigateUrl, LoginUrl, LogoUrl, IsActive, Password, UserName
                     FROM ProjectList
                     WHERE IsActive = 1";
 
@@ -78,7 +78,7 @@ public class GetNavProjectByUser(IDbConnectionFactory _dbConnectionFactory)
 
                 // 3. Fetch matching projects
                 var query = @"
-                    SELECT Id, Title, NavigateUrl, LoginUrl, LogoUrl, IsActive
+                    SELECT Id, Title, NavigateUrl, LoginUrl, LogoUrl, IsActive , Password, UserName
                     FROM ProjectList
                     WHERE Id IN @Ids AND IsActive = 1";
 

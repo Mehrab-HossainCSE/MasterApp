@@ -10,10 +10,12 @@ namespace MasterApp.Application.Setup.MasterApp;
 public class CreateProject
 {
     private readonly IDbConnectionFactory _context;
+    private readonly IEncryption _encryption;
 
-    public CreateProject(IDbConnectionFactory context)
+    public CreateProject(IDbConnectionFactory context, IEncryption encryption)
     {
         _context = context;
+        _encryption = encryption;
     }
    
         public async Task<IResult> Handle(CreateProjectCommand request)
@@ -51,8 +53,8 @@ public class CreateProject
 
             // Insert into database using Dapper
             var sql = @"
-                    INSERT INTO ProjectList (Title, NavigateUrl, LoginUrl, LogoUrl, IsActive)
-                    VALUES (@Title, @NavigateUrl, @LoginUrl, @LogoUrl, @IsActive);
+                    INSERT INTO ProjectList (Title, NavigateUrl, LoginUrl, LogoUrl, IsActive, UserName,Password)
+                    VALUES (@Title, @NavigateUrl, @LoginUrl, @LogoUrl, @IsActive,@UserName,@Password);
                     SELECT CAST(SCOPE_IDENTITY() as int);";
 
             var parameters = new
@@ -61,7 +63,9 @@ public class CreateProject
                 NavigateUrl = request.NavigateUrl,
                 LoginUrl = request.LoginUrl,
                 LogoUrl = uniqueFileName != null ? $"/ProjectLogo/{uniqueFileName}" : null,
-                IsActive = request.IsActive
+                IsActive = request.IsActive,
+                Password = _encryption.Encrypt(request.Password),
+                UserName = request.UserName
             };
 
             using var connection = _context.CreateConnection("MasterAppDB");

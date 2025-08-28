@@ -69,6 +69,14 @@ public static class DependencyInjection
         services.AddScoped<GetUser>();
         services.AddScoped<RoleWiseMenu>();
         services.AddScoped<UpdateUserRole>();
+      
+        services.AddSingleton<IEncryption>(provider =>
+        {
+            var config = provider.GetRequiredService<IConfiguration>();
+            var key = config["Encryption:Key"];  // read from appsettings.json
+            return new EncryptionHelper(key);
+        });
+
         return services;
     }
 }
