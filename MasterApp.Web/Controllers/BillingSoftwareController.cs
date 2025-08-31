@@ -1,7 +1,6 @@
 ﻿using MasterApp.Application.Setup.SlaveApp.BillingSoftware.NavSetting;
 using MasterApp.Application.Setup.SlaveApp.BillingSoftware.RoleManagement;
 using MasterApp.Application.Setup.SlaveApp.BillingSoftware.UserManagement;
-using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 using MasterApp.Application.SlaveDto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +33,7 @@ public class BillingSoftwareController(
         return Ok(result);
     }
 
-   [ HttpPost]
+    [HttpPost]
     public async Task<IActionResult> GetParentNav()
     {
         var result = await _getParentNav.GetParentsAsync();

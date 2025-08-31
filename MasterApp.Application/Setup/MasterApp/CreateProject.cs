@@ -64,8 +64,13 @@ public class CreateProject
                 LoginUrl = request.LoginUrl,
                 LogoUrl = uniqueFileName != null ? $"/ProjectLogo/{uniqueFileName}" : null,
                 IsActive = request.IsActive,
-                Password = _encryption.Encrypt(request.Password),
-                UserName = request.UserName
+                Password = string.IsNullOrWhiteSpace(request.Password) || request.Password == "null"
+                            ? null
+                            : _encryption.Encrypt(request.Password),
+
+               UserName = string.IsNullOrWhiteSpace(request.UserName) || request.UserName == "null"
+                            ? null
+                            : request.UserName
             };
 
             using var connection = _context.CreateConnection("MasterAppDB");

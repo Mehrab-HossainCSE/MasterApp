@@ -158,7 +158,7 @@ public class ProjectListController : ControllerBase
         }
     }
 
-    [HttpDelete("{Id}")]
+    [HttpDelete]
     public async Task<IActionResult> DeleteProject(int Id)
     {
         var result = await _deleteProject.HandleAsync(Id, _webHostEnvironment.WebRootPath);
