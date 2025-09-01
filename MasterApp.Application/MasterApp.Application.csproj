@@ -14,9 +14,4 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.7.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Setup\SlaveApp\SorolSoftwate\UserManagement\" />
-    <Folder Include="Setup\SlaveApp\SorolSoftwate\RoleManagement\" />
-  </ItemGroup>
-
 </Project>

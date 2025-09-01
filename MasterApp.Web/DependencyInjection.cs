@@ -10,6 +10,8 @@ using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.NavSettingC
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.RoleManagementCloudPosReportHerlanCheck;
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.UserManagementCloudPosReportHerlanCheck;
 using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.NavSetting;
+using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.RoleManagement;
+using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.UserManagement;
 using MasterApp.Service.DbContext;
 using MasterApp.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -75,6 +77,11 @@ public static class DependencyInjection
         services.AddScoped<CreateNavSorol>();
         services.AddScoped<UpdateSorolNavs>();
         services.AddScoped<UpdateSorolSoftDatabaseNav>();
+        services.AddScoped<CreateSorolRole>();
+        services.AddScoped<GetSorolRole>();
+        services.AddScoped<GetMenuRoleByIdSorol>();
+        services.AddScoped<UpdateMenuIdForRoelSorol>();
+        services.AddScoped<GetAllUserSorol>();
         services.AddSingleton<IEncryption>(provider =>
         {
             var config = provider.GetRequiredService<IConfiguration>();
