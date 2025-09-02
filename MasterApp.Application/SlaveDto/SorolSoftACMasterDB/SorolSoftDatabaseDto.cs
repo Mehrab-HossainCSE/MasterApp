@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 namespace MasterApp.Application.SlaveDto.SorolSoftACMasterDB
 {
     public class SorolSoftDatabaseDto
-    {
-        
-        
+    {       
             public int menuID { get; set; }
             public int parentID { get; set; }
             public int? moduleID { get; set; }

@@ -18,7 +18,6 @@ public class UpdateMenuIdForRoelSorol(IDbConnectionFactory _connectionFactory)
         try
         {
 
-
             if (!string.IsNullOrWhiteSpace(dto.MenuListID))
             {
                

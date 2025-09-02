@@ -3,15 +3,13 @@
 namespace MasterApp.Application.SlaveDto.SorolSoftACMasterDB
 {
     public class CreateSorolRoleDto
-    {
-       
+    {      
 
             [JsonPropertyName("RoleId")]
             public int? RoleId { get; set; }
 
             [JsonPropertyName("RoleName")]
             public string RoleName { get; set; }
-
 
             [JsonPropertyName("IsActive")]
             public bool IsActive { get; set; }

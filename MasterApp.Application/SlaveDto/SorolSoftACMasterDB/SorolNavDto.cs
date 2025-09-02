@@ -1,7 +1,6 @@
 ﻿namespace MasterApp.Application.SlaveDto.SorolSoftACMasterDB;
 
 public class SorolNavDto
-
 {
     public int MenuID { get; set; }
     public int? ParentID { get; set; }

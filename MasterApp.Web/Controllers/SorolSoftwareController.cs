@@ -16,7 +16,7 @@ namespace MasterApp.Web.Controllers;
 [Route("api/[controller]/[action]")]
 public class SorolSoftwareController(GetSorolNav _getNav, GetParentNavSorol getParentNavSorol, CreateNavSorol createNavSorol, UpdateSorolNavs updateSorolNavs,
     UpdateSorolSoftDatabaseNav updateSorolSoftDatabaseNav, CreateSorolRole createSorolRole, GetSorolRole getSorolRole, GetMenuRoleByIdSorol getMenuRoleByIdSorol
-    , UpdateMenuIdForRoelSorol updateMenuIdForRoelSorol, GetAllUserSorol getAllUserSorol) : ControllerBase
+    , UpdateMenuIdForRoelSorol updateMenuIdForRoelSorol, GetAllUserSorol getAllUserSorol, GetMenuByRoleSorol menuByRoleSorol) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> GetNav()
@@ -113,6 +113,16 @@ public class SorolSoftwareController(GetSorolNav _getNav, GetParentNavSorol getP
         var result = await getAllUserSorol.GetAllUserAsync();
 
         if (result == null || !result.Any())
+            return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
+    [HttpPost]
+    public async Task<IActionResult> GetmenuByRoleSorol()
+    {
+        var result = await menuByRoleSorol.GetAllMenuDetailsAsync();
+
+        if (result == null )
             return NotFound("No parent menus found.");
 
         return Ok(result);

@@ -9,6 +9,5 @@ public class CreateSorolSoftNavDto
     public string? URL { get; set; }
     public string? REL { get; set; }
     public int? Serial { get; set; }
-
     public string? IcoClass { get; set; }
 }

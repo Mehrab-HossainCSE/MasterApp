@@ -80,7 +80,6 @@ public class UpdateDatabaseNav
     }
 
 
-
     private List<BillingSoftwareDatabaseDto> FlattenMenuItems(List<BillingSoftwareDatabaseDto> menuItems)
     {
         var flattenedItems = new List<BillingSoftwareDatabaseDto>();

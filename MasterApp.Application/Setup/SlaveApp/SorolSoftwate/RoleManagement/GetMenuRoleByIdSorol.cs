@@ -54,9 +54,18 @@ public class GetMenuRoleByIdSorol
             var menuIdsFromRole = new HashSet<int>();
             if (!string.IsNullOrWhiteSpace(menuIdListString))
             {
-                menuIdsFromRole = menuIdListString
-                    .Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(id => id.Trim())
+                var parts = menuIdListString
+                   .Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
+                   .Select(id => id.Trim())
+                   .ToList();
+
+                if (parts.Count > 0)
+                {
+                    // Remove only the leading '-' from the first number
+                    parts[0] = parts[0].TrimStart('-');
+                }
+
+                menuIdsFromRole = parts
                     .Where(id => int.TryParse(id, out _))
                     .Select(int.Parse)
                     .ToHashSet();
