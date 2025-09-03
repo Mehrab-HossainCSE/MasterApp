@@ -16,7 +16,7 @@ namespace MasterApp.Web.Controllers;
 [Route("api/[controller]/[action]")]
 public class SorolSoftwareController(GetSorolNav _getNav, GetParentNavSorol getParentNavSorol, CreateNavSorol createNavSorol, UpdateSorolNavs updateSorolNavs,
     UpdateSorolSoftDatabaseNav updateSorolSoftDatabaseNav, CreateSorolRole createSorolRole, GetSorolRole getSorolRole, GetMenuRoleByIdSorol getMenuRoleByIdSorol
-    , UpdateMenuIdForRoelSorol updateMenuIdForRoelSorol, GetAllUserSorol getAllUserSorol, GetMenuByRoleSorol menuByRoleSorol) : ControllerBase
+    , UpdateMenuIdForRoelSorol updateMenuIdForRoelSorol, GetAllUserSorol getAllUserSorol, GetMenuByRoleSorol menuByRoleSorol, AssignUserMenuSorol assignUserMenuSorol) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> GetNav()
@@ -127,4 +127,17 @@ public class SorolSoftwareController(GetSorolNav _getNav, GetParentNavSorol getP
 
         return Ok(result);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> AssignUserMenuSorol([FromBody] UserMenuSorolDto dto)
+    {
+        var result = await assignUserMenuSorol.AssignUserMenu(dto);
+
+        if (result.Succeeded)
+            return Ok(new { success = true, message = "Menu IDs updated successfully." });
+
+        return BadRequest(new { success = false, message = "Failed to update menu IDs." });
+    }
+
+
 }

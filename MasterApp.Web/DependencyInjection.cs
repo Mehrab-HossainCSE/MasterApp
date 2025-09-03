@@ -83,6 +83,7 @@ public static class DependencyInjection
         services.AddScoped<UpdateMenuIdForRoelSorol>();
         services.AddScoped<GetAllUserSorol>();
         services.AddScoped<GetMenuByRoleSorol>();
+        services.AddScoped<AssignUserMenuSorol>();
         services.AddSingleton<IEncryption>(provider =>
         {
             var config = provider.GetRequiredService<IConfiguration>();
