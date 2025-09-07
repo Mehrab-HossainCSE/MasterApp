@@ -1,6 +1,7 @@
 
 using MasterApp.Application.Common.Exceptions;
 using MasterApp.Application.Common.Models;
+using MasterApp.Application.MasterAppDto;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -20,6 +21,7 @@ namespace MasterApp.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddWebServices();
+            builder.Services.AddHttpClient();
             builder.Services.Configure<JWTSettings>(
                 builder.Configuration.GetSection("JWTSettings")
             );
@@ -41,6 +43,8 @@ namespace MasterApp.Web
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTSettings:Key"]))
                 };
             });
+            builder.Services.Configure<ApiSettings>(
+    builder.Configuration.GetSection("ApiSettings"));
             var app = builder.Build();
          
        // Configure the HTTP request pipeline.

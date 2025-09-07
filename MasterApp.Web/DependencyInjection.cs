@@ -14,6 +14,7 @@ using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.RoleManagement;
 using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.UserManagement;
 using MasterApp.Service.DbContext;
 using MasterApp.Service.Services;
+using MasterApp.Service.Services.ProjectAdmin;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -84,6 +85,8 @@ public static class DependencyInjection
         services.AddScoped<GetAllUserSorol>();
         services.AddScoped<GetMenuByRoleSorol>();
         services.AddScoped<AssignUserMenuSorol>();
+        services.AddScoped<SSOUserCreate>();
+        services.AddScoped<IVatProSoftUserCreate, VatProSoftUserCreate>();
         services.AddSingleton<IEncryption>(provider =>
         {
             var config = provider.GetRequiredService<IConfiguration>();
