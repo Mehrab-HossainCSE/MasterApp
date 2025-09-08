@@ -37,14 +37,31 @@ public class VatProSoftUserCreate : IVatProSoftUserCreate
 
         var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponseVatPro>();
 
+        //if (apiResponse == null)
+        //{
+        //    return Result.Fail("Invalid response from server");
+        //}
+
+        //return apiResponse.Status
+        //    ? Result.Success(apiResponse.Message ?? "User created successfully")
+        //    : Result.Fail(apiResponse.Message ?? "Failed to create user");
+
         if (apiResponse == null)
         {
             return Result.Fail("Invalid response from server");
         }
 
-        return apiResponse.Status
-            ? Result.Success(apiResponse.Message ?? "User created successfully")
-            : Result.Fail(apiResponse.Message ?? "Failed to create user");
+        if (apiResponse.Status) // ✅ success regardless of message
+        {
+            return Result.Success(string.IsNullOrWhiteSpace(apiResponse.Message)
+                ? "User created successfully"
+                : apiResponse.Message);
+        }
+
+        // ❌ failed case
+        return Result.Fail(string.IsNullOrWhiteSpace(apiResponse.Message)
+            ? "Failed to create user"
+            : apiResponse.Message);
     }
 
 

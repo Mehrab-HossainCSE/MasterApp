@@ -45,6 +45,8 @@ namespace MasterApp.Web
             });
             builder.Services.Configure<ApiSettings>(
     builder.Configuration.GetSection("ApiSettings"));
+            builder.Services.Configure<ApiSettingsEncryption>(
+   builder.Configuration.GetSection("Encryption"));
             var app = builder.Build();
          
        // Configure the HTTP request pipeline.

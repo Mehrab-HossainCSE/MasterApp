@@ -1,21 +1,16 @@
 ﻿using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MasterApp.Service.Services;
 
-
-public class EncryptionHelper : IEncryption
+public class TokenEncryption : ITokenEncryption
 {
     private readonly string _key;
 
-    public EncryptionHelper(IOptions<ApiSettingsEncryption> options) // inject key here
+    public TokenEncryption(IOptions<ApiSettingsEncryption> options)
     {
         var key = options.Value.Key;  // read from appsettings.json via IOptions
 
@@ -25,7 +20,49 @@ public class EncryptionHelper : IEncryption
         _key = key;
     }
 
-    public string Encrypt(string plainText)
+    public string TokenEncrypt(string plainText)
+    {
+        if (string.IsNullOrWhiteSpace(plainText))
+            throw new ArgumentException("Plain text cannot be null or empty.");
+
+        // Split the plainText by ~ to get username and password
+        var parts = plainText.Split('~');
+        if (parts.Length != 2)
+            throw new ArgumentException("Plain text must contain username and password separated by '~'.");
+
+        string username = parts[0];
+        string password = parts[1];
+
+        // Encrypt username and password separately
+        string encryptedUsername = EncryptString(username);
+        string encryptedPassword = EncryptString(password);
+
+        // Combine with ~ separator
+        return encryptedUsername + "~" + encryptedPassword;
+    }
+
+    public string TokenDecrypt(string cipherText)
+    {
+        if (string.IsNullOrWhiteSpace(cipherText))
+            throw new ArgumentException("Cipher text cannot be null or empty.");
+
+        // Split the cipherText by ~ to get encrypted username and password
+        var parts = cipherText.Split('~');
+        if (parts.Length != 2)
+            throw new ArgumentException("Cipher text must contain encrypted username and password separated by '~'.");
+
+        string encryptedUsername = parts[0];
+        string encryptedPassword = parts[1];
+
+        // Decrypt username and password separately
+        string username = DecryptString(encryptedUsername);
+        string password = DecryptString(encryptedPassword);
+
+        // Combine with ~ separator
+        return username + "~" + password;
+    }
+
+    private string EncryptString(string plainText)
     {
         using (var aes = Aes.Create())
         {
@@ -48,7 +85,7 @@ public class EncryptionHelper : IEncryption
         }
     }
 
-    public string Decrypt(string cipherText)
+    private string DecryptString(string cipherText)
     {
         var fullCipher = Convert.FromBase64String(cipherText);
 

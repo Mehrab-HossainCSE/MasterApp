@@ -3,6 +3,7 @@ using MasterApp.Application.Common.Models;
 using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
 using MasterApp.Application.SlaveDto;
+using System.Reflection;
 using System.Security.Cryptography;
 using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
@@ -31,17 +32,45 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
 
                 USER_NAME = request.userName,
                 USER_PASS=request.password,
-                
+                FullName=request.fullName,
+                ExcelPermission=false,
                 BranchID =request.branch,
                 NID= request.NID,
-                FullName = request.employeeName,
+                RoleId=request.RoleId,
                 EMAIL = request.email,
                 DES_ID = request.designationID,
                 MOBILE = request.mobileNo,
-                ADDRESS = request.address
+                ADDRESS = request.address,
+                IsActive= true,
+                userImages = new UserImages
+                {
+                    UserImageId="string",
+                    USER_ID="string",
+                    UserImageData="stringsss",
+                    NIDImageData="stringsss",
+                    NIDImageData2="stringss"
+                },
+                OldPassword= "string",
+                DES_TITLE= "string",
+                RecordCount=0,
+                RecordFilter=0,
+                CREATE_BY = "string",
+                CREATE_DATE = DateTime.Now,
+                UPDATE_BY = "string",
+                UPDATE_DATE = DateTime.Now
             };
             var result = await vatProSoftUserCreate.CreateUserVatPro(dto,token);
-            return Result.Success();
+
+
+            if (result.Succeeded) // ✅ instead of result.IsSuccess
+            {
+                return Result.Success(result.Messages.FirstOrDefault() ?? "User created successfully");
+            }
+            else
+            {
+                return Result.Fail(result.Messages.FirstOrDefault() ?? "Failed to create user");
+            }
+
         }
         catch (Exception ex)
         {

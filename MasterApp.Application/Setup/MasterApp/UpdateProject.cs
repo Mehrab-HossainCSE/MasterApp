@@ -72,7 +72,7 @@ public class UpdateProject(IDbConnectionFactory _context, IEncryption _encryptio
             {
                 encryptedPassword = _encryption.Encrypt(request.Password);
             }
-
+        
             var parameters = new
             {
                 Title = request.Title,

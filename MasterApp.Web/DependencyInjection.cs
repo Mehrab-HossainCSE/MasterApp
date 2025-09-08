@@ -86,13 +86,15 @@ public static class DependencyInjection
         services.AddScoped<GetMenuByRoleSorol>();
         services.AddScoped<AssignUserMenuSorol>();
         services.AddScoped<SSOUserCreate>();
+        services.AddScoped<ITokenEncryption, TokenEncryption>();
+        services.AddScoped<IEncryption, EncryptionHelper>();
         services.AddScoped<IVatProSoftUserCreate, VatProSoftUserCreate>();
-        services.AddSingleton<IEncryption>(provider =>
-        {
-            var config = provider.GetRequiredService<IConfiguration>();
-            var key = config["Encryption:Key"];  // read from appsettings.json
-            return new EncryptionHelper(key);
-        });
+        //services.AddSingleton<IEncryption>(provider =>
+        //{
+        //    var config = provider.GetRequiredService<IConfiguration>();
+        //    var key = config["Encryption:Key"];  // read from appsettings.json
+        //    return new EncryptionHelper(key);
+        //});
 
         return services;
     }

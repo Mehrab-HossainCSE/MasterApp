@@ -14,12 +14,13 @@ public class LoginCommand
     private readonly IDbConnectionFactory _context;
     private readonly ITokenService _tokenService;
     private readonly IPasswordHash _passwordHash;
-
-    public LoginCommand(IDbConnectionFactory context, ITokenService tokenService, IPasswordHash passwordHash)
+    private readonly ITokenEncryption _encrytionToken;
+    public LoginCommand(IDbConnectionFactory context, ITokenService tokenService, IPasswordHash passwordHash, ITokenEncryption encrytionToken)
     {
         _context = context;
         _tokenService = tokenService;
         _passwordHash = passwordHash;
+        _encrytionToken = encrytionToken;
     }
 
     public async Task<LoginResultDto> ExecuteAsync(LoginDto request, CancellationToken cancellationToken)
@@ -38,13 +39,15 @@ public class LoginCommand
             // Generate token for the fake user
             var token = _tokenService.GenerateJWToken(fakeUser);
             var refreshToken = _tokenService.GenerateRefreshToken();
-
+            var encriptedPass = _encrytionToken.TokenEncrypt(request.UserName+"~"+ request.Password);
+           var de = _encrytionToken.TokenDecrypt(encriptedPass);
             return new LoginResultDto
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                 RefreshToken = refreshToken,
-                UserName = fakeUser.UserName,
+                UserName = fakeUser.Email,
                 UserID = "0",
+                token = encriptedPass,
             };
         }
 
@@ -69,13 +72,15 @@ public class LoginCommand
         // Generate JWT token
         var dbToken = _tokenService.GenerateJWToken(user);
         var dbRefreshToken = _tokenService.GenerateRefreshToken();
-
+        var dbencriptedPass = _encrytionToken.TokenEncrypt(request.Password + "~" + request.UserName);
+        var decryptedPass = _encrytionToken.TokenDecrypt(dbencriptedPass);
         return new LoginResultDto
         {
             AccessToken = new JwtSecurityTokenHandler().WriteToken(dbToken),
             RefreshToken = dbRefreshToken,
             UserName = user.UserName,
             UserID = user.UserID,
+            token = dbencriptedPass
         };
     }
 
