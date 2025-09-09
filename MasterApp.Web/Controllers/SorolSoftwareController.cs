@@ -2,6 +2,7 @@
 using MasterApp.Application.Setup.SlaveApp.BillingSoftware.NavSetting;
 using MasterApp.Application.Setup.SlaveApp.BillingSoftware.RoleManagement;
 using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
+using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.CompanySet;
 using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.NavSetting;
 using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.RoleManagement;
 using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.UserManagement;
@@ -16,7 +17,8 @@ namespace MasterApp.Web.Controllers;
 [Route("api/[controller]/[action]")]
 public class SorolSoftwareController(GetSorolNav _getNav, GetParentNavSorol getParentNavSorol, CreateNavSorol createNavSorol, UpdateSorolNavs updateSorolNavs,
     UpdateSorolSoftDatabaseNav updateSorolSoftDatabaseNav, CreateSorolRole createSorolRole, GetSorolRole getSorolRole, GetMenuRoleByIdSorol getMenuRoleByIdSorol
-    , UpdateMenuIdForRoelSorol updateMenuIdForRoelSorol, GetAllUserSorol getAllUserSorol, GetMenuByRoleSorol menuByRoleSorol, AssignUserMenuSorol assignUserMenuSorol) : ControllerBase
+    , UpdateMenuIdForRoelSorol updateMenuIdForRoelSorol, GetAllUserSorol getAllUserSorol, GetMenuByRoleSorol menuByRoleSorol, AssignUserMenuSorol assignUserMenuSorol,
+    GetCompanyInfo companyInfo) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> GetNav()
@@ -139,5 +141,14 @@ public class SorolSoftwareController(GetSorolNav _getNav, GetParentNavSorol getP
         return BadRequest(new { success = false, message = "Failed to update menu IDs." });
     }
 
+    [HttpPost]
+    public async Task<IActionResult> GetAllCompanyList()
+    {
+        var result = await companyInfo.GetAllCompanyList();
 
+        if (result == null)
+            return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
 }

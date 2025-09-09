@@ -5,8 +5,8 @@ using MasterApp.Application.SlaveDto.SorolSoftACMasterDB;
 
 namespace MasterApp.Application.Interface;
 
-public interface ISorolSoftUserCreate
+public interface IBillingSoftUserCreate
 {
-    Task<IResult> CreateUserSorol(SorolUserCreateDto dto, string token);
-    Task<string> getSorolToken(SorolTokenDto dto);
+    Task<IResult> CreateUserBilling(BillingUserCreateDto dto);
+    
 }

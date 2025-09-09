@@ -9,6 +9,7 @@ using MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBK
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.NavSettingCloudPosReportHerlanCheck;
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.RoleManagementCloudPosReportHerlanCheck;
 using MasterApp.Application.Setup.SlaveApp.CloudPosReportHerlanCheck.UserManagementCloudPosReportHerlanCheck;
+using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.CompanySet;
 using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.NavSetting;
 using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.RoleManagement;
 using MasterApp.Application.Setup.SlaveApp.SorolSoftwate.UserManagement;
@@ -89,6 +90,9 @@ public static class DependencyInjection
         services.AddScoped<ITokenEncryption, TokenEncryption>();
         services.AddScoped<IEncryption, EncryptionHelper>();
         services.AddScoped<IVatProSoftUserCreate, VatProSoftUserCreate>();
+        services.AddScoped<ISorolSoftUserCreate, SorolSoftUserCreate>();
+        services.AddScoped<IBillingSoftUserCreate, BillingSoftUserCreate>();
+        services.AddScoped<GetCompanyInfo>();
         //services.AddSingleton<IEncryption>(provider =>
         //{
         //    var config = provider.GetRequiredService<IConfiguration>();
