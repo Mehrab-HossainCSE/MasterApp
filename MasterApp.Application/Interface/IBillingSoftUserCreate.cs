@@ -8,5 +8,7 @@ namespace MasterApp.Application.Interface;
 public interface IBillingSoftUserCreate
 {
     Task<IResult> CreateUserBilling(BillingUserCreateDto dto);
-    
+    Task<Result<ApiResopnseBilling>> GetRoleBilling();
+
+
 }

@@ -1,4 +1,5 @@
-﻿using MasterApp.Application.Setup.SlaveApp.BillingSoftware.NavSetting;
+﻿using MasterApp.Application.Interface;
+using MasterApp.Application.Setup.SlaveApp.BillingSoftware.NavSetting;
 using MasterApp.Application.Setup.SlaveApp.BillingSoftware.RoleManagement;
 using MasterApp.Application.Setup.SlaveApp.BillingSoftware.UserManagement;
 using MasterApp.Application.SlaveDto;
@@ -19,7 +20,8 @@ public class BillingSoftwareController(
     UpdateRole updateRole,
     GetUser getUser,
     RoleWiseMenu roleWiseMenu,
-    UpdateUserRole updateUserRole
+    UpdateUserRole updateUserRole,
+    IBillingSoftUserCreate billingSoftUserCreate
     ) : ControllerBase
 {
     [HttpPost]
@@ -128,6 +130,13 @@ public class BillingSoftwareController(
     public async Task<IActionResult> UpdateUserRole([FromBody] UpdateRoleBillingDto dto)
     {
         var result = await updateUserRole.UpdateRoleAsync(dto);
+
+        return Ok(result);
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetRoleBilling()
+    {
+        var result = await billingSoftUserCreate.GetRoleBilling();
 
         return Ok(result);
     }

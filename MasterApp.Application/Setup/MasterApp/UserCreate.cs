@@ -51,9 +51,9 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
 
             // ✅ Step 4: Insert user
             var sql = @"INSERT INTO Users 
-                        (UserID, UserName, ShopID, EmployeeID, FullName, Email, DesignationID, MobileNo, Address, InActive, PasswordHash, PasswordSalt)
+                        (UserID, UserName, ShopID, EmployeeID, FullName, Email, DesignationID, MobileNo, Address, InActive, PasswordHash, PasswordSalt,PasswordEncrypted)
                         VALUES 
-                        (@UserID, @UserName, @ShopID, @EmployeeID, @FullName, @Email, @DesignationID, @MobileNo, @Address, @InActive, @PasswordHash, @PasswordSalt)";
+                        (@UserID, @UserName, @ShopID, @EmployeeID, @FullName, @Email, @DesignationID, @MobileNo, @Address, @InActive, @PasswordHash, @PasswordSalt,@PasswordEncrypted)";
 
             var parameters = new
             {
@@ -68,7 +68,8 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
                 userDto.Address,
                 InActive = userDto.InActive ?? false,
                 PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
+                PasswordSalt = passwordSalt,
+                userDto.PasswordEncrypted,
             };
 
             await connection.ExecuteAsync(sql, parameters);
@@ -78,6 +79,7 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
         catch (Exception ex)
         {
             return Result<string>.Fail("Error: " + ex.Message);
+            Console.WriteLine(ex.Message);
         }
     }
 }

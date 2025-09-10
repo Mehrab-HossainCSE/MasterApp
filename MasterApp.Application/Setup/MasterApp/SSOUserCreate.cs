@@ -4,6 +4,7 @@ using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
 using MasterApp.Application.SlaveDto;
 using MasterApp.Application.SlaveDto.SorolSoftACMasterDB;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel.Design;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -12,7 +13,7 @@ using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 namespace MasterApp.Application.Setup.MasterApp;
 
 public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnectionFactory _context, IEncryption encryption, UserCreate userCreate, ISorolSoftUserCreate 
-    sorolSoftUserCreate)
+    sorolSoftUserCreate,IBillingSoftUserCreate billingSoftUserCreate)
 {
     public async Task<IResult> Handle(SSOUserCreateDto request)
     {
@@ -98,9 +99,13 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                     }
                     else if (projectId == 25) // ✅ Local MasterAppDB user creation
                     {
-                        var dto = new UserCreateDto {
-                        UserName=request.userName,
-                            ShopID= request.shopID,
+
+                        var passwordEnc = encryption.Encrypt(request.password);
+                        var newa = passwordEnc;
+                        var dto = new UserCreateDto
+                        {
+                            UserName = request.userName,
+                            ShopID = request.shopID,
                             EmployeeID = request.employeeID,
                             FullName = request.fullName,
                             Email = request.email,
@@ -113,7 +118,8 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             UpdateDate = DateTime.Now,
                             InActive = false,
                             Password = request.password,
-                            ProjectListId = request.ProjectListId
+                            ProjectListId = request.ProjectListId,
+                            PasswordEncrypted = passwordEnc
                         };
 
                         var localResult = await userCreate.HandleAsync(dto);
@@ -161,6 +167,32 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         };
 
                     }
+                    else if (projectId==26)
+                    {
+                        var dto = new BillingUserCreateDto
+                        {
+                            Username = request.userName,
+                            FullName=request.fullName,
+                            PhoneNo = request.mobileNo,
+                            Password = request.password,
+                            RoleId=request.RoleIdBilling,
+                            IsActive=request.inActive.ToString(),
+                            ExpairsOn=request.ExpairsOn,
+                            IsMobileAppUser = request.IsMobileAppUser,
+                            IMEI = request.IMEI,
+                            PayrollUsername = request.userName,
+                        };
+
+                        var result = await billingSoftUserCreate.CreateUserBilling(dto);
+
+                        return new ProjectUserCreationResult
+                        {
+                            ProjectId = projectId,
+                            Success = result.Succeeded,
+                            Message = result.Messages.FirstOrDefault() ??
+                                      (result.Succeeded ? "User created successfully" : "Failed to create user")
+                        };
+                    }
                     else
                     {
                         return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Handler not implemented" };
@@ -178,6 +210,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             {
                 tasks.Add(Task.Run(async () =>
                 {
+                    var passwordEnc = encryption.Decrypt(request.password);
                     var dto = new UserCreateDto
                     {
                         UserName = request.userName,
@@ -194,7 +227,8 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         UpdateDate = DateTime.Now,
                         InActive = false,
                         Password = request.password,
-                        ProjectListId = request.ProjectListId
+                        ProjectListId = request.ProjectListId,
+                        PasswordEncrypted = passwordEnc
                     };
 
                     var localResult = await userCreate.HandleAsync(dto);

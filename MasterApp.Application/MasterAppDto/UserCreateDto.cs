@@ -21,6 +21,7 @@ public class UserCreateDto
     public string? Password { get; set; } 
     public string? PasswordHash { get; set; }
     public string? PasswordSalt { get; set; }
+    public string? PasswordEncrypted { get; set; }
     public string? ProjectListId { get; set; }
 }
 
