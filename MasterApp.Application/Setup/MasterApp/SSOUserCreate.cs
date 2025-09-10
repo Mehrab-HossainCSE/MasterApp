@@ -210,7 +210,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             {
                 tasks.Add(Task.Run(async () =>
                 {
-                    var passwordEnc = encryption.Decrypt(request.password);
+                    var passwordEnc = encryption.Encrypt(request.password);
                     var dto = new UserCreateDto
                     {
                         UserName = request.userName,
