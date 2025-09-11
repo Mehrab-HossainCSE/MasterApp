@@ -60,17 +60,17 @@ public class SorolSoftUserCreate:ISorolSoftUserCreate
             return Result.Fail("Invalid response from server");
         }
 
-        if (apiResponse.Status) // ✅ success regardless of message
+        if (apiResponse.status) // ✅ success regardless of message
         {
-            return Result.Success(string.IsNullOrWhiteSpace(apiResponse.Message)
+            return Result.Success(string.IsNullOrWhiteSpace(apiResponse.message)
                 ? "User created successfully"
-                : apiResponse.Message);
+                : apiResponse.message);
         }
 
         // ❌ failed case
-        return Result.Fail(string.IsNullOrWhiteSpace(apiResponse.Message)
+        return Result.Fail(string.IsNullOrWhiteSpace(apiResponse.message)
             ? "Failed to create user"
-            : apiResponse.Message);
+            : apiResponse.message);
     }
 
 

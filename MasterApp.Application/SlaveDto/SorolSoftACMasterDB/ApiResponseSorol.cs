@@ -7,6 +7,8 @@ public class ApiResponseSorol
 
 public class ApiResponseSorolCreateUser
 {
-    public bool Status { get; set; }
-    public string Message { get; set; }
+    public bool status { get; set; }
+    public int code { get; set; }
+    public string data { get; set; }
+    public string message { get; set; }
 }

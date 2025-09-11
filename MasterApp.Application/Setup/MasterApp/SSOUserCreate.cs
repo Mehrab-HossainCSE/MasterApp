@@ -27,30 +27,91 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
 
             using var connection = _context.CreateConnection("MasterAppDB");
 
-           
+            var query = "SELECT Id, UserName as Username, Password FROM ProjectList";
+            var allProjects = (await connection.QueryAsync<ProjectTokenDto>(query)).ToList();
 
 
-
-
-
-
+            var tokenDictionary = allProjects.ToDictionary(p => p.Id, p => p);
 
             // Run all project tasks in parallel
             var tasks = projectIds.Select(async projectId =>
             {
                 try
                 {
-                    if (projectId == 30) // Example project VatPro
+                  
+                    if (projectId == 1035)
+                      {
+                        if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
+                        {
+                            return new ProjectUserCreationResult
+                            {
+                                ProjectId = projectId,
+                                Success = false,
+                                Message = "Project config not found"
+                            };
+                        }
+                        var decryptedPassword = encryption.Decrypt(projectConfig.Password);
+                       
+
+                        var dtoToken = new SorolTokenDto
+                        {
+                            Username = projectConfig.Username,
+                            Password = decryptedPassword
+                        };
+
+                        if (dtoToken == null)
+                            return new ProjectUserCreationResult { ProjectId = projectId, Title= projectConfig.Title, Success = false, Message = "Project config not found" };
+
+                       
+
+                        var token = await sorolSoftUserCreate.getSorolToken(dtoToken);
+                        if (string.IsNullOrEmpty(token))
+                            return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Authentication failed / API unavailable" };
+
+                        var dto = new SorolUserCreateDto
+                        {
+                            Username = request.userName,
+                            Designation = request.RoleIdSorol,
+                            Password = request.password,
+                            CompanyId = request.companyIdSorol,
+                            Menulist = request.sorolMenuIdList,
+                        };
+
+                        var result = await sorolSoftUserCreate.CreateUserSorol(dto, token);
+
+                        return new ProjectUserCreationResult
+                        {
+                            ProjectId = projectId,
+                            Success = result.Succeeded,
+                            Message = result.Messages.FirstOrDefault() ??
+                                      (result.Succeeded ? "User created successfully" : "Failed to create user")
+                        };
+
+                    }
+
+
+                  else  if (projectId == 30) // Example project VatPro
                     {
-                        var projectsQuery = "SELECT UserName,Password FROM ProjectList WHERE Id=30";
-                        var projects = (await connection.QueryAsync<VatProTokenDto>(projectsQuery)).FirstOrDefault();
+                        if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
+                        {
+                            return new ProjectUserCreationResult
+                            {
+                                ProjectId = projectId,
+                                Success = false,
+                                Message = "Project config not found"
+                            };
+                        }
+                        var decryptedPassword = encryption.Decrypt(projectConfig.Password);
+                      
+                        var dtoToken = new VatProTokenDto
+                        {
+                            username = projectConfig.Username,
+                            password = decryptedPassword
+                        };
 
-                        if (projects == null)
-                            return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Project config not found" };
-
-                        var password = encryption.Decrypt(projects.password);
-                        var dtoToken = new VatProTokenDto { username = projects.username, password = password };
-
+                        if (dtoToken == null)
+                            return new ProjectUserCreationResult { ProjectId = projectId, Title = projectConfig.Title, Success = false, Message = "Project config not found" };
+                    
                         var token = await vatProSoftUserCreate.getVatProToken(dtoToken);
                         if (string.IsNullOrEmpty(token))
                             return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Authentication failed / API unavailable" };
@@ -99,7 +160,15 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                     }
                     else if (projectId == 25) // ✅ Local MasterAppDB user creation
                     {
-
+                        if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
+                        {
+                            return new ProjectUserCreationResult
+                            {
+                                ProjectId = projectId,
+                                Success = false,
+                                Message = "Project config not found"
+                            };
+                        }
                         var passwordEnc = encryption.Encrypt(request.password);
                         var newa = passwordEnc;
                         var dto = new UserCreateDto
@@ -126,49 +195,28 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
 
                         return new ProjectUserCreationResult
                         {
-                            ProjectId = projectId,
+                            ProjectId = projectId,                      
+                            Title = projectConfig.Title,
                             Success = localResult.Succeeded,
                             Message = localResult.Messages.FirstOrDefault() ??
                                       (localResult.Succeeded ? "User created in MasterAppDB successfully."
                                                              : "Failed to create user in MasterAppDB.")
                         };
                     }
-                    else if (projectId == 1035)
-                    {
-                        var projectsQuery = "SELECT UserName,Password FROM ProjectList WHERE Id=1035";
-                        var projects = (await connection.QueryAsync<SorolTokenDto>(projectsQuery)).FirstOrDefault();
-
-                        if (projects == null)
-                            return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Project config not found" };
-
-                        var password = encryption.Decrypt(projects.Password);
-                        var dtoToken = new SorolTokenDto { Username = projects.Username, Password = password };
-
-                        var token = await sorolSoftUserCreate.getSorolToken(dtoToken);
-                        if (string.IsNullOrEmpty(token))
-                            return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Authentication failed / API unavailable" };
-
-                        var dto = new SorolUserCreateDto
-                        {
-                            UserName=request.userName,
-                            Designation=request.designationID.ToString(),
-                            Password= request.password,
-                            CompanyId=request.companyCode,
-                        };
-
-                        var result = await sorolSoftUserCreate.CreateUserSorol(dto, token);
-
-                        return new ProjectUserCreationResult
-                        {
-                            ProjectId = projectId,
-                            Success = result.Succeeded,
-                            Message = result.Messages.FirstOrDefault() ??
-                                      (result.Succeeded ? "User created successfully" : "Failed to create user")
-                        };
-
-                    }
+                   
                     else if (projectId==26)
                     {
+
+                        if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
+                        {
+                            return new ProjectUserCreationResult
+                            {
+                                ProjectId = projectId,
+                                Success = false,
+                                Message = "Project config not found"
+                            };
+                        }
+
                         var dto = new BillingUserCreateDto
                         {
                             Username = request.userName,
@@ -187,7 +235,8 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
 
                         return new ProjectUserCreationResult
                         {
-                            ProjectId = projectId,
+                            ProjectId = projectId,                           
+                            Title = projectConfig.Title,
                             Success = result.Succeeded,
                             Message = result.Messages.FirstOrDefault() ??
                                       (result.Succeeded ? "User created successfully" : "Failed to create user")
@@ -207,7 +256,9 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             }).ToList();
 
             if (!projectIds.Contains(25))
-            {
+            {   
+
+
                 tasks.Add(Task.Run(async () =>
                 {
                     var passwordEnc = encryption.Encrypt(request.password);

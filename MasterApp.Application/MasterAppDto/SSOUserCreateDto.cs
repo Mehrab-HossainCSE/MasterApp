@@ -23,8 +23,9 @@ public class SSOUserCreateDto
     public string? type { get; set; } = "0";
     public string? NID { get; set; }
     public string? branch { get; set; }
-   
+    public string? sorolMenuIdList { get; set; }
     public string ? RoleIdBilling { get; set; }
     public string? companyIdSorol { get; set; }
     public string ProjectListId { get; set; }
+    public string RoleIdSorol { get; set; }
 }
