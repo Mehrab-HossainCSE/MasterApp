@@ -93,6 +93,9 @@ public static class DependencyInjection
         services.AddScoped<ISorolSoftUserCreate, SorolSoftUserCreate>();
         services.AddScoped<IBillingSoftUserCreate, BillingSoftUserCreate>();
         services.AddScoped<GetCompanyInfo>();
+        services.AddScoped<UpdateMasterUser>();
+        services.AddScoped<GetUserByUserName>();
+        services.AddScoped<SSOUserUpdate>();
         //services.AddSingleton<IEncryption>(provider =>
         //{
         //    var config = provider.GetRequiredService<IConfiguration>();

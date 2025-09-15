@@ -188,7 +188,18 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             InActive = false,
                             Password = request.password,
                             ProjectListId = request.ProjectListId,
-                            PasswordEncrypted = passwordEnc
+                            PasswordEncrypted = passwordEnc,
+                            RoleIdBilling= request.RoleIdBilling,
+                            ExpairsOnBilling=request.RoleIdBilling,
+                            IsMobileAppUserBilling = request.IsMobileAppUser,
+                            IMEIBilling=request.IMEI,
+                            RoleIdSorol = request.companyIdSorol,
+                            DES_IDVatPro=request.designationID.ToString(),
+                            RoleIdVatPro=request.RoleId,
+                            NIDVatPro=request.NID,
+                            BranchIDVatPro= request.branch,
+                            DesignationIDVatPro=request.designationID.ToString(),
+                            BranchVatPro=request.branch
                         };
 
                         var localResult = await userCreate.HandleAsync(dto);
@@ -279,7 +290,18 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         InActive = false,
                         Password = request.password,
                         ProjectListId = request.ProjectListId,
-                        PasswordEncrypted = passwordEnc
+                        PasswordEncrypted = passwordEnc,
+                        RoleIdBilling = request.RoleIdBilling,
+                        ExpairsOnBilling = request.RoleIdBilling,
+                        IsMobileAppUserBilling = request.IsMobileAppUser,
+                        IMEIBilling = request.IMEI,
+                        RoleIdSorol = request.companyIdSorol,
+                        DES_IDVatPro = request.designationID.ToString(),
+                        RoleIdVatPro = request.RoleId,
+                        NIDVatPro = request.NID,
+                        BranchIDVatPro = request.branch,
+                        DesignationIDVatPro = request.designationID.ToString(),
+                        BranchVatPro = request.branch
                     };
 
                     var localResult = await userCreate.HandleAsync(dto);

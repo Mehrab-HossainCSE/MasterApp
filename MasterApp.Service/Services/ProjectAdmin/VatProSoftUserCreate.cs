@@ -1,6 +1,7 @@
 ﻿using MasterApp.Application.Common.Models;
 using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
+using MasterApp.Application.Setup.MasterApp;
 using MasterApp.Application.SlaveDto;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
@@ -37,15 +38,7 @@ public class VatProSoftUserCreate : IVatProSoftUserCreate
 
         var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponseVatPro>();
 
-        //if (apiResponse == null)
-        //{
-        //    return Result.Fail("Invalid response from server");
-        //}
-
-        //return apiResponse.Status
-        //    ? Result.Success(apiResponse.Message ?? "User created successfully")
-        //    : Result.Fail(apiResponse.Message ?? "Failed to create user");
-
+       
         if (apiResponse == null)
         {
             return Result.Fail("Invalid response from server");
@@ -81,5 +74,52 @@ public class VatProSoftUserCreate : IVatProSoftUserCreate
             return "Invalid response from server";
         }
         return apiResponse.token;
+    }
+
+    public async Task<GetUserVatProDto> GetUserByUsername(string userName,string token)
+    {
+        var url = $"{_apiSettings.VatProBaseUrl}api/Setup/User_FindByUserId?username={userName}";
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        var response = await _httpClient.SendAsync(request);
+       return await response.Content.ReadFromJsonAsync<GetUserVatProDto>();
+    }
+    public async Task<IResult> UpdateUserVatPro(VatProUserUpdateDto dto, string token)
+    {
+        var url = $"{_apiSettings.VatProBaseUrl}api/Setup/User_Update";
+
+        // Attach Bearer token in the request headers
+        using var request = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.Fail($"API call failed: {response.StatusCode}");
+        }
+
+        var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponseVatPro>();
+
+
+        if (apiResponse == null)
+        {
+            return Result.Fail("Invalid response from server");
+        }
+
+        if (apiResponse.Status) // ✅ success regardless of message
+        {
+            return Result.Success(string.IsNullOrWhiteSpace(apiResponse.Message)
+                ? "User created successfully"
+                : apiResponse.Message);
+        }
+
+        // ❌ failed case
+        return Result.Fail(string.IsNullOrWhiteSpace(apiResponse.Message)
+            ? "Failed to create user"
+            : apiResponse.Message);
     }
 }

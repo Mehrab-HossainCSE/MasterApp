@@ -23,6 +23,19 @@ public class UserCreateDto
     public string? PasswordSalt { get; set; }
     public string? PasswordEncrypted { get; set; }
     public string? ProjectListId { get; set; }
+    public string? RoleIdBilling { get; set; }
+    public string? ExpairsOnBilling { get; set; }
+    public bool IsMobileAppUserBilling { get; set; }
+    public string? IMEIBilling { get; set; }
+    public string RoleIdSorol { get; set; }
+    public string? CompanyIdSorol { get; set; }
+    public string? DES_IDVatPro { get; set; }
+    public int RoleIdVatPro { get; set; }
+    public string? NIDVatPro { get; set; }
+    public string? BranchIDVatPro { get; set; }
+    public string? DesignationIDVatPro { get; set; } = "0";
+    public string? BranchVatPro { get; set; } = "0";
+    
 }
 
 public class ProjectUpdateDto

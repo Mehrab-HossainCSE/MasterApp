@@ -1,6 +1,9 @@
-﻿using MasterApp.Application.Common.Models;
+﻿using Azure;
+using Dapper;
+using MasterApp.Application.Common.Models;
 using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
+using MasterApp.Application.Setup.MasterApp;
 using MasterApp.Application.SlaveDto;
 using MasterApp.Application.SlaveDto.SorolSoftACMasterDB;
 using Microsoft.Extensions.Options;
@@ -20,11 +23,13 @@ public class SorolSoftUserCreate:ISorolSoftUserCreate
 {
     private readonly HttpClient _httpClient;
     private readonly ApiSettings _apiSettings;
+    private readonly IDbConnectionFactory _dbConnectionFactory;
 
-    public SorolSoftUserCreate(HttpClient httpClient, IOptions<ApiSettings> options)
+    public SorolSoftUserCreate(HttpClient httpClient, IOptions<ApiSettings> options, IDbConnectionFactory dbConnectionFactory)
     {
         _httpClient = httpClient;
         _apiSettings = options.Value;
+        _dbConnectionFactory = dbConnectionFactory;
     }
     public async Task<IResult> CreateUserSorol(SorolUserCreateDto dto, string token)
     {
@@ -46,14 +51,7 @@ public class SorolSoftUserCreate:ISorolSoftUserCreate
 
         var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponseSorolCreateUser>();
 
-        //if (apiResponse == null)
-        //{
-        //    return Result.Fail("Invalid response from server");
-        //}
-
-        //return apiResponse.Status
-        //    ? Result.Success(apiResponse.Message ?? "User created successfully")
-        //    : Result.Fail(apiResponse.Message ?? "Failed to create user");
+        
 
         if (apiResponse == null)
         {
@@ -114,5 +112,57 @@ public class SorolSoftUserCreate:ISorolSoftUserCreate
         return apiResponse?.token ?? "Invalid response from server";
     }
 
+    public async Task<IResult> UpdateUserSorol(SorolUserUpdateDto dto, string token)
+    {
+        var url = $"{_apiSettings.SorolBaseUrl}api/UserRegistratoin";
 
+        // Attach Bearer token in the request headers
+        using var request = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.Fail($"API call failed: {response.StatusCode}");
+        }
+
+        var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponseSorolCreateUser>();
+
+
+
+        if (apiResponse == null)
+        {
+            return Result.Fail("Invalid response from server");
+        }
+
+        if (apiResponse.status) // ✅ success regardless of message
+        {
+            return Result.Success(string.IsNullOrWhiteSpace(apiResponse.message)
+                ? "User created successfully"
+                : apiResponse.message);
+        }
+
+        // ❌ failed case
+        return Result.Fail(string.IsNullOrWhiteSpace(apiResponse.message)
+            ? "Failed to create user"
+            : apiResponse.message);
+    }
+
+
+    public async Task<GetAllUserSorolDto?> GetUserByUsername(string userName)
+    {
+        using var connection = _dbConnectionFactory.CreateConnection("SorolSoftACMasterDB");
+
+        var sql = @"SELECT u.UserId, u.UserName, u.Designation, u.CompanyId ,UM.MenuIdList 
+                FROM [AC_Users]  as u join  AC_UserMenu as UM on u.UserId =UM.UserId
+                WHERE UserName = @UserName";
+
+        return await connection.QueryFirstOrDefaultAsync<GetAllUserSorolDto>(sql, new { UserName = userName });
+    }
+
+   
 }

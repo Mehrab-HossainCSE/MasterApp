@@ -7,20 +7,45 @@ namespace MasterApp.Application.Setup.MasterApp;
 
 public class GetAllUser(IDbConnectionFactory _dbConnectionFactory)
 {
-    public async Task<Result<List<UserCreateDto>>> HandleAsync()
+    public async Task<Result<List<GetUseDto>>> HandleAsync()
     {
         try
         {  
 
             using var connection = _dbConnectionFactory.CreateConnection("MasterAppDB");
-            var sql = "SELECT UserID, UserName, EmployeeID, ShopID, FullName, Email,DesignationID,MobileNo,Address  FROM Users";
-            var users = await connection.QueryAsync<UserCreateDto>(sql);
-            return Result<List<UserCreateDto>>.Success(users.ToList());
+            var sql = @"
+                    SELECT 
+                       UserID,
+                       UserName,
+                       EmployeeID,
+                       ShopID,
+                       FullName,
+                       Email,
+                       CAST(NULLIF(DesignationID, '') AS INT) as DesignationID,
+                       MobileNo,
+                       Address,
+                       InActive,
+                       ProjectListId,
+                       RoleIdBilling,
+                       ExpairsOnBilling as ExpairsOn,
+                       IsMobileAppUserBilling as IsMobileAppUser,
+                       IMEIBilling as IMEI,
+                       RoleIdSorol,
+                       CompanyIdSorol,
+                       DES_IDVatPro,
+                       RoleIdVatPro as RoleId,
+                       NIDVatPro as NID,
+                       BranchIDVatPro as branch,
+                       DesignationIDVatPro,
+                       BranchVatPro as branch
+                    FROM Users";
+            var users = await connection.QueryAsync<GetUseDto>(sql);
+            return Result<List<GetUseDto>>.Success(users.ToList());
         }
         catch (Exception ex)
         {
             // Log the exception or handle it as needed
-            return Result<List<UserCreateDto>>.Fail("Error: " + ex.Message);
+            return Result<List<GetUseDto>>.Fail("Error: " + ex.Message);
         }
     }
 }

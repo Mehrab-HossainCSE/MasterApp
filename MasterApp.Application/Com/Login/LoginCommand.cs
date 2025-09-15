@@ -54,11 +54,11 @@ public class LoginCommand
         // ---- Normal DB login process ----
         using var connection = _context.CreateConnection("MasterAppDB");
 
-        const string sql = @"SELECT TOP 1 * FROM Users WHERE Email = @Email";
+        const string sql = @"SELECT TOP 1 * FROM Users WHERE UserName = @UserName";
 
         var user = await connection.QuerySingleOrDefaultAsync<UserDto>(
             sql,
-            new { Email = request.UserName }
+            new { UserName = request.UserName }
         );
 
         if (user == null)
@@ -72,7 +72,7 @@ public class LoginCommand
         // Generate JWT token
         var dbToken = _tokenService.GenerateJWToken(user);
         var dbRefreshToken = _tokenService.GenerateRefreshToken();
-        var dbencriptedPass = _encrytionToken.TokenEncrypt(request.Password + "~" + request.UserName);
+        var dbencriptedPass = _encrytionToken.TokenEncrypt(user.UserName + "~" + request.Password);
         var decryptedPass = _encrytionToken.TokenDecrypt(dbencriptedPass);
         return new LoginResultDto
         {

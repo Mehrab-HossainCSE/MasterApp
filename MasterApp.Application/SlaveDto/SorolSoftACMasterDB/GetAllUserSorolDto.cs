@@ -21,5 +21,6 @@ namespace MasterApp.Application.SlaveDto.SorolSoftACMasterDB
         public string Designation { get; set; }
         [JsonPropertyName("CompanyId")]
         public string CompanyId { get; set; }
+      
     }
 }

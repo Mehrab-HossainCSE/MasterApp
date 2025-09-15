@@ -13,10 +13,8 @@ public class TokenEncryption : ITokenEncryption
     public TokenEncryption(IOptions<ApiSettingsEncryption> options)
     {
         var key = options.Value.Key;  // read from appsettings.json via IOptions
-
         if (string.IsNullOrWhiteSpace(key) || (key.Length != 16 && key.Length != 24 && key.Length != 32))
             throw new ArgumentException("Key must be 16, 24, or 32 characters long.");
-
         _key = key;
     }
 
@@ -30,15 +28,9 @@ public class TokenEncryption : ITokenEncryption
         if (parts.Length != 2)
             throw new ArgumentException("Plain text must contain username and password separated by '~'.");
 
-        string username = parts[0];
-        string password = parts[1];
-
-        // Encrypt username and password separately
-        string encryptedUsername = EncryptString(username);
-        string encryptedPassword = EncryptString(password);
-
-        // Combine with ~ separator
-        return encryptedUsername + "~" + encryptedPassword;
+        // Combine username and password with ~ separator, then encrypt the whole string
+        string combinedText = parts[0] + "~" + parts[1];
+        return EncryptString(combinedText);
     }
 
     public string TokenDecrypt(string cipherText)
@@ -46,25 +38,13 @@ public class TokenEncryption : ITokenEncryption
         if (string.IsNullOrWhiteSpace(cipherText))
             throw new ArgumentException("Cipher text cannot be null or empty.");
 
-        // Split the cipherText by ~ to get encrypted username and password
-        var parts = cipherText.Split('~');
-        if (parts.Length != 2)
-            throw new ArgumentException("Cipher text must contain encrypted username and password separated by '~'.");
-
-        string encryptedUsername = parts[0];
-        string encryptedPassword = parts[1];
-
-        // Decrypt username and password separately
-        string username = DecryptString(encryptedUsername);
-        string password = DecryptString(encryptedPassword);
-
-        // Combine with ~ separator
-        return username + "~" + password;
+        // Decrypt the whole string, which should contain username~password
+        return DecryptString(cipherText);
     }
 
     private string EncryptString(string plainText)
     {
-        using (var aes = Aes.Create())
+        using (var aes = new AesCryptoServiceProvider()) // .NET 4.5 compatible
         {
             aes.Key = Encoding.UTF8.GetBytes(_key);
             aes.GenerateIV();
@@ -72,6 +52,7 @@ public class TokenEncryption : ITokenEncryption
             using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
             using (var ms = new MemoryStream())
             {
+                // Write IV to the beginning of the stream
                 ms.Write(aes.IV, 0, aes.IV.Length);
 
                 using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
@@ -79,24 +60,28 @@ public class TokenEncryption : ITokenEncryption
                 {
                     sw.Write(plainText);
                 }
-
-                return Convert.ToBase64String(ms.ToArray());
+                // Convert to URL-safe Base64
+                return ToUrlSafeBase64(ms.ToArray());
             }
         }
     }
 
     private string DecryptString(string cipherText)
     {
-        var fullCipher = Convert.FromBase64String(cipherText);
+        // Convert from URL-safe Base64 back to regular Base64
+        var fullCipher = FromUrlSafeBase64(cipherText);
 
-        using (var aes = Aes.Create())
+        using (var aes = new AesCryptoServiceProvider()) // .NET 4.5 compatible
         {
             aes.Key = Encoding.UTF8.GetBytes(_key);
+
+            // Extract IV from the beginning of the cipher
             byte[] iv = new byte[aes.BlockSize / 8];
             byte[] cipher = new byte[fullCipher.Length - iv.Length];
 
             Array.Copy(fullCipher, iv, iv.Length);
             Array.Copy(fullCipher, iv.Length, cipher, 0, cipher.Length);
+
             aes.IV = iv;
 
             using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
@@ -107,5 +92,31 @@ public class TokenEncryption : ITokenEncryption
                 return sr.ReadToEnd();
             }
         }
+    }
+
+    // Convert regular Base64 to URL-safe Base64
+    private string ToUrlSafeBase64(byte[] data)
+    {
+        return Convert.ToBase64String(data)
+            .Replace('+', '-')
+            .Replace('/', '_')
+            .Replace("=", ""); // Remove padding
+    }
+
+    // Convert URL-safe Base64 back to regular Base64
+    private byte[] FromUrlSafeBase64(string urlSafeBase64)
+    {
+        string base64 = urlSafeBase64
+            .Replace('-', '+')
+            .Replace('_', '/');
+
+        // Add padding if necessary
+        switch (base64.Length % 4)
+        {
+            case 2: base64 += "=="; break;
+            case 3: base64 += "="; break;
+        }
+
+        return Convert.FromBase64String(base64);
     }
 }

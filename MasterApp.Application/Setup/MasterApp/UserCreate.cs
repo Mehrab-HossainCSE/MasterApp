@@ -51,9 +51,9 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
 
             // ✅ Step 4: Insert user
             var sql = @"INSERT INTO Users 
-                        (UserID, UserName, ShopID, EmployeeID, FullName, Email, DesignationID, MobileNo, Address, InActive, PasswordHash, PasswordSalt,PasswordEncrypted)
+                        (UserID, UserName, ShopID, EmployeeID, FullName, Email, DesignationID, MobileNo, Address, InActive, PasswordHash, PasswordSalt,PasswordEncrypted,ProjectListId,RoleIdBilling,ExpairsOnBilling,IsMobileAppUserBilling,IMEIBilling,PayrollUsernameBilling,RoleIdSorol,CompanyIdSorol,DES_IDVatPro,RoleIdVatPro,NIDVatPro,BranchIDVatPro,DesignationIDVatPro,BranchVatPro)
                         VALUES 
-                        (@UserID, @UserName, @ShopID, @EmployeeID, @FullName, @Email, @DesignationID, @MobileNo, @Address, @InActive, @PasswordHash, @PasswordSalt,@PasswordEncrypted)";
+                        (@UserID, @UserName, @ShopID, @EmployeeID, @FullName, @Email, @DesignationID, @MobileNo, @Address, @InActive, @PasswordHash, @PasswordSalt,@PasswordEncrypted,@ProjectListId,@RoleIdBilling,@ExpairsOnBilling,@IsMobileAppUserBilling,@IMEIBilling,@PayrollUsernameBilling,@RoleIdSorol,@CompanyIdSorol,@DES_IDVatPro,@RoleIdVatPro,@NIDVatPro,@BranchIDVatPro,@DesignationIDVatPro,@BranchVatPro)";
 
             var parameters = new
             {
@@ -70,6 +70,21 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 userDto.PasswordEncrypted,
+                userDto.ProjectListId,
+                userDto.RoleIdBilling,
+
+                userDto.ExpairsOnBilling,
+                userDto.IsMobileAppUserBilling,
+                userDto.IMEIBilling,
+
+                userDto.RoleIdSorol,
+                userDto.CompanyIdSorol,
+                userDto.DES_IDVatPro,
+                userDto.RoleIdVatPro,
+                userDto.NIDVatPro,
+                userDto.BranchIDVatPro,
+                userDto.DesignationIDVatPro,
+                userDto.BranchVatPro,
             };
 
             await connection.ExecuteAsync(sql, parameters);

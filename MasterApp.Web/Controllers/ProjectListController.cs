@@ -28,10 +28,11 @@ public class ProjectListController : ControllerBase
     private readonly UserProjectPermission _userProjectPermission;
     private readonly UpdateUserInfo _updateUserInfo;
     private readonly SSOUserCreate _ssoUserCreate;
+    private readonly SSOUserUpdate _ssoUserUpdate;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
         LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, 
-        GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate)
+        GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate, SSOUserUpdate sSOUserUpdate)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -45,6 +46,7 @@ public class ProjectListController : ControllerBase
         _userProjectPermission = userProjectPermission;
         _updateUserInfo = updateUserInfo;
         _ssoUserCreate = ssoUserCreate;
+        _ssoUserUpdate = sSOUserUpdate;
 
     }
     [HttpGet]
@@ -226,5 +228,12 @@ public class ProjectListController : ControllerBase
         return Ok(result);
     }
 
+
+    [HttpPost]
+    public async Task<IActionResult> SSOUserUpdate([FromBody] SSOUserUpdateDto model, CancellationToken cancellationToken)
+    {
+        var result = await _ssoUserUpdate.Handle(model);
+        return Ok(result);
+    }
 
 }
