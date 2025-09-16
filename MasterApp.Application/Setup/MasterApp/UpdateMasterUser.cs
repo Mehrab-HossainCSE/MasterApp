@@ -28,11 +28,13 @@ public class UpdateMasterUser(IPasswordHash _passwordHash, IDbConnectionFactory 
             var updatedUser = new UserCreateDto
             {
                 UserName = existingUser.UserName, // cannot change username
-                ShopID = string.IsNullOrEmpty(userDto.ShopID) ? existingUser.ShopID : userDto.ShopID,
-                EmployeeID = string.IsNullOrEmpty(userDto.EmployeeID) ? existingUser.EmployeeID : userDto.EmployeeID,
+                
                 FullName = string.IsNullOrEmpty(userDto.FullName) ? existingUser.FullName : userDto.FullName,
                 Email = string.IsNullOrEmpty(userDto.Email) ? existingUser.Email : userDto.Email,
-                DesignationID = string.IsNullOrEmpty(userDto.DesignationID) ? existingUser.DesignationID : userDto.DesignationID,
+                DesignationID = userDto?.DesignationID.HasValue == true
+                                ? userDto.DesignationID.Value
+                                : existingUser.DesignationID,
+
                 MobileNo = string.IsNullOrEmpty(userDto.MobileNo) ? existingUser.MobileNo : userDto.MobileNo,
                 Address = string.IsNullOrEmpty(userDto.Address) ? existingUser.Address : userDto.Address,
                 InActive = userDto.InActive ?? existingUser.InActive,
@@ -53,8 +55,7 @@ public class UpdateMasterUser(IPasswordHash _passwordHash, IDbConnectionFactory 
 
             // ✅ Step 4: Update user record
             var sql = @"UPDATE Users 
-                        SET ShopID = @ShopID, 
-                            EmployeeID = @EmployeeID, 
+                        SET  
                             FullName = @FullName, 
                             Email = @Email, 
                             DesignationID = @DesignationID, 
@@ -71,8 +72,7 @@ public class UpdateMasterUser(IPasswordHash _passwordHash, IDbConnectionFactory 
             await connection.ExecuteAsync(sql, new
             {
                 updatedUser.UserName,
-                updatedUser.ShopID,
-                updatedUser.EmployeeID,
+               
                 updatedUser.FullName,
                 updatedUser.Email,
                 updatedUser.DesignationID,

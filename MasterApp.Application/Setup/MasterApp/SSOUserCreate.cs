@@ -6,14 +6,16 @@ using MasterApp.Application.SlaveDto;
 using MasterApp.Application.SlaveDto.SorolSoftACMasterDB;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel.Design;
+using System.Numerics;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Xml.Linq;
 using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace MasterApp.Application.Setup.MasterApp;
 
 public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnectionFactory _context, IEncryption encryption, UserCreate userCreate, ISorolSoftUserCreate 
-    sorolSoftUserCreate,IBillingSoftUserCreate billingSoftUserCreate)
+    sorolSoftUserCreate,IBillingSoftUserCreate billingSoftUserCreate, ICloudePosUserCreate cloudePosUserCreate)
 {
     public async Task<IResult> Handle(SSOUserCreateDto request)
     {
@@ -89,8 +91,60 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
 
                     }
 
+                  else  if (projectId == 16)
+                    {
+                        if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
+                        {
+                            return new ProjectUserCreationResult
+                            {
+                                ProjectId = projectId,
+                                Success = false,
+                                Message = "Project config not found"
+                            };
+                        }
+                        var decryptedPassword = encryption.Decrypt(projectConfig.Password);
 
-                  else  if (projectId == 30) // Example project VatPro
+
+                        var dtoToken = new CloudPosApiKeyDto
+                        {
+                            username = projectConfig.Username,
+                            password = decryptedPassword
+                        };
+
+                        if (dtoToken == null)
+                            return new ProjectUserCreationResult { ProjectId = projectId, Title = projectConfig.Title, Success = false, Message = "Project config not found" };
+
+
+
+                        var apiKey = await cloudePosUserCreate.GetCloudePosApiKey(dtoToken);
+                        if (string.IsNullOrEmpty(apiKey))
+                            return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Authentication failed / API unavailable" };
+
+                        var dto = new CloudPosUserDto
+                        {
+                            UserName = request.userName,
+                            Name=request.fullName,
+                            name=request.fullName ,
+                            Phone=request.mobileNo,
+                            Address = request.address,
+                            City=request.City,
+                            Password= request.password
+                        };
+
+                        var result = await cloudePosUserCreate.CreateUserCloudePos(dto, apiKey);
+
+                        return new ProjectUserCreationResult
+                        {
+                            ProjectId = projectId,
+                            Success = result.Succeeded,
+                            Message = result.Messages.FirstOrDefault() ??
+                                      (result.Succeeded ? "User created successfully" : "Failed to create user")
+                        };
+
+                    }
+
+
+                    else  if (projectId == 30) // Example project VatPro
                     {
                         if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
                         {
@@ -174,11 +228,10 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         var dto = new UserCreateDto
                         {
                             UserName = request.userName,
-                            ShopID = request.shopID,
-                            EmployeeID = request.employeeID,
+                           
                             FullName = request.fullName,
                             Email = request.email,
-                            DesignationID = request.designationID.ToString(),
+                            DesignationID = request.designationID,
                             MobileNo = request.mobileNo,
                             Address = request.address,
                             CreateBy = "Admin",
@@ -194,11 +247,11 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             IsMobileAppUserBilling = request.IsMobileAppUser,
                             IMEIBilling=request.IMEI,
                             RoleIdSorol = request.companyIdSorol,
-                            DES_IDVatPro=request.designationID.ToString(),
+                            DES_IDVatPro=request.designationID,
                             RoleIdVatPro=request.RoleId,
                             NIDVatPro=request.NID,
                             BranchIDVatPro= request.branch,
-                            DesignationIDVatPro=request.designationID.ToString(),
+                           
                             BranchVatPro=request.branch
                         };
 
@@ -276,11 +329,10 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                     var dto = new UserCreateDto
                     {
                         UserName = request.userName,
-                        ShopID = request.shopID,
-                        EmployeeID = request.employeeID,
+                       
                         FullName = request.fullName,
                         Email = request.email,
-                        DesignationID = request.designationID.ToString(),
+                        DesignationID = request.designationID,
                         MobileNo = request.mobileNo,
                         Address = request.address,
                         CreateBy = "Admin",
@@ -296,11 +348,11 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         IsMobileAppUserBilling = request.IsMobileAppUser,
                         IMEIBilling = request.IMEI,
                         RoleIdSorol = request.companyIdSorol,
-                        DES_IDVatPro = request.designationID.ToString(),
+                        DES_IDVatPro = request.designationID,
                         RoleIdVatPro = request.RoleId,
                         NIDVatPro = request.NID,
                         BranchIDVatPro = request.branch,
-                        DesignationIDVatPro = request.designationID.ToString(),
+                       
                         BranchVatPro = request.branch
                     };
 

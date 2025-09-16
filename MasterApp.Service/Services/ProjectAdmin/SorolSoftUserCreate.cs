@@ -1,25 +1,15 @@
-﻿using Azure;
-using Dapper;
+﻿using Dapper;
 using MasterApp.Application.Common.Models;
 using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
-using MasterApp.Application.Setup.MasterApp;
-using MasterApp.Application.SlaveDto;
 using MasterApp.Application.SlaveDto.SorolSoftACMasterDB;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MasterApp.Service.Services.ProjectAdmin;
 
-public class SorolSoftUserCreate:ISorolSoftUserCreate
+public class SorolSoftUserCreate : ISorolSoftUserCreate
 {
     private readonly HttpClient _httpClient;
     private readonly ApiSettings _apiSettings;
@@ -51,7 +41,7 @@ public class SorolSoftUserCreate:ISorolSoftUserCreate
 
         var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponseSorolCreateUser>();
 
-        
+
 
         if (apiResponse == null)
         {
@@ -114,7 +104,7 @@ public class SorolSoftUserCreate:ISorolSoftUserCreate
 
     public async Task<IResult> UpdateUserSorol(SorolUserUpdateDto dto, string token)
     {
-        var url = $"{_apiSettings.SorolBaseUrl}api/UserRegistratoin";
+        var url = $"{_apiSettings.SorolBaseUrl}api/UpdateRegistratoin";
 
         // Attach Bearer token in the request headers
         using var request = new HttpRequestMessage(HttpMethod.Post, url)
@@ -164,5 +154,5 @@ public class SorolSoftUserCreate:ISorolSoftUserCreate
         return await connection.QueryFirstOrDefaultAsync<GetAllUserSorolDto>(sql, new { UserName = userName });
     }
 
-   
+
 }

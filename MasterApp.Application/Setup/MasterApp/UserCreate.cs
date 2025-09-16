@@ -51,16 +51,15 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
 
             // ✅ Step 4: Insert user
             var sql = @"INSERT INTO Users 
-                        (UserID, UserName, ShopID, EmployeeID, FullName, Email, DesignationID, MobileNo, Address, InActive, PasswordHash, PasswordSalt,PasswordEncrypted,ProjectListId,RoleIdBilling,ExpairsOnBilling,IsMobileAppUserBilling,IMEIBilling,PayrollUsernameBilling,RoleIdSorol,CompanyIdSorol,DES_IDVatPro,RoleIdVatPro,NIDVatPro,BranchIDVatPro,DesignationIDVatPro,BranchVatPro)
+                        (UserID, UserName,  FullName, Email, DesignationID, MobileNo, Address, InActive, PasswordHash, PasswordSalt,PasswordEncrypted,ProjectListId,RoleIdBilling,ExpairsOnBilling,IsMobileAppUserBilling,IMEIBilling,RoleIdSorol,CompanyIdSorol,DES_IDVatPro,RoleIdVatPro,NIDVatPro,BranchIDVatPro,BranchVatPro)
                         VALUES 
-                        (@UserID, @UserName, @ShopID, @EmployeeID, @FullName, @Email, @DesignationID, @MobileNo, @Address, @InActive, @PasswordHash, @PasswordSalt,@PasswordEncrypted,@ProjectListId,@RoleIdBilling,@ExpairsOnBilling,@IsMobileAppUserBilling,@IMEIBilling,@PayrollUsernameBilling,@RoleIdSorol,@CompanyIdSorol,@DES_IDVatPro,@RoleIdVatPro,@NIDVatPro,@BranchIDVatPro,@DesignationIDVatPro,@BranchVatPro)";
+                        (@UserID, @UserName,  @FullName, @Email, @DesignationID, @MobileNo, @Address, @InActive, @PasswordHash, @PasswordSalt,@PasswordEncrypted,@ProjectListId,@RoleIdBilling,@ExpairsOnBilling,@IsMobileAppUserBilling,@IMEIBilling,@RoleIdSorol,@CompanyIdSorol,@DES_IDVatPro,@RoleIdVatPro,@NIDVatPro,@BranchIDVatPro,@BranchVatPro)";
 
             var parameters = new
             {
                 UserID = maxUserId,  // ✅ auto-generated ID
                 userDto.UserName,
-                userDto.ShopID,
-                userDto.EmployeeID,
+               
                 userDto.FullName,
                 userDto.Email,
                 userDto.DesignationID,
@@ -83,7 +82,7 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
                 userDto.RoleIdVatPro,
                 userDto.NIDVatPro,
                 userDto.BranchIDVatPro,
-                userDto.DesignationIDVatPro,
+              
                 userDto.BranchVatPro,
             };
 

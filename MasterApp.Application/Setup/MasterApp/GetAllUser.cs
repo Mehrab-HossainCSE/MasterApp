@@ -36,7 +36,7 @@ public class GetAllUser(IDbConnectionFactory _dbConnectionFactory)
                        RoleIdVatPro as RoleId,
                        NIDVatPro as NID,
                        BranchIDVatPro as branch,
-                       DesignationIDVatPro,
+                       
                        BranchVatPro as branch
                     FROM Users";
             var users = await connection.QueryAsync<GetUseDto>(sql);

@@ -9,6 +9,7 @@ namespace MasterApp.Service.Services;
 public class TokenEncryption : ITokenEncryption
 {
     private readonly string _key;
+    private readonly int _expirationHours;
 
     public TokenEncryption(IOptions<ApiSettingsEncryption> options)
     {
@@ -16,6 +17,7 @@ public class TokenEncryption : ITokenEncryption
         if (string.IsNullOrWhiteSpace(key) || (key.Length != 16 && key.Length != 24 && key.Length != 32))
             throw new ArgumentException("Key must be 16, 24, or 32 characters long.");
         _key = key;
+        _expirationHours = 1; // Token expires in 1 hour
     }
 
     public string TokenEncrypt(string plainText)
@@ -28,8 +30,16 @@ public class TokenEncryption : ITokenEncryption
         if (parts.Length != 2)
             throw new ArgumentException("Plain text must contain username and password separated by '~'.");
 
-        // Combine username and password with ~ separator, then encrypt the whole string
-        string combinedText = parts[0] + "~" + parts[1];
+        // Get current datetime and expiration datetime in UTC
+        DateTime createdTime = DateTime.UtcNow;
+        DateTime expirationTime = createdTime.AddHours(_expirationHours);
+
+        // Format expiration timestamp in ISO 8601 format (URL-safe)
+        string expirationTimeStr = expirationTime.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+
+        // Combine username, password, and expiration time with ~ separator
+        string combinedText = $"{parts[0]}~{parts[1]}~{expirationTimeStr}";
+
         return EncryptString(combinedText);
     }
 
@@ -38,9 +48,36 @@ public class TokenEncryption : ITokenEncryption
         if (string.IsNullOrWhiteSpace(cipherText))
             throw new ArgumentException("Cipher text cannot be null or empty.");
 
-        // Decrypt the whole string, which should contain username~password
+        // Decrypt the whole string, which should contain username~password~expirationTime
         return DecryptString(cipherText);
     }
+
+    public bool IsTokenValid(string cipherText)
+    {
+        try
+        {
+            string decryptedText = TokenDecrypt(cipherText);
+            var parts = decryptedText.Split('~');
+
+            if (parts.Length != 3)
+                return false;
+
+            // Parse expiration time (now at index 2)
+            if (DateTime.TryParse(parts[2], out DateTime expirationTime))
+            {
+                // Check if token has expired (compare with UTC)
+                return DateTime.UtcNow < expirationTime;
+            }
+
+            return false;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+  
 
     private string EncryptString(string plainText)
     {

@@ -5,6 +5,7 @@
     public string VatProBaseUrl { get; set; }
     public string SorolBaseUrl { get; set; }
     public string BillingBaseUrl { get; set; }
+    public string CloudPosBaseUrl { get; set; }
 }
 
 public class ApiSettingsEncryption

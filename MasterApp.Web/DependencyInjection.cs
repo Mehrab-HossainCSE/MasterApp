@@ -92,6 +92,7 @@ public static class DependencyInjection
         services.AddScoped<IVatProSoftUserCreate, VatProSoftUserCreate>();
         services.AddScoped<ISorolSoftUserCreate, SorolSoftUserCreate>();
         services.AddScoped<IBillingSoftUserCreate, BillingSoftUserCreate>();
+        services.AddScoped<ICloudePosUserCreate, CloudePosUserCreate>();
         services.AddScoped<GetCompanyInfo>();
         services.AddScoped<UpdateMasterUser>();
         services.AddScoped<GetUserByUserName>();

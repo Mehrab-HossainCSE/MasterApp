@@ -44,8 +44,7 @@ public class UpdateUserInfo(IDbConnectionFactory dbConncetionFactory)
         {
             query = @"
                 UPDATE Users
-                SET UserName = @UserName,
-                    ShopID = @ShopID,
+                SET 
                     EmployeeID = @EmployeeID,
                     FullName = @FullName,
                     Email = @Email,
@@ -63,8 +62,7 @@ public class UpdateUserInfo(IDbConnectionFactory dbConncetionFactory)
         {
             userDto.UserID,
             userDto.UserName,
-            userDto.ShopID,
-            userDto.EmployeeID,
+           
             userDto.FullName,
             userDto.Email,
             userDto.DesignationID,

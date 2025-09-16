@@ -332,11 +332,10 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             var createDto = new UserCreateDto
             {
                 UserName = request.userName,
-                ShopID = request.shopID,
-                EmployeeID = request.employeeID,
+               
                 FullName = request.fullName,
                 Email = request.email,
-                DesignationID = request.designationID.ToString(),
+                DesignationID = request.designationID,
                 MobileNo = request.mobileNo,
                 Address = request.address,
                 CreateBy = "Admin",
@@ -365,11 +364,10 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             var updateDto = new UserUpdateDto
             {
                 UserName = request.userName,
-                ShopID = request.shopID ?? existingUser.ShopID,
-                EmployeeID = request.employeeID ?? existingUser.EmployeeID,
+             
                 FullName = !string.IsNullOrEmpty(request.fullName) ? request.fullName : existingUser.FullName,
                 Email = !string.IsNullOrEmpty(request.email) ? request.email : existingUser.Email,
-                DesignationID = (request.designationID.ToString() ?? existingUser.DesignationID),
+                DesignationID = (request.designationID ?? existingUser?.DesignationID),
                 MobileNo = !string.IsNullOrEmpty(request.mobileNo) ? request.mobileNo : existingUser.MobileNo,
                 Address = !string.IsNullOrEmpty(request.address) ? request.address : existingUser.Address,
                 UpdateBy = "Admin",

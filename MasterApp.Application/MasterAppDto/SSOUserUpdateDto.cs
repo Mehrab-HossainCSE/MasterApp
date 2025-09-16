@@ -64,7 +64,7 @@ public class UserUpdateDto
     public string? EmployeeID { get; set; }
     public string FullName { get; set; }
     public string Email { get; set; }
-    public string DesignationID { get; set; }
+    public int? DesignationID { get; set; }
     public string MobileNo { get; set; }
     public string Address { get; set; }
     public bool? InActive { get; set; }

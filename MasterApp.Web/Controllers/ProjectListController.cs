@@ -141,7 +141,7 @@ public class ProjectListController : ControllerBase
                 WebRootPath = _webHostEnvironment.WebRootPath,
                 IsActive = dto.IsActive,
                 UserName = dto.UserName,
-                Password = dto.Password
+                Password = dto?.Password
             };
 
             // Execute command

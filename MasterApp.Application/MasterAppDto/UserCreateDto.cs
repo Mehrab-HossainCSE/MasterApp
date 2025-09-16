@@ -6,11 +6,10 @@ public class UserCreateDto
 {
     public string? UserID { get; set; }
     public string? UserName { get; set; }
-    public string? ShopID { get; set; }
-    public string? EmployeeID { get; set; }
+   
     public string? FullName { get; set; }
     public string? Email { get; set; }
-    public string? DesignationID { get; set; }
+    public int? DesignationID { get; set; }
     public string? MobileNo { get; set; }
     public string? Address { get; set; }
     public string? CreateBy { get; set; }
@@ -29,11 +28,11 @@ public class UserCreateDto
     public string? IMEIBilling { get; set; }
     public string RoleIdSorol { get; set; }
     public string? CompanyIdSorol { get; set; }
-    public string? DES_IDVatPro { get; set; }
+    public int? DES_IDVatPro { get; set; }
     public int RoleIdVatPro { get; set; }
     public string? NIDVatPro { get; set; }
     public string? BranchIDVatPro { get; set; }
-    public string? DesignationIDVatPro { get; set; } = "0";
+  
     public string? BranchVatPro { get; set; } = "0";
     
 }

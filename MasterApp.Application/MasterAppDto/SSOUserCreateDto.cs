@@ -5,6 +5,7 @@ public class SSOUserCreateDto
     public string userName { get; set; }
     public string password { get; set; }
     public string? fullName { get; set; }
+    public string? City { get; set; }
     public string email { get; set; }
     public string? shopID { get; set; } = "0";
     public string? employeeID { get; set; } = "0";
