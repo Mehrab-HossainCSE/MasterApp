@@ -1,10 +1,12 @@
-﻿namespace MasterApp.Application.SlaveDto;
+﻿using System.Text.Json.Serialization;
+
+namespace MasterApp.Application.SlaveDto;
 
 public class CloudPosUserDto
 {
     public string? Name { get; set; }
-    public string? UserName { get; set; } 
-    public string? name { get; set; } 
+    public string? UserName { get; set; }
+    public string? ApiKeyUser { get; set; }
     public string? Phone { get; set; }
     public string? Address { get; set; }
     public string? City { get; set; }

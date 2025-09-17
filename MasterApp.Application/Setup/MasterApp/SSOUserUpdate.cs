@@ -5,11 +5,14 @@ using MasterApp.Application.MasterAppDto;
 using MasterApp.Application.Setup.SlaveApp.BillingSoftware.UserManagement;
 using MasterApp.Application.SlaveDto;
 using MasterApp.Application.SlaveDto.SorolSoftACMasterDB;
+using Newtonsoft.Json.Linq;
+using System.Numerics;
 
 namespace MasterApp.Application.Setup.MasterApp;
 
 public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnectionFactory _context, IEncryption encryption, UserCreate userCreate, ISorolSoftUserCreate
-    sorolSoftUserUpdate, IBillingSoftUserCreate billingSoftUserCreate, IDbConnectionFactory _dbConnectionFactory, UpdateMasterUser userUpdate, GetUserByUserName getUserByUserName)
+    sorolSoftUserUpdate, IBillingSoftUserCreate billingSoftUserCreate, IDbConnectionFactory _dbConnectionFactory,
+    UpdateMasterUser userUpdate, GetUserByUserName getUserByUserName, ICloudePosUserCreate cloudePosUserCreate, UpdateMasterAppProjectID updateMasterAppProjectID)
 {
 
     public async Task<IResult> Handle(SSOUserUpdateDto request)
@@ -50,6 +53,10 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                     {
                         return await HandleBillingUserUpdate(projectId, tokenDictionary, request, getUserByUserName);
                     }
+                    else if(projectId == 16) // Billing Project
+                    {
+                        return await HandleCoudPostUserUpdate(projectId, tokenDictionary, request);
+                    }
                     else
                     {
                         return new ProjectUserCreationResult
@@ -88,7 +95,13 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                 SuccessfulProjects = results.Where(r => r.Success),
                 FailedProjects = results.Where(r => !r.Success)
             };
-
+            var successfulProjectIds = response.SuccessfulProjects
+                .Select(p => p.ProjectId)
+                .ToList();
+            await updateMasterAppProjectID.UpdateMasterAppProjectListAsync(
+                 request.userName,
+                 successfulProjectIds
+             );
             return Result<ProjectUserCreationResponse>.Success(response, "User update process completed");
         }
         catch (Exception ex)
@@ -463,6 +476,103 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
         }
     }
     #endregion
+
+    #region CoudPos Project Handler
+    private async Task<ProjectUserCreationResult> HandleCoudPostUserUpdate(
+        int projectId,
+        Dictionary<int, ProjectTokenDto> tokenDictionary,
+        SSOUserUpdateDto request)
+    {
+        if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
+        {
+            return new ProjectUserCreationResult
+            {
+                ProjectId = projectId,
+                Success = false,
+                Message = "Project config not found"
+            };
+        }
+
+        var decryptedPassword = encryption.Decrypt(projectConfig.Password);
+
+        var dtoToken = new CloudPosApiKeyDto
+        {
+            username = projectConfig.Username,
+            password = decryptedPassword
+        };
+
+        var apiKey = await cloudePosUserCreate.GetCloudePosApiKey(dtoToken);
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            return new ProjectUserCreationResult
+            {
+                ProjectId = projectId,
+                Success = false,
+                Message = "Authentication failed / API unavailable"
+            };
+        }
+        var exitingUserDto = new CloudPosApiKeyDto
+        {
+            username = request.userName,
+            password = request.password,
+        };
+        // Check if user exists
+        var existingUserResult = await cloudePosUserCreate.GetUserByUsernameCloudPos(exitingUserDto);
+
+        if (!existingUserResult.Succeeded)
+        {
+            // 🚨 user not found OR invalid credentials → create new user
+            var createDto = new CloudPosUserDto
+            {
+                UserName = request.userName,
+                Name = request.fullName,
+               
+                Phone = request.mobileNo,
+                Address = request.address,
+                City = request.City,
+                Password = request.password,
+            };
+
+            var createResult = await cloudePosUserCreate.CreateUserCloudePos(createDto, apiKey);
+
+            return new ProjectUserCreationResult
+            {
+                ProjectId = projectId,
+                Title = projectConfig.Title,
+                Success = createResult.Succeeded,
+                Message = createResult.Succeeded ? "User created successfully" : "User created successfully"
+            };
+        }
+        else
+        {
+            var existingUser = existingUserResult.Data!; // ✅ safe unwrap since success
+
+            // ✅ user exists → update
+            var updateDto = new CloudPosUserDto
+            {
+                UserName = request.userName,
+                Password = request.password,
+                Name = !string.IsNullOrEmpty(request.fullName) ? request.fullName : existingUser.FullName,
+                Phone = !string.IsNullOrEmpty(request.mobileNo) ? request.mobileNo : "0173445",
+                City = !string.IsNullOrEmpty(request.City) ? request.City : "Dhaka",
+                Address = !string.IsNullOrEmpty(request.address) ? request.address : "Dhaka",
+            };
+
+            var updateResult = await cloudePosUserCreate.CreateUserCloudePos(updateDto, existingUser.ApiKey);
+
+            return new ProjectUserCreationResult
+            {
+                ProjectId = projectId,
+                Title = projectConfig.Title,
+                Success = updateResult.Succeeded,
+                Message = updateResult.Succeeded ? "User updated successfully" : "User updated successfully"
+            };
+        }
+
+    }
+    #endregion
+
+
 }
 
 

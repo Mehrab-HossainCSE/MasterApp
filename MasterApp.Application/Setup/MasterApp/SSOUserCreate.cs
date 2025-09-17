@@ -15,7 +15,7 @@ using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 namespace MasterApp.Application.Setup.MasterApp;
 
 public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnectionFactory _context, IEncryption encryption, UserCreate userCreate, ISorolSoftUserCreate 
-    sorolSoftUserCreate,IBillingSoftUserCreate billingSoftUserCreate, ICloudePosUserCreate cloudePosUserCreate)
+    sorolSoftUserCreate,IBillingSoftUserCreate billingSoftUserCreate, ICloudePosUserCreate cloudePosUserCreate, UpdateMasterAppProjectID updateMasterAppProjectID)
 {
     public async Task<IResult> Handle(SSOUserCreateDto request)
     {
@@ -124,8 +124,8 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         {
                             UserName = request.userName,
                             Name=request.fullName,
-                            name=request.fullName ,
-                            Phone=request.mobileNo,
+                           ApiKeyUser = dtoToken.username,
+                            Phone =request.mobileNo,
                             Address = request.address,
                             City=request.City,
                             Password= request.password
@@ -228,7 +228,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         var dto = new UserCreateDto
                         {
                             UserName = request.userName,
-                           
+                            CityCloudPos=request.City,
                             FullName = request.fullName,
                             Email = request.email,
                             DesignationID = request.designationID,
@@ -352,7 +352,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         RoleIdVatPro = request.RoleId,
                         NIDVatPro = request.NID,
                         BranchIDVatPro = request.branch,
-                       
+                        CityCloudPos=request.City,
                         BranchVatPro = request.branch
                     };
 
@@ -376,6 +376,13 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                 SuccessfulProjects = results.Where(r => r.Success),
                 FailedProjects = results.Where(r => !r.Success)
             };
+            var successfulProjectIds = response.SuccessfulProjects
+                .Select(p => p.ProjectId)
+                .ToList();
+           await updateMasterAppProjectID.UpdateMasterAppProjectListAsync(
+                request.userName,
+                successfulProjectIds
+            );
 
             return Result<ProjectUserCreationResponse>.Success(response, "User creation process completed");
         }

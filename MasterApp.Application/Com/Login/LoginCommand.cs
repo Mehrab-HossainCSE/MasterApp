@@ -15,7 +15,7 @@ public class LoginCommand
     private readonly ITokenService _tokenService;
     private readonly IPasswordHash _passwordHash;
     private readonly ITokenEncryption _encrytionToken;
-
+    
  
     public LoginCommand(IDbConnectionFactory context, ITokenService tokenService, IPasswordHash passwordHash, ITokenEncryption encrytionToken)
     {
@@ -42,10 +42,9 @@ public class LoginCommand
             // Generate token for the fake user
             var token = _tokenService.GenerateJWToken(fakeUser);
             var refreshToken = _tokenService.GenerateRefreshToken();
-            // var encriptedPass = _encrytionToken.TokenEncrypt(request.UserName+"~"+ request.Password);
-            //var de = _encrytionToken.TokenDecrypt(encriptedPass);
-             var encriptedPass = _encrytionToken.TokenEncrypt("ms"+"~"+ "1");
+            var encriptedPass = _encrytionToken.TokenEncrypt(request.UserName + "~" + request.Password);
             var de = _encrytionToken.TokenDecrypt(encriptedPass);
+
             return new LoginResultDto
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),

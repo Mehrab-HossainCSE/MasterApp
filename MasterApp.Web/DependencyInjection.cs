@@ -97,6 +97,7 @@ public static class DependencyInjection
         services.AddScoped<UpdateMasterUser>();
         services.AddScoped<GetUserByUserName>();
         services.AddScoped<SSOUserUpdate>();
+        services.AddScoped<UpdateMasterAppProjectID>();
         //services.AddSingleton<IEncryption>(provider =>
         //{
         //    var config = provider.GetRequiredService<IConfiguration>();

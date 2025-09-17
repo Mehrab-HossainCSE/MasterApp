@@ -32,7 +32,7 @@ public class UserCreateDto
     public int RoleIdVatPro { get; set; }
     public string? NIDVatPro { get; set; }
     public string? BranchIDVatPro { get; set; }
-  
+    public string? CityCloudPos { get; set; }
     public string? BranchVatPro { get; set; } = "0";
     
 }

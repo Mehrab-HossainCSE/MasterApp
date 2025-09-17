@@ -17,8 +17,8 @@ public class GetAllUser(IDbConnectionFactory _dbConnectionFactory)
                     SELECT 
                        UserID,
                        UserName,
-                       EmployeeID,
-                       ShopID,
+                      
+                      
                        FullName,
                        Email,
                        CAST(NULLIF(DesignationID, '') AS INT) as DesignationID,
@@ -37,7 +37,8 @@ public class GetAllUser(IDbConnectionFactory _dbConnectionFactory)
                        NIDVatPro as NID,
                        BranchIDVatPro as branch,
                        
-                       BranchVatPro as branch
+                       BranchVatPro as branch,
+                       CityCloudPos as City
                     FROM Users";
             var users = await connection.QueryAsync<GetUseDto>(sql);
             return Result<List<GetUseDto>>.Success(users.ToList());

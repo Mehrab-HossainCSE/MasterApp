@@ -29,4 +29,5 @@ public class GetUseDto
     public string? companyIdSorol { get; set; }
     public string ProjectListId { get; set; }
     public string RoleIdSorol { get; set; }
+    public string? City { get; set; }
 }

@@ -9,4 +9,5 @@ public interface ICloudePosUserCreate
 {
     Task<IResult> CreateUserCloudePos(CloudPosUserDto dto, string token);
     Task<string> GetCloudePosApiKey(CloudPosApiKeyDto dto);
+    Task<Result<CloudPosApiResponse>> GetUserByUsernameCloudPos(CloudPosApiKeyDto dto);
 }
