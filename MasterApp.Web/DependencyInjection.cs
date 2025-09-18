@@ -95,7 +95,7 @@ public static class DependencyInjection
         services.AddScoped<ICloudePosUserCreate, CloudePosUserCreate>();
         services.AddScoped<GetCompanyInfo>();
         services.AddScoped<UpdateMasterUser>();
-        services.AddScoped<GetUserByUserName>();
+       
         services.AddScoped<SSOUserUpdate>();
         services.AddScoped<UpdateMasterAppProjectID>();
         //services.AddSingleton<IEncryption>(provider =>

@@ -51,9 +51,9 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
 
             // ✅ Step 4: Insert user
             var sql = @"INSERT INTO Users 
-                        (UserID, UserName,  FullName, Email, DesignationID, MobileNo, Address, InActive, PasswordHash, PasswordSalt,PasswordEncrypted,ProjectListId,RoleIdBilling,ExpairsOnBilling,IsMobileAppUserBilling,IMEIBilling,RoleIdSorol,CompanyIdSorol,DES_IDVatPro,RoleIdVatPro,NIDVatPro,BranchIDVatPro,BranchVatPro,CityCloudPos)
+                        (UserID, UserName,  FullName, Email, DesignationID, MobileNo, Address, PasswordHash, PasswordSalt,PasswordEncrypted,ProjectListId,RoleIdBilling,ExpairsOnBilling,IsMobileAppUserBilling,IMEIBilling,RoleIdSorol,CompanyIdSorol,DES_IDVatPro,RoleIdVatPro,NIDVatPro,BranchIDVatPro,BranchVatPro,CityCloudPos,StatusBilling)
                         VALUES 
-                        (@UserID, @UserName,  @FullName, @Email, @DesignationID, @MobileNo, @Address, @InActive, @PasswordHash, @PasswordSalt,@PasswordEncrypted,@ProjectListId,@RoleIdBilling,@ExpairsOnBilling,@IsMobileAppUserBilling,@IMEIBilling,@RoleIdSorol,@CompanyIdSorol,@DES_IDVatPro,@RoleIdVatPro,@NIDVatPro,@BranchIDVatPro,@BranchVatPro,@CityCloudPos)";
+                        (@UserID, @UserName,  @FullName, @Email, @DesignationID, @MobileNo, @Address, @PasswordHash, @PasswordSalt,@PasswordEncrypted,@ProjectListId,@RoleIdBilling,@ExpairsOnBilling,@IsMobileAppUserBilling,@IMEIBilling,@RoleIdSorol,@CompanyIdSorol,@DES_IDVatPro,@RoleIdVatPro,@NIDVatPro,@BranchIDVatPro,@BranchVatPro,@CityCloudPos,@StatusBilling)";
 
             var parameters = new
             {
@@ -65,7 +65,7 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
                 userDto.DesignationID,
                 userDto.MobileNo,
                 userDto.Address,
-                InActive = userDto.InActive ?? false,
+             
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 userDto.PasswordEncrypted,
@@ -75,7 +75,7 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
                 userDto.ExpairsOnBilling,
                 userDto.IsMobileAppUserBilling,
                 userDto.IMEIBilling,
-
+                
                 userDto.RoleIdSorol,
                 userDto.CompanyIdSorol,
                 userDto.DES_IDVatPro,
@@ -85,6 +85,7 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
               
                 userDto.BranchVatPro,
                 userDto.CityCloudPos,
+                userDto.StatusBilling,
             };
 
             await connection.ExecuteAsync(sql, parameters);

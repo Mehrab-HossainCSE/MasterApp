@@ -7,19 +7,16 @@ public class SSOUserCreateDto
     public string? fullName { get; set; }
     public string? City { get; set; }
     public string email { get; set; }
-    public string? shopID { get; set; } = "0";
-    public string? employeeID { get; set; } = "0";
-    public string? employeeName { get; set; }
+  
     public int designationID { get; set; }
     public string? mobileNo { get; set; }
     public string? address { get; set; }
     public string? ExpairsOn { get; set; }
     public bool IsMobileAppUser { get; set; }
     public string? IMEI { get; set; }
-    public bool? inActive { get; set; }
+    public bool? StatusBilling { get; set; }
     public int RoleId { get; set; }
-    public string? companyCode { get; set; } = "0";
-    public string? productPricePermission { get; set; } = "0";    
+      
     public string? NID { get; set; }
     public string? branch { get; set; }
     public string? sorolMenuIdList { get; set; }

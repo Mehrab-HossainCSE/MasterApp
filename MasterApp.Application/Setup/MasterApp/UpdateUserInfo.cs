@@ -70,7 +70,7 @@ public class UpdateUserInfo(IDbConnectionFactory dbConncetionFactory)
             userDto.Address,
             userDto.UpdateBy,
             userDto.UpdateDate,
-            userDto.InActive,
+           
             userDto.ProjectListId,
             userDto.Password,
             userDto.PasswordHash,

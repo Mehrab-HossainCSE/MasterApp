@@ -11,5 +11,5 @@ public interface IBillingSoftUserCreate
     Task<IResult> CreateUserBilling(BillingUserCreateDto dto);
     Task<Result<ApiResopnseBilling>> GetRoleBilling();
     Task<IResult> UpdateUserBilling(BillingUserUpdateDto dto);
-
+    Task<Result<bool>> GetUserByUserNameBilling(string username);
 }

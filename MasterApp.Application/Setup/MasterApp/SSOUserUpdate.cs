@@ -12,7 +12,7 @@ namespace MasterApp.Application.Setup.MasterApp;
 
 public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnectionFactory _context, IEncryption encryption, UserCreate userCreate, ISorolSoftUserCreate
     sorolSoftUserUpdate, IBillingSoftUserCreate billingSoftUserCreate, IDbConnectionFactory _dbConnectionFactory,
-    UpdateMasterUser userUpdate, GetUserByUserName getUserByUserName, ICloudePosUserCreate cloudePosUserCreate, UpdateMasterAppProjectID updateMasterAppProjectID)
+    UpdateMasterUser userUpdate, ICloudePosUserCreate cloudePosUserCreate, UpdateMasterAppProjectID updateMasterAppProjectID)
 {
 
     public async Task<IResult> Handle(SSOUserUpdateDto request)
@@ -51,7 +51,7 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                     }
                     else if (projectId == 26) // Billing Project
                     {
-                        return await HandleBillingUserUpdate(projectId, tokenDictionary, request, getUserByUserName);
+                        return await HandleBillingUserUpdate(projectId, tokenDictionary, request);
                     }
                     else if(projectId == 16) // Billing Project
                     {
@@ -242,9 +242,9 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                 ExcelPermission = false,
                 BranchID = request.branch,
                 NID = request.NID,
-                RoleId = request.RoleId ?? 0,
+                RoleId = request.RoleId ,
                 EMAIL = request.email,
-                DES_ID = request.designationID ?? 0,
+                DES_ID = request.designationID ,
                 MOBILE = request.mobileNo,
                 ADDRESS = request.address,
                 IsActive = true,
@@ -286,9 +286,9 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                 ExcelPermission = existingUser.ExcelPermission,
                 BranchID = request.branch ?? existingUser.BranchID,
                 NID = !string.IsNullOrEmpty(request.NID) ? request.NID : existingUser.NID,
-                RoleId = request.RoleId ?? existingUser.RoleId,
+                RoleId = request.RoleId,
                 EMAIL = !string.IsNullOrEmpty(request.email) ? request.email : existingUser.EMAIL,
-                DES_ID = request.designationID ?? existingUser.DES_ID,
+                DES_ID = request.designationID ,
                 MOBILE = !string.IsNullOrEmpty(request.mobileNo) ? request.mobileNo : existingUser.MOBILE,
                 ADDRESS = !string.IsNullOrEmpty(request.address) ? request.address : existingUser.ADDRESS,
                 IsActive = true,
@@ -320,7 +320,7 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
 
         using var connection = _dbConnectionFactory.CreateConnection("MasterAppDB");
 
-        var sql = @"SELECT UserID, UserName, EmployeeID, ShopID, FullName, 
+        var sql = @"SELECT UserID, UserName, FullName, 
                    Email, DesignationID, MobileNo, Address  
             FROM Users 
             WHERE UserName = @UserName";
@@ -345,7 +345,7 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             var createDto = new UserCreateDto
             {
                 UserName = request.userName,
-               
+                CityCloudPos = request.City,
                 FullName = request.fullName,
                 Email = request.email,
                 DesignationID = request.designationID,
@@ -355,10 +355,21 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                 CreateDate = DateTime.Now,
                 UpdateBy = "Admin",
                 UpdateDate = DateTime.Now,
-                InActive = false,
+                StatusBilling = request.StatusBilling,
                 Password = request.password,
                 ProjectListId = request.ProjectListId,
-                PasswordEncrypted = passwordEnc
+                PasswordEncrypted = passwordEnc,
+                RoleIdBilling = request.RoleIdBilling,
+                ExpairsOnBilling = request.RoleIdBilling,
+                IsMobileAppUserBilling = request.IsMobileAppUser,
+                IMEIBilling = request.IMEI,
+                RoleIdSorol = request.RoleIdSorol,
+                DES_IDVatPro = request.designationID,
+                RoleIdVatPro = request.RoleId,
+                NIDVatPro = request.NID,
+                BranchIDVatPro = request.branch,
+                CompanyIdSorol = request.companyIdSorol,
+                BranchVatPro = request.branch,
             };
 
             var createResult = await userCreate.HandleAsync(createDto);
@@ -377,18 +388,31 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             var updateDto = new UserUpdateDto
             {
                 UserName = request.userName,
-             
-                FullName = !string.IsNullOrEmpty(request.fullName) ? request.fullName : existingUser.FullName,
-                Email = !string.IsNullOrEmpty(request.email) ? request.email : existingUser.Email,
-                DesignationID = (request.designationID ?? existingUser?.DesignationID),
-                MobileNo = !string.IsNullOrEmpty(request.mobileNo) ? request.mobileNo : existingUser.MobileNo,
-                Address = !string.IsNullOrEmpty(request.address) ? request.address : existingUser.Address,
+                CityCloudPos = request.City,
+                FullName = request.fullName,
+                Email = request.email,
+                DesignationID = request.designationID,
+                MobileNo = request.mobileNo,
+                Address = request.address,
+                CreateBy = "Admin",
+                CreateDate = DateTime.Now,
                 UpdateBy = "Admin",
                 UpdateDate = DateTime.Now,
-                InActive = request.inActive ?? existingUser.InActive,
-                Password = !string.IsNullOrEmpty(request.password) ? request.password : existingUser.Password,
-                ProjectListId = !string.IsNullOrEmpty(request.ProjectListId) ? request.ProjectListId : existingUser.ProjectListId,
-                PasswordEncrypted = passwordEnc
+                StatusBilling = request.StatusBilling,
+                Password = request.password,
+                ProjectListId = request.ProjectListId,
+                PasswordEncrypted = passwordEnc,
+                RoleIdBilling = request.RoleIdBilling,
+                ExpairsOnBilling = request.RoleIdBilling,
+                IsMobileAppUserBilling = request.IsMobileAppUser,
+                IMEIBilling = request.IMEI,
+                RoleIdSorol = request.RoleIdSorol,
+                DES_IDVatPro = request.designationID,
+                RoleIdVatPro = request.RoleId,
+                NIDVatPro = request.NID,
+                BranchIDVatPro = request.branch,
+                CompanyIdSorol = request.companyIdSorol,
+                BranchVatPro = request.branch,
             };
 
             var updateResult = await userUpdate.HandleAsync(updateDto);
@@ -407,7 +431,7 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
     private async Task<ProjectUserCreationResult> HandleBillingUserUpdate(
         int projectId,
         Dictionary<int, ProjectTokenDto> tokenDictionary,
-        SSOUserUpdateDto request, GetUserByUserName getUserByUserName)
+        SSOUserUpdateDto request)
     {
         if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
         {
@@ -420,10 +444,11 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
         }
 
         // Check if user exists
-        var existingUser = await getUserByUserName.GetUserAsync(request.userName);
+        var existingUser = await billingSoftUserCreate.GetUserByUserNameBilling(request.userName);
 
-        if (existingUser == null)
-        {
+       
+         if (!existingUser.Data)
+         {
             // User doesn't exist, create new user
             var createDto = new BillingUserCreateDto
             {
@@ -432,9 +457,9 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                 PhoneNo = request.mobileNo,
                 Password = request.password,
                 RoleId = request.RoleIdBilling,
-                IsActive = request.inActive?.ToString() ?? "true",
+                IsActive = request.StatusBilling.ToString(),
                 ExpairsOn = request.ExpairsOn,
-                IsMobileAppUser = request.IsMobileAppUser ?? false,
+                IsMobileAppUser = request.IsMobileAppUser ,
                 IMEI = request.IMEI,
                 PayrollUsername = request.userName,
             };
@@ -454,14 +479,14 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             var updateDto = new BillingUserUpdateDto
             {
                 Username = request.userName,
-                FullName = !string.IsNullOrEmpty(request.fullName) ? request.fullName : existingUser.FullName,
-                PhoneNo = !string.IsNullOrEmpty(request.mobileNo) ? request.mobileNo : existingUser.PhoneNo,
-                Password = !string.IsNullOrEmpty(request.password) ? request.password : existingUser.Password,
-                RoleId = request.RoleIdBilling ?? existingUser.RoleId,
-                IsActive = request.inActive?.ToString() ?? existingUser.IsActive,
-                ExpairsOn = request.ExpairsOn ?? existingUser.ExpairsOn,
-                IsMobileAppUser = request.IsMobileAppUser ?? existingUser.IsMobileAppUser,
-                IMEI = request.IMEI ?? existingUser.IMEI,
+                FullName =  request.fullName ,
+                PhoneNo = request.mobileNo ,
+                Password =  request.password ,
+                RoleId = request.RoleIdBilling ,
+                IsActive = request.StatusBilling.ToString(),
+                ExpairsOn = request.ExpairsOn ,
+                IsMobileAppUser = request.IsMobileAppUser ,
+                IMEI = request.IMEI ,
                 PayrollUsername = request.userName,
             };
 

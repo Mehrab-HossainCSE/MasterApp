@@ -24,7 +24,7 @@ public class GetAllUser(IDbConnectionFactory _dbConnectionFactory)
                        CAST(NULLIF(DesignationID, '') AS INT) as DesignationID,
                        MobileNo,
                        Address,
-                       InActive,
+                       
                        ProjectListId,
                        RoleIdBilling,
                        ExpairsOnBilling as ExpairsOn,
@@ -38,7 +38,8 @@ public class GetAllUser(IDbConnectionFactory _dbConnectionFactory)
                        BranchIDVatPro as branch,
                        
                        BranchVatPro as branch,
-                       CityCloudPos as City
+                       CityCloudPos as City,
+                       StatusBilling
                     FROM Users";
             var users = await connection.QueryAsync<GetUseDto>(sql);
             return Result<List<GetUseDto>>.Success(users.ToList());

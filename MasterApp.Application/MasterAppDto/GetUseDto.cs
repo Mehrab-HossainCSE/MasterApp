@@ -16,7 +16,7 @@ public class GetUseDto
     public string? ExpairsOn { get; set; }
     public bool? IsMobileAppUser { get; set; }
     public string? IMEI { get; set; }
-    public bool? inActive { get; set; }
+   
     public int? RoleId { get; set; }
     public string? companyCode { get; set; } = "0";
     public string? productPricePermission { get; set; } = "0";
@@ -30,4 +30,5 @@ public class GetUseDto
     public string ProjectListId { get; set; }
     public string RoleIdSorol { get; set; }
     public string? City { get; set; }
+    public bool? StatusBilling { get; set; }
 }

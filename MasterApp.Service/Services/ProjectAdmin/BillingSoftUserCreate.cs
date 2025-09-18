@@ -86,7 +86,7 @@ public class BillingSoftUserCreate : IBillingSoftUserCreate
     }
     public async  Task<IResult> UpdateUserBilling(BillingUserUpdateDto dto)
     {
-        var url = $"{_apiSettings.BillingBaseUrl}/SaveUser";
+        var url = $"{_apiSettings.BillingBaseUrl}SaveUser";
 
         // Attach Bearer token in the request headers
         using var request = new HttpRequestMessage(HttpMethod.Post, url)
@@ -122,5 +122,40 @@ public class BillingSoftUserCreate : IBillingSoftUserCreate
             ? "Failed to create user"
             : apiResponse.msg);
     }
+
+    public async Task<Result<bool>> GetUserByUserNameBilling(string username)
+    {
+        var url = $"{_apiSettings.BillingBaseUrl}GetUser?searchQuery=&pageNo=0&itemPerPage=2000";
+
+        var response = await _httpClient.GetAsync(url);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result<bool>.Fail($"API call failed: {response.StatusCode}");
+        }
+
+        var apiResponse = await response.Content.ReadFromJsonAsync<GetUserBillingByUserNameDto>();
+
+        if (apiResponse == null)
+        {
+            return Result<bool>.Fail("Invalid response from server");
+        }
+
+        if (apiResponse.success && apiResponse.data != null)
+        {
+            // Check if user exists
+            var exists = apiResponse.data.Any(u =>
+                u.username.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+            return Result<bool>.Success(exists);
+        }
+
+        return Result<bool>.Fail(string.IsNullOrWhiteSpace(apiResponse.msg)
+            ? "Failed to retrieve users"
+            : apiResponse.msg);
+    }
+
+
+
 
 }

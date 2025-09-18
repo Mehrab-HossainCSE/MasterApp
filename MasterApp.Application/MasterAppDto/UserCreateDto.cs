@@ -16,7 +16,7 @@ public class UserCreateDto
     public DateTime? CreateDate { get; set; }
     public string? UpdateBy { get; set; }
     public DateTime? UpdateDate { get; set; }
-    public bool? InActive { get; set; }
+    public bool? StatusBilling { get; set; }
     public string? Password { get; set; } 
     public string? PasswordHash { get; set; }
     public string? PasswordSalt { get; set; }

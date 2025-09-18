@@ -238,7 +238,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             CreateDate = DateTime.Now,
                             UpdateBy = "Admin",
                             UpdateDate = DateTime.Now,
-                            InActive = false,
+                            StatusBilling=request.StatusBilling,
                             Password = request.password,
                             ProjectListId = request.ProjectListId,
                             PasswordEncrypted = passwordEnc,
@@ -246,13 +246,13 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             ExpairsOnBilling=request.RoleIdBilling,
                             IsMobileAppUserBilling = request.IsMobileAppUser,
                             IMEIBilling=request.IMEI,
-                            RoleIdSorol = request.companyIdSorol,
+                            RoleIdSorol = request.RoleIdSorol,
                             DES_IDVatPro=request.designationID,
                             RoleIdVatPro=request.RoleId,
                             NIDVatPro=request.NID,
                             BranchIDVatPro= request.branch,
-                           
-                            BranchVatPro=request.branch
+                            CompanyIdSorol = request.companyIdSorol,
+                            BranchVatPro =request.branch,
                         };
 
                         var localResult = await userCreate.HandleAsync(dto);
@@ -288,7 +288,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             PhoneNo = request.mobileNo,
                             Password = request.password,
                             RoleId=request.RoleIdBilling,
-                            IsActive=request.inActive.ToString(),
+                            IsActive=request.StatusBilling.ToString(),
                             ExpairsOn=request.ExpairsOn,
                             IsMobileAppUser = request.IsMobileAppUser,
                             IMEI = request.IMEI,
@@ -339,7 +339,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         CreateDate = DateTime.Now,
                         UpdateBy = "Admin",
                         UpdateDate = DateTime.Now,
-                        InActive = false,
+                        StatusBilling = request.StatusBilling,
                         Password = request.password,
                         ProjectListId = request.ProjectListId,
                         PasswordEncrypted = passwordEnc,
@@ -347,13 +347,14 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         ExpairsOnBilling = request.RoleIdBilling,
                         IsMobileAppUserBilling = request.IsMobileAppUser,
                         IMEIBilling = request.IMEI,
-                        RoleIdSorol = request.companyIdSorol,
+                        RoleIdSorol = request.RoleIdSorol,
                         DES_IDVatPro = request.designationID,
                         RoleIdVatPro = request.RoleId,
                         NIDVatPro = request.NID,
                         BranchIDVatPro = request.branch,
                         CityCloudPos=request.City,
-                        BranchVatPro = request.branch
+                        BranchVatPro = request.branch,
+                        CompanyIdSorol=request.companyIdSorol,
                     };
 
                     var localResult = await userCreate.HandleAsync(dto);
