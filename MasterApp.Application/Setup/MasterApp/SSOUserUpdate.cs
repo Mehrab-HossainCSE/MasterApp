@@ -447,7 +447,7 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
         var existingUser = await billingSoftUserCreate.GetUserByUserNameBilling(request.userName);
 
        
-         if (!existingUser.Data)
+         if (existingUser.Data == 0)
          {
             // User doesn't exist, create new user
             var createDto = new BillingUserCreateDto
@@ -478,6 +478,7 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             // User exists, update with merged data
             var updateDto = new BillingUserUpdateDto
             {
+                Id = existingUser.Data,
                 Username = request.userName,
                 FullName =  request.fullName ,
                 PhoneNo = request.mobileNo ,

@@ -70,9 +70,25 @@ public class UpdateProject(IDbConnectionFactory _context, IEncryption _encryptio
             string? encryptedPassword = null;
             if (!string.IsNullOrEmpty(request.Password))
             {
-                encryptedPassword = _encryption.Encrypt(request.Password);
+                if (existingProject.Password == null || string.IsNullOrWhiteSpace(existingProject.Password))
+                {
+                    encryptedPassword = _encryption.Encrypt(request.Password);
+                }
+                else
+                {
+                    // Decrypt existing password to compare
+                    //string decryptedExistingPassword = _encryption.Decrypt(existingProject.Password);
+                    if (existingProject.Password != request.Password)
+                    {
+                        encryptedPassword = _encryption.Encrypt(request.Password);
+                    }
+                    else
+                    {
+                        encryptedPassword = existingProject.Password; // No change
+                    }
+
+                }
             }
-        
             var parameters = new
             {
                 Title = request.Title,

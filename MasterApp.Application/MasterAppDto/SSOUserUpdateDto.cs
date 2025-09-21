@@ -89,6 +89,7 @@ public class UserUpdateDto
 
 public class BillingUserUpdateDto
 {
+    public int Id { get; set; }
     public string Username { get; set; }
     public string FullName { get; set; }
     public string PhoneNo { get; set; }
