@@ -2,12 +2,14 @@
 using MasterApp.Application.Common.Models;
 using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
+using Microsoft.Extensions.Options;
+using System.Text.Json;
 using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace MasterApp.Application.Setup.MasterApp.NavMasterApp;
 
 
-public class GetNavProjectByUser(IDbConnectionFactory _dbConnectionFactory)
+public class GetNavProjectByUser(IDbConnectionFactory _dbConnectionFactory,IOptions<ApplicationUsers> _applicationUser)
 {
     public async Task<IResult<List<ProjectNavDto>>> HandleAsync(string UserID)
     {
@@ -17,14 +19,18 @@ public class GetNavProjectByUser(IDbConnectionFactory _dbConnectionFactory)
 
             List<ProjectNavDto> projects;
 
-            if (UserID == "0") // ✅ Special condition: return all projects
+            if (UserID == "0" && _applicationUser.Value.IsMediaSoftUser) // ✅ Special condition: return all projects
             {
-                var queryAll = @"
-                    SELECT Id, Title, NavigateUrl, LoginUrl, LogoUrl, IsActive, Password, UserName
-                    FROM ProjectList
-                    WHERE IsActive = 1";
+               
+                var jsonPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProjectList", "Project.json");
+                if (!File.Exists(jsonPath))
+                    throw new FileNotFoundException("Project.json not found at " + jsonPath);
 
-                projects = (await connection.QueryAsync<ProjectNavDto>(queryAll)).ToList();
+                var json = await File.ReadAllTextAsync(jsonPath);
+                projects = JsonSerializer.Deserialize<List<ProjectNavDto>>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ?? new List<ProjectNavDto>();
             }
             else
             {

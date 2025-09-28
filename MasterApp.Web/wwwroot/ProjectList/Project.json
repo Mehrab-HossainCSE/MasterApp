@@ -1,0 +1,72 @@
+[
+  {
+    "Id": 1,
+    "Title": "Cloud Pos",
+    "NavigateUrl": "project/cloud-pos",
+    "LoginUrl": "http://192.168.1.138/cloudposWH/#/Login",
+    "LogoUrl": "/ProjectLogo/project_b34d2d99.png",
+    "IsActive": true,
+    "UserName": "ms",
+    "Password": "Xh3mwYDMsMb6XywR8kJ8sC8o4p2MsHNl0vz5S9VjdzdeekYD3gha5\u002BmdtaR0OtTRvuX59uYmwhik89BoLKN9GMVluUC55dvkNKU53laNvNaKCk0S4/G6ODtzH5/qhYlm6mpofTo5kJPBIX9BZ/LKqg=="
+  },
+  {
+    "Id": 2,
+    "Title": "Cloud Pos Report MSI",
+    "NavigateUrl": "project/cloudpos-report",
+    "LoginUrl": "http://192.168.0.117:81/login",
+    "LogoUrl": "/ProjectLogo/project_1aef09ba.png",
+    "IsActive": true,
+    "UserName": null,
+    "Password": "ikdbRizxIXETMUdFWrniWk0cj96z6Uh6aWi6rl1Jj4s="
+  },
+  {
+    "Id": 3,
+    "Title": "Master APP",
+    "NavigateUrl": "project/master-app",
+    "LoginUrl": "",
+    "LogoUrl": "/ProjectLogo/project_1e069786.png",
+    "IsActive": true,
+    "UserName": null,
+    "Password": null
+  },
+  {
+    "Id": 4,
+    "Title": "Billing Software",
+    "NavigateUrl": "project/billing-soft",
+    "LoginUrl": "https://software.mediasoftbd.com/testbill/Login.aspx",
+    "LogoUrl": "/ProjectLogo/project_b179a91e.png",
+    "IsActive": true,
+    "UserName": null,
+    "Password": null
+  },
+  {
+    "Id": 5,
+    "Title": "VAT Pro",
+    "NavigateUrl": "project/vatPro-soft",
+    "LoginUrl": "http://localhost:4200/#/dashboard",
+    "LogoUrl": "/ProjectLogo/project_5b16dc6d.png",
+    "IsActive": true,
+    "UserName": "apiuser",
+    "Password": "hRk/Rvt/s0sXSKoag1FovIoTjt33S8bzLO2MrAkncUY="
+  },
+  {
+    "Id": 6,
+    "Title": "Sorol-Soft",
+    "NavigateUrl": "project/sorol-soft",
+    "LoginUrl": "http://192.168.1.93/accounts/Login.aspx",
+    "LogoUrl": "/ProjectLogo/project_c0514c00.png",
+    "IsActive": true,
+    "UserName": "admin",
+    "Password": "V4zgIuugQE2J3kkhl1ZbOekJvPOCO2n4Wx3peH5XBlI="
+  },
+  {
+    "Id": 7,
+    "Title": "mediasoft_1",
+    "NavigateUrl": "http://localhost:4200/#/dashboard",
+    "LoginUrl": "http://localhost:4200/#/dashboard",
+    "LogoUrl": "/ProjectLogo/project_42b909fc.png",
+    "IsActive": true,
+    "UserName": "mehrab",
+    "Password": "Uh1DkWhuP16TfpXWny1RZHIM7VD/HsL8EE1hGuQK43A="
+  }
+]

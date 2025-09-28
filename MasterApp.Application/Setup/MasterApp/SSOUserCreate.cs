@@ -90,6 +90,15 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         };
 
                     }
+                  else if (projectId == 24)
+                    {
+                        return new ProjectUserCreationResult
+                        {
+                            ProjectId = projectId,
+                            Success = true,
+                            Message = "User created successfully"
+                        };
+                    }
 
                   else  if (projectId == 16)
                     {
@@ -328,8 +337,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                     var passwordEnc = encryption.Encrypt(request.password);
                     var dto = new UserCreateDto
                     {
-                        UserName = request.userName,
-                       
+                        UserName = request.userName,                       
                         FullName = request.fullName,
                         Email = request.email,
                         DesignationID = request.designationID,
@@ -378,7 +386,8 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                 FailedProjects = results.Where(r => !r.Success)
             };
             var successfulProjectIds = response.SuccessfulProjects
-                .Select(p => p.ProjectId)
+               .Where(p => projectIds.Contains(p.ProjectId))
+                .Select(p => p.ProjectId)                
                 .ToList();
            await updateMasterAppProjectID.UpdateMasterAppProjectListAsync(
                 request.userName,

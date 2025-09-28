@@ -21,6 +21,9 @@ public class UpdateProject(IDbConnectionFactory _context, IEncryption _encryptio
                 "SELECT * FROM ProjectList WHERE Id = @Id",
                 new { request.Id });
 
+            
+            
+            
             if (existingProject == null)
                 return Result.Fail("Project not found.");
 

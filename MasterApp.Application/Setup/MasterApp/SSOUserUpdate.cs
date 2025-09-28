@@ -57,6 +57,15 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                     {
                         return await HandleCoudPostUserUpdate(projectId, tokenDictionary, request);
                     }
+                    else if (projectId == 24)
+                    {
+                        return new ProjectUserCreationResult
+                        {
+                            ProjectId = projectId,
+                            Success = true,
+                            Message = "User created successfully"
+                        };
+                    }
                     else
                     {
                         return new ProjectUserCreationResult
@@ -89,6 +98,7 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             }
 
             var results = await Task.WhenAll(tasks);
+           
 
             var response = new ProjectUserCreationResponse
             {
@@ -96,6 +106,7 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                 FailedProjects = results.Where(r => !r.Success)
             };
             var successfulProjectIds = response.SuccessfulProjects
+                .Where(p => projectIds.Contains(p.ProjectId))
                 .Select(p => p.ProjectId)
                 .ToList();
             await updateMasterAppProjectID.UpdateMasterAppProjectListAsync(

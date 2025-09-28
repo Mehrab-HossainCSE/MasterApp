@@ -47,15 +47,17 @@ namespace MasterApp.Web
             builder.Configuration.GetSection("ApiSettings"));
             builder.Services.Configure<ApiSettingsEncryption>(
             builder.Configuration.GetSection("Encryption"));
+            builder.Services.Configure<ApplicationUsers>(
+           builder.Configuration.GetSection("ApplicationUser"));
             var app = builder.Build();
-         
-       // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
 
+            // Configure the HTTP request pipeline.
+            //if (app.Environment.IsDevelopment())
+            //{
+            //   
+            //}
+            app.UseSwagger();
+             app.UseSwaggerUI();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMiddleware<ExceptionMiddleware>();

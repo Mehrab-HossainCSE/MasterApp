@@ -106,6 +106,7 @@ public class SorolSoftUserCreate : ISorolSoftUserCreate
     {
         var url = $"{_apiSettings.SorolBaseUrl}api/UpdateRegistratoin";
 
+        Console.WriteLine(dto);
         // Attach Bearer token in the request headers
         using var request = new HttpRequestMessage(HttpMethod.Post, url)
         {

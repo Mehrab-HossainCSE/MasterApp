@@ -4,7 +4,7 @@ public class ProjectNavDto
 {   
     public int Id { get; set; }
     public string LogoUrl { get; set; }
-    public string title { get; set; }
+    public string Title { get; set; }
     public string NavigateUrl { get; set; }
     public bool IsActive { get; set; }
     public string? LoginUrl { get; set; }

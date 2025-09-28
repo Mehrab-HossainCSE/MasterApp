@@ -19,14 +19,14 @@ public class RoleWiseMenu
         var sql = @"
         ;WITH MenuCTE AS (
             SELECT m.MenuId, m.ParentMenuId, m.MenuName, m.Url, m.Sorting, m.IsActive, p.CanView
-            FROM [Management].[Menu_1] m
+            FROM [Management].[Menu] m
             INNER JOIN [Management].[Permission] p ON m.MenuId = p.MenuId
             WHERE p.RoleId = @RoleId
 
             UNION ALL
 
             SELECT m.MenuId, m.ParentMenuId, m.MenuName, m.Url, m.Sorting, m.IsActive, CAST(1 AS bit) AS CanView
-            FROM [Management].[Menu_1] m
+            FROM [Management].[Menu] m
             INNER JOIN MenuCTE c ON m.MenuId = c.ParentMenuId
         )
         SELECT DISTINCT MenuId, ParentMenuId, MenuName, Url, Sorting, IsActive, CanView

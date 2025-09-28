@@ -29,10 +29,14 @@ public class ProjectListController : ControllerBase
     private readonly UpdateUserInfo _updateUserInfo;
     private readonly SSOUserCreate _ssoUserCreate;
     private readonly SSOUserUpdate _ssoUserUpdate;
+    private readonly AddProjectToJson _addProjectToJson;
+    private readonly UpdateJsonProject _updateJsonProject;
+    private readonly GetNavByUserId _getNavByUserId;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
         LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, 
-        GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate, SSOUserUpdate sSOUserUpdate)
+        GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate, SSOUserUpdate sSOUserUpdate,
+       AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -47,7 +51,9 @@ public class ProjectListController : ControllerBase
         _updateUserInfo = updateUserInfo;
         _ssoUserCreate = ssoUserCreate;
         _ssoUserUpdate = sSOUserUpdate;
-
+        _addProjectToJson = addProjectToJson;
+        _updateJsonProject = updateJsonProject;
+        _getNavByUserId = getNavByUser;
     }
     [HttpGet]
     public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
@@ -55,7 +61,12 @@ public class ProjectListController : ControllerBase
         var result = await _getNavProjectByUser.HandleAsync(UserID);
         return Ok(result);
     }
-
+    [HttpGet]
+    public async Task<IActionResult> GetSideNav([FromQuery] string UserID)
+    {
+        var result = await _getNavByUserId.HandleAsync(UserID);
+        return Ok(result);
+    }
 
     [HttpPost]
     public async Task<IActionResult> Authenticate([FromBody] LoginDto model, CancellationToken cancellationToken)
@@ -68,6 +79,46 @@ public class ProjectListController : ControllerBase
     {
         var result = await _userCreate.HandleAsync(dto);
         return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddProjectToJson([FromForm] CreateProjectDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            // Map DTO to Command
+            var command = new CreateProjectCommand
+            {
+                Title = dto.Title,
+                NavigateUrl = dto.NavigateUrl,
+                LoginUrl = dto.LoginUrl,
+                LogoFile = dto.LogoFile,
+                WebRootPath = _webHostEnvironment.WebRootPath,
+                IsActive = dto.IsActive,
+                UserName = dto.UserName,
+                Password = dto.Password
+            };
+
+            // Execute command
+            var result = await _addProjectToJson.Handle(command);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { success = true });
+            }
+            else
+            {
+                return BadRequest(new { success = false });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception here
+            return StatusCode(500, new { success = false, Message = "An unexpected error occurred." });
+        }
     }
 
     [HttpPost]
@@ -121,6 +172,50 @@ public class ProjectListController : ControllerBase
 
         return Ok(result);
     }
+
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateJsonProject([FromForm] UpdateProjectDto dto)
+    {
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            // Map DTO to Command
+            var command = new UpdateProjectCommand
+            {
+                Id = dto.Id,
+                Title = dto.Title,
+                NavigateUrl = dto.NavigateUrl,
+                LoginUrl = dto.LoginUrl,
+                LogoFile = dto.LogoFile,
+                WebRootPath = _webHostEnvironment.WebRootPath,
+                IsActive = dto.IsActive,
+                UserName = dto.UserName,
+                Password = dto?.Password
+            };
+
+            // Execute command
+            var result = await _updateJsonProject.HandleUpdate(command);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { success = true });
+            }
+            else
+            {
+                return BadRequest(new { success = false });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception here
+            return StatusCode(500, new { success = false, Message = "An unexpected error occurred." });
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> UpdateProject([FromForm] UpdateProjectDto dto)
     {
@@ -163,7 +258,7 @@ public class ProjectListController : ControllerBase
         }
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProject(int Id)
     {
         var result = await _deleteProject.HandleAsync(Id, _webHostEnvironment.WebRootPath);

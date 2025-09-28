@@ -28,6 +28,7 @@
 public class GetMenuByRoleSorolDto
 {
     public string ROLENAME { get; set; } = null!;
+
     public List<MenuDetails> menuRoles { get; set; } = new();
 }
 

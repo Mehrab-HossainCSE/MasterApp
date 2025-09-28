@@ -12,3 +12,8 @@ public class ApiSettingsEncryption
 {
     public string Key { get; set; }
 }
+
+public class ApplicationUsers
+{
+    public bool IsMediaSoftUser { get; set; }
+}

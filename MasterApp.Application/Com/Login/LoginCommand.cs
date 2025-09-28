@@ -6,6 +6,8 @@ using MasterApp.Application.Common.Models;
 using System.IdentityModel.Tokens.Jwt;
 using static MasterApp.Application.Common.Exceptions.ValidationException;
 using System.Reflection;
+using MasterApp.Application.MasterAppDto;
+using Microsoft.Extensions.Options;
 
 namespace MasterApp.Application.Com.Login;
 
@@ -15,21 +17,22 @@ public class LoginCommand
     private readonly ITokenService _tokenService;
     private readonly IPasswordHash _passwordHash;
     private readonly ITokenEncryption _encrytionToken;
-    
- 
-    public LoginCommand(IDbConnectionFactory context, ITokenService tokenService, IPasswordHash passwordHash, ITokenEncryption encrytionToken)
+    private readonly ApplicationUsers _applicationUser;
+      
+
+    public LoginCommand(IDbConnectionFactory context, ITokenService tokenService, IPasswordHash passwordHash, ITokenEncryption encrytionToken, IOptions<ApplicationUsers> applicatinUser)
     {
         _context = context;
         _tokenService = tokenService;
         _passwordHash = passwordHash;
         _encrytionToken = encrytionToken;
-       
+        _applicationUser = applicatinUser.Value;
     }
 
     public async Task<LoginResultDto> ExecuteAsync(LoginDto request, CancellationToken cancellationToken)
     {
         // Special hardcoded login (no DB check)
-        if (request.UserName == "systemuser@gmail.com" && request.Password == "...")
+        if (request.UserName == "systemuser@gmail.com" && request.Password == "..." && _applicationUser.IsMediaSoftUser== true)
         {
             // Create a fake user object
             var fakeUser = new UserDto
