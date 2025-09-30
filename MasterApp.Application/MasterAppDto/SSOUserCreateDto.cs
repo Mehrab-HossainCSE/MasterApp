@@ -15,8 +15,7 @@ public class SSOUserCreateDto
     public bool IsMobileAppUser { get; set; }
     public string? IMEI { get; set; }
     public bool? StatusBilling { get; set; }
-    public int RoleId { get; set; }
-      
+    public int RoleId { get; set; }     
     public string? NID { get; set; }
     public string? branch { get; set; }
     public string? sorolMenuIdList { get; set; }
@@ -24,4 +23,5 @@ public class SSOUserCreateDto
     public string? companyIdSorol { get; set; }
     public string ProjectListId { get; set; }
     public string RoleIdSorol { get; set; }
+    public string? MenuList { get; set; }
 }

@@ -34,7 +34,7 @@ public class UserCreateDto
     public string? BranchIDVatPro { get; set; }
     public string? CityCloudPos { get; set; }
     public string? BranchVatPro { get; set; } = "0";
-    
+    public string? MenuList { get; set; }
 }
 
 public class ProjectUpdateDto

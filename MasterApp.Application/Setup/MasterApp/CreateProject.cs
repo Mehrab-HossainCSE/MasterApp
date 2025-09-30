@@ -19,7 +19,7 @@ public class CreateProject
     }
    
         public async Task<IResult> Handle(CreateProjectCommand request)
-    {
+        {
         try
         {
             // Generate unique filename for logo if provided

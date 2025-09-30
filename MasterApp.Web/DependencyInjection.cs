@@ -101,6 +101,7 @@ public static class DependencyInjection
         services.AddScoped<AddProjectToJson>();
         services.AddScoped<UpdateJsonProject>();
         services.AddScoped<GetNavByUserId>();
+        services.AddScoped<ClientAdminUserCreate>();
         //services.AddSingleton<IEncryption>(provider =>
         //{
         //    var config = provider.GetRequiredService<IConfiguration>();

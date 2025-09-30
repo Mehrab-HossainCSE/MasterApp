@@ -1,5 +1,7 @@
-﻿using MasterApp.Application.Com.Login;
+﻿using Azure.Core;
+using MasterApp.Application.Com.Login;
 using MasterApp.Application.Common.Models;
+using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
 using MasterApp.Application.Setup.MasterApp;
 using MasterApp.Application.Setup.MasterApp.NavMasterApp;
@@ -32,11 +34,12 @@ public class ProjectListController : ControllerBase
     private readonly AddProjectToJson _addProjectToJson;
     private readonly UpdateJsonProject _updateJsonProject;
     private readonly GetNavByUserId _getNavByUserId;
+    private readonly ClientAdminUserCreate _clientAdminUserCreate;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
         LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, 
         GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate, SSOUserUpdate sSOUserUpdate,
-       AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser)
+       AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser, ClientAdminUserCreate ClientAdminUserCreate)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -54,6 +57,7 @@ public class ProjectListController : ControllerBase
         _addProjectToJson = addProjectToJson;
         _updateJsonProject = updateJsonProject;
         _getNavByUserId = getNavByUser;
+        _clientAdminUserCreate = ClientAdminUserCreate;
     }
     [HttpGet]
     public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
@@ -75,9 +79,11 @@ public class ProjectListController : ControllerBase
         return Ok(result);
     }
     [HttpPost]
-    public async Task<IActionResult> UserCreate([FromBody] UserCreateDto dto)
+    public async Task<IActionResult> ClientAdminUserCreate([FromBody] ClientAdminUserCreateDto request)
     {
-        var result = await _userCreate.HandleAsync(dto);
+        
+     
+        var result = await _clientAdminUserCreate.HandleAsync(request);
         return Ok(result);
     }
 

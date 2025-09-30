@@ -51,9 +51,9 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
 
             // ✅ Step 4: Insert user
             var sql = @"INSERT INTO Users 
-                        (UserID, UserName,  FullName, Email, DesignationID, MobileNo, Address, PasswordHash, PasswordSalt,PasswordEncrypted,ProjectListId,RoleIdBilling,ExpairsOnBilling,IsMobileAppUserBilling,IMEIBilling,RoleIdSorol,CompanyIdSorol,DES_IDVatPro,RoleIdVatPro,NIDVatPro,BranchIDVatPro,BranchVatPro,CityCloudPos,StatusBilling)
+                        (UserID, UserName,  FullName, Email, DesignationID, MobileNo, Address, PasswordHash, PasswordSalt,PasswordEncrypted,ProjectListId,RoleIdBilling,ExpairsOnBilling,IsMobileAppUserBilling,IMEIBilling,RoleIdSorol,CompanyIdSorol,DES_IDVatPro,RoleIdVatPro,NIDVatPro,BranchIDVatPro,BranchVatPro,CityCloudPos,StatusBilling,MenuList)
                         VALUES 
-                        (@UserID, @UserName,  @FullName, @Email, @DesignationID, @MobileNo, @Address, @PasswordHash, @PasswordSalt,@PasswordEncrypted,@ProjectListId,@RoleIdBilling,@ExpairsOnBilling,@IsMobileAppUserBilling,@IMEIBilling,@RoleIdSorol,@CompanyIdSorol,@DES_IDVatPro,@RoleIdVatPro,@NIDVatPro,@BranchIDVatPro,@BranchVatPro,@CityCloudPos,@StatusBilling)";
+                        (@UserID, @UserName,  @FullName, @Email, @DesignationID, @MobileNo, @Address, @PasswordHash, @PasswordSalt,@PasswordEncrypted,@ProjectListId,@RoleIdBilling,@ExpairsOnBilling,@IsMobileAppUserBilling,@IMEIBilling,@RoleIdSorol,@CompanyIdSorol,@DES_IDVatPro,@RoleIdVatPro,@NIDVatPro,@BranchIDVatPro,@BranchVatPro,@CityCloudPos,@StatusBilling,@MenuList)";
 
             var parameters = new
             {
@@ -86,6 +86,7 @@ public class UserCreate(IPasswordHash _passwordHash, IDbConnectionFactory _dbCon
                 userDto.BranchVatPro,
                 userDto.CityCloudPos,
                 userDto.StatusBilling,
+                userDto.MenuList,
             };
 
             await connection.ExecuteAsync(sql, parameters);

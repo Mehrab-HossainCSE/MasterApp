@@ -11,12 +11,12 @@
   },
   {
     "Id": 2,
-    "Title": "Cloud Pos Report MSI",
+    "Title": "Cloud Pos Report MIS",
     "NavigateUrl": "project/cloudpos-report",
     "LoginUrl": "http://192.168.0.117:81/login",
     "LogoUrl": "/ProjectLogo/project_1aef09ba.png",
     "IsActive": true,
-    "UserName": null,
+    "UserName": "api",
     "Password": "ikdbRizxIXETMUdFWrniWk0cj96z6Uh6aWi6rl1Jj4s="
   },
   {
