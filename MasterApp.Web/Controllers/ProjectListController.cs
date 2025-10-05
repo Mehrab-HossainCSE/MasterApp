@@ -35,11 +35,13 @@ public class ProjectListController : ControllerBase
     private readonly UpdateJsonProject _updateJsonProject;
     private readonly GetNavByUserId _getNavByUserId;
     private readonly ClientAdminUserCreate _clientAdminUserCreate;
+    private readonly MasterCreateRole _masterCreateRole;
+    private readonly GetMasterRole _getMasterRole;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
         LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, 
         GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate, SSOUserUpdate sSOUserUpdate,
-       AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser, ClientAdminUserCreate ClientAdminUserCreate)
+       AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser, ClientAdminUserCreate ClientAdminUserCreate, MasterCreateRole masterCreateRole, GetMasterRole getMasterRole)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -58,6 +60,8 @@ public class ProjectListController : ControllerBase
         _updateJsonProject = updateJsonProject;
         _getNavByUserId = getNavByUser;
         _clientAdminUserCreate = ClientAdminUserCreate;
+        _masterCreateRole = masterCreateRole;
+        _getMasterRole = getMasterRole;
     }
     [HttpGet]
     public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
@@ -336,5 +340,16 @@ public class ProjectListController : ControllerBase
         var result = await _ssoUserUpdate.Handle(model);
         return Ok(result);
     }
-
+    [HttpPost]
+    public async Task<IActionResult> MasterRoleCreate([FromBody] MasterAppRoleDto model)
+    {
+        var result = await _masterCreateRole.InsertRoleAsync(model);
+        return Ok(result);
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetRoleMaster()
+    {
+        var result = await _getMasterRole.GetAllRolesAsync();
+        return Ok(result);
+    }
 }

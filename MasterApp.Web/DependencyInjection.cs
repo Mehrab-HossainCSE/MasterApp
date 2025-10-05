@@ -102,6 +102,8 @@ public static class DependencyInjection
         services.AddScoped<UpdateJsonProject>();
         services.AddScoped<GetNavByUserId>();
         services.AddScoped<ClientAdminUserCreate>();
+        services.AddScoped<MasterCreateRole>();
+        services.AddScoped<GetMasterRole>();
         //services.AddSingleton<IEncryption>(provider =>
         //{
         //    var config = provider.GetRequiredService<IConfiguration>();
