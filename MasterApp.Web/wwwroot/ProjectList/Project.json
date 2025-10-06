@@ -58,15 +58,5 @@
     "IsActive": true,
     "UserName": "admin",
     "Password": "V4zgIuugQE2J3kkhl1ZbOekJvPOCO2n4Wx3peH5XBlI="
-  },
-  {
-    "Id": 7,
-    "Title": "mediasoft_1",
-    "NavigateUrl": "http://localhost:4200/#/dashboard",
-    "LoginUrl": "http://localhost:4200/#/dashboard",
-    "LogoUrl": "/ProjectLogo/project_42b909fc.png",
-    "IsActive": true,
-    "UserName": "mehrab",
-    "Password": "Uh1DkWhuP16TfpXWny1RZHIM7VD/HsL8EE1hGuQK43A="
   }
 ]

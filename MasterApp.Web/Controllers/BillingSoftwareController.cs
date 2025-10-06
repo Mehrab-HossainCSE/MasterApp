@@ -21,13 +21,24 @@ public class BillingSoftwareController(
     GetUser getUser,
     RoleWiseMenu roleWiseMenu,
     UpdateUserRole updateUserRole,
-    IBillingSoftUserCreate billingSoftUserCreate
+    IBillingSoftUserCreate billingSoftUserCreate,
+    GetNavBilling getNavBilling
     ) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> GetNav()
     {
         var result = await _getNavs.GetNavsAsync();
+
+        if (result == null || !result.Any())
+            return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
+    [HttpPost]
+    public async Task<IActionResult> GetNavBilling()
+    {
+        var result = await getNavBilling.GetNavsAsync();
 
         if (result == null || !result.Any())
             return NotFound("No parent menus found.");

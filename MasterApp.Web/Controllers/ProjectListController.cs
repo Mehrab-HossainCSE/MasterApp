@@ -37,11 +37,13 @@ public class ProjectListController : ControllerBase
     private readonly ClientAdminUserCreate _clientAdminUserCreate;
     private readonly MasterCreateRole _masterCreateRole;
     private readonly GetMasterRole _getMasterRole;
+    private readonly TempRoleCreate _temRoleCreate;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
         LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, 
         GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate, SSOUserUpdate sSOUserUpdate,
-       AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser, ClientAdminUserCreate ClientAdminUserCreate, MasterCreateRole masterCreateRole, GetMasterRole getMasterRole)
+       AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser, ClientAdminUserCreate ClientAdminUserCreate, MasterCreateRole masterCreateRole,
+       GetMasterRole getMasterRole, TempRoleCreate tempRoleCreate)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -62,6 +64,7 @@ public class ProjectListController : ControllerBase
         _clientAdminUserCreate = ClientAdminUserCreate;
         _masterCreateRole = masterCreateRole;
         _getMasterRole = getMasterRole;
+        _temRoleCreate = tempRoleCreate;
     }
     [HttpGet]
     public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
@@ -350,6 +353,12 @@ public class ProjectListController : ControllerBase
     public async Task<IActionResult> GetRoleMaster()
     {
         var result = await _getMasterRole.GetAllRolesAsync();
+        return Ok(result);
+    }
+    [HttpPost]
+    public async Task<IActionResult> TempRoleCreate([FromBody] TemRoleCreateDto model)
+    {
+        var result = await _temRoleCreate.UpdateRoleWiseMenuAsync(model);
         return Ok(result);
     }
 }
