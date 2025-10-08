@@ -72,7 +72,7 @@ namespace MasterApp.Application.Setup.SlaveApp.SorolSoftwate.NavSetting
                     Serial = n.Serial,
                     IcoClass = n.IcoClass,
                     REL = n.REL,
-                    IsChecked = true, // optional flag
+                    IsChecked = false, // optional flag
                     children = BuildTree(items, n.MenuID)
                 })
                 .ToList();

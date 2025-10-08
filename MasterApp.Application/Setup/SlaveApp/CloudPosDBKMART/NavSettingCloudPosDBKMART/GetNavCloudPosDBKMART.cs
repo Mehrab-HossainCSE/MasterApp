@@ -73,7 +73,7 @@ namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPo
                     FA_CLASS = x.FA_CLASS,
                     MENU_TYPE = x.MENU_TYPE,
                     SHOW_EDIT_PERMISSION = x.SHOW_EDIT_PERMISSION,
-                    IsChecked = true, // all from DB are considered checked
+                    IsChecked = false, // all from DB are considered checked
                     Children = BuildTree(allItems, x.SERIAL)
                 })
                 .ToList();

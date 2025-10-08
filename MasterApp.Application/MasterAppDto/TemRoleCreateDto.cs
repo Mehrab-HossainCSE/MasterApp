@@ -4,17 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MasterApp.Application.MasterAppDto
-{
-    public class ProjectMenuDto
-    {
-        public string ProjectId { get; set; }
-        public List<string> MenuIds { get; set; } = new();
-    }
-    public class TemRoleCreateDto
-    {
-        public int RoleId { get; set; }
-        public List<ProjectMenuDto> ProjectMenus { get; set; } = new();
-    }
+namespace MasterApp.Application.MasterAppDto;
 
+public class TemRoleCreateDto
+{
+    public string roleId { get; set; } = string.Empty;
+    public List<ProjectMenuDto> projectMenus { get; set; } = new();
+}
+
+public class ProjectMenuDto
+{
+    public string projectId { get; set; } = string.Empty;
+    public List<string> menuIds { get; set; } = new();
 }

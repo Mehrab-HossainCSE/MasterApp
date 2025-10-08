@@ -48,7 +48,7 @@ namespace MasterApp.Web
             builder.Services.Configure<ApiSettingsEncryption>(
             builder.Configuration.GetSection("Encryption"));
             builder.Services.Configure<ApplicationUsers>(
-           builder.Configuration.GetSection("ApplicationUser"));
+            builder.Configuration.GetSection("ApplicationUser"));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -61,7 +61,6 @@ namespace MasterApp.Web
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMiddleware<ExceptionMiddleware>();
-
            
             app.UseCors(x => x
                .AllowAnyMethod()
@@ -72,7 +71,6 @@ namespace MasterApp.Web
             app.UseAuthorization();
             app.MapControllers();
             app.MapControllers();
-
 
             app.Run();
         }

@@ -2,6 +2,7 @@
 using MasterApp.Application.Common.Models;
 using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
+using System.Xml;
 
 namespace MasterApp.Application.Setup.MasterApp;
 
@@ -9,6 +10,7 @@ public class MasterCreateRole(IDbConnectionFactory _connectionFactory)
 {
     public async Task<IResult> InsertRoleAsync(MasterAppRoleDto dto)
     {
+               
         try
         {
             using var connection = _connectionFactory.CreateConnection("MasterAppDB");

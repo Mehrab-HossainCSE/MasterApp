@@ -54,9 +54,9 @@ public class GetNavByUserId(IDbConnectionFactory _dbConnectionFactory, IOptions<
 
 
                 var projectListCsv = await connection.ExecuteScalarAsync<string>(
-     "SELECT MenuList FROM [Users] WHERE UserID = @UserID",
-     new { UserID }
- );
+                 "SELECT MenuList FROM [Users] WHERE UserID = @UserID",
+                 new { UserID }
+                );
 
                 if (string.IsNullOrWhiteSpace(projectListCsv))
                     return Result<List<NavsDto>>.Success(new List<NavsDto>(), "No projects found.");
@@ -93,9 +93,6 @@ public class GetNavByUserId(IDbConnectionFactory _dbConnectionFactory, IOptions<
                 }
 
                 return Result<List<NavsDto>>.Success(projectss, "Projects retrieved successfully.");
-
-
-
             }
         }
         catch (Exception ex)

@@ -303,7 +303,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             IMEI = request.IMEI,
                             PayrollUsername = request.userName,
                         };
-
+                         
                         var result = await billingSoftUserCreate.CreateUserBilling(dto);
 
                         return new ProjectUserCreationResult

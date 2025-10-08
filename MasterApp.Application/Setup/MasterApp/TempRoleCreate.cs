@@ -22,7 +22,7 @@ public class TempRoleCreate
             using var connection = _context.CreateConnection("MasterAppDB");
 
             // Convert full projectMenus list into JSON
-            string projectMenusJson = JsonSerializer.Serialize(dto.ProjectMenus);
+            string projectMenusJson = JsonSerializer.Serialize(dto.projectMenus);
 
             string query = @"
             UPDATE [MasterAppDB].[dbo].[RoleWiseMenu]
@@ -32,7 +32,7 @@ public class TempRoleCreate
             var parameters = new
             {
                 MenuIdList = projectMenusJson,
-                RoleId = dto.RoleId
+                RoleId = dto.roleId
             };
 
             int rowsAffected = await connection.ExecuteAsync(query, parameters);
