@@ -8,6 +8,7 @@ namespace MasterApp.Application.MasterAppDto;
 
 public class TemRoleCreateDto
 {
+    public string projectId { get; set; } = string.Empty;
     public string roleId { get; set; } = string.Empty;
     public List<ProjectMenuDto> projectMenus { get; set; } = new();
 }

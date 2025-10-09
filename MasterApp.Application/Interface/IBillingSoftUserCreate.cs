@@ -12,4 +12,6 @@ public interface IBillingSoftUserCreate
     Task<Result<ApiResopnseBilling>> GetRoleBilling();
     Task<IResult> UpdateUserBilling(BillingUserUpdateDto dto);
     Task<Result<int>> GetUserByUserNameBilling(string username);
+    Task<IResult> SaveRoleAsync(BillingRoleCreateDto dto);
+    Task<IResult> AddMenuPagesToRoleAsync(int roleId, List<int> menuIds);
 }

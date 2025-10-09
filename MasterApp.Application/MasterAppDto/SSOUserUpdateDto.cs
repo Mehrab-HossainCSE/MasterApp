@@ -101,3 +101,10 @@ public class BillingUserUpdateDto
     public string IMEI { get; set; }
     public string PayrollUsername { get; set; }
 }
+public class BillingRoleCreateDto
+{
+    public bool isActive { get; set; } = true;
+    public string roleName { get; set; } = string.Empty;
+    public string description { get; set; } = string.Empty;
+    public string CreatorId { get; set; } = string.Empty;
+}
