@@ -19,18 +19,9 @@
     "UserName": "api",
     "Password": "ikdbRizxIXETMUdFWrniWk0cj96z6Uh6aWi6rl1Jj4s="
   },
+ 
   {
     "Id": 3,
-    "Title": "Master APP",
-    "NavigateUrl": "project/master-app",
-    "LoginUrl": "",
-    "LogoUrl": "/ProjectLogo/project_1e069786.png",
-    "IsActive": true,
-    "UserName": null,
-    "Password": null
-  },
-  {
-    "Id": 4,
     "Title": "Billing Software",
     "NavigateUrl": "project/billing-soft",
     "LoginUrl": "https://software.mediasoftbd.com/testbill/Login.aspx",
@@ -40,7 +31,7 @@
     "Password": null
   },
   {
-    "Id": 5,
+    "Id": 4,
     "Title": "VAT Pro",
     "NavigateUrl": "project/vatPro-soft",
     "LoginUrl": "http://localhost:4200/#/dashboard",
@@ -50,7 +41,7 @@
     "Password": "hRk/Rvt/s0sXSKoag1FovIoTjt33S8bzLO2MrAkncUY="
   },
   {
-    "Id": 6,
+    "Id": 5,
     "Title": "Sorol-Soft",
     "NavigateUrl": "project/sorol-soft",
     "LoginUrl": "http://192.168.1.93/accounts/Login.aspx",

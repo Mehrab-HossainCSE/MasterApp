@@ -17,15 +17,15 @@ public class GetNav
     /// <summary>
     /// Merge JSON menu + DB checked items
     /// </summary>
-    public async Task<List<BillingSoftNavDto>> GetNavsAsync()
-    {
-        var jsonMenuItems = await GetNavsJsonAsync();
-        var dbMenuItems = await GetNavsFromDB();
+    //public async Task<List<BillingSoftNavDto>> GetNavsAsync()
+    //{
+    //    var jsonMenuItems = await GetNavsJsonAsync();
+    //    var dbMenuItems = await GetNavsFromDB();
 
-        var dbMenuIds = new HashSet<int>(dbMenuItems.Select(x => x.MenuId));
+    //    var dbMenuIds = new HashSet<int>(dbMenuItems.Select(x => x.MenuId));
 
-        return SetCheckedStatus(jsonMenuItems, dbMenuIds);
-    }
+    //    return SetCheckedStatus(jsonMenuItems, dbMenuIds);
+    //}
 
     /// <summary>
     /// Load JSON menu (complete structure)
@@ -51,83 +51,83 @@ public class GetNav
     /// <summary>
     /// Load DB menu items
     /// </summary>
-    public async Task<List<BillingSoftNavDto>> GetNavsFromDB()
-    {
-        using var connection = _connectionFactory.CreateConnection("BillingSoft");
+    //public async Task<List<BillingSoftNavDto>> GetNavsFromDB()
+    //{
+    //    using var connection = _connectionFactory.CreateConnection("BillingSoft");
 
-        const string sql = @"
-            SELECT 
-                MenuId,
-                ParentMenuId,
-                MenuName,
-                Url,
-                Sorting,
-                IsActive,
-                ApplicationId,
-                CreatorId,
-                CreateDate
-            FROM [Management].[Menu_1]
-            ORDER BY Sorting";
+    //    const string sql = @"
+    //        SELECT 
+    //            MenuId,
+    //            ParentMenuId,
+    //            MenuName,
+    //            Url,
+    //            Sorting,
+    //            IsActive,
+    //            ApplicationId,
+    //            CreatorId,
+    //            CreateDate
+    //        FROM [Management].[Menu_1]
+    //        ORDER BY Sorting";
 
-        var navItems = (await connection.QueryAsync<BillingSoftNavDto>(sql)).ToList();
+    //    var navItems = (await connection.QueryAsync<BillingSoftNavDto>(sql)).ToList();
 
-        // Fix any self-referencing rows
-        foreach (var item in navItems.Where(n => n.MenuId == n.ParentMenuId))
-        {
-            item.ParentMenuId = 0;
-        }
+    //    // Fix any self-referencing rows
+    //    foreach (var item in navItems.Where(n => n.MenuId == n.ParentMenuId))
+    //    {
+    //        item.ParentMenuId = 0;
+    //    }
 
-        return navItems;
-    }
+    //    return navItems;
+    //}
 
     /// <summary>
     /// Set IsChecked status using DB menu IDs
     /// </summary>
-    private List<BillingSoftNavDto> SetCheckedStatus(List<BillingSoftNavDto> menuItems, HashSet<int> dbMenuIds)
-    {
-        if (menuItems == null) return new List<BillingSoftNavDto>();
+    //private List<BillingSoftNavDto> SetCheckedStatus(List<BillingSoftNavDto> menuItems, HashSet<int> dbMenuIds)
+    //{
+    //    if (menuItems == null) return new List<BillingSoftNavDto>();
 
-        foreach (var menuItem in menuItems)
-        {
-            menuItem.IsChecked = dbMenuIds.Contains(menuItem.MenuId);
+    //    foreach (var menuItem in menuItems)
+    //    {
+    //        menuItem.IsChecked = dbMenuIds.Contains(menuItem.MenuId);
 
-            if (menuItem.children != null && menuItem.children.Any())
-            {
-                menuItem.children = SetCheckedStatus(menuItem.children, dbMenuIds);
-            }
-        }
+    //        if (menuItem.children != null && menuItem.children.Any())
+    //        {
+    //            menuItem.children = SetCheckedStatus(menuItem.children, dbMenuIds);
+    //        }
+    //    }
 
-        return menuItems;
-    }
+    //    return menuItems;
+    //}
 
     /// <summary>
     /// Build tree from DB items
     /// </summary>
-    public async Task<List<BillingSoftNavDto>> GetCheckedNavsWithHierarchyAsync()
-    {
-        var dbMenuItems = await GetNavsFromDB();
-        return BuildTree(dbMenuItems, 0);
-    }
+    //public async Task<List<BillingSoftNavDto>> GetCheckedNavsWithHierarchyAsync()
+    //{
+    //    var dbMenuItems = await GetNavsFromDB();
+    //    return BuildTree(dbMenuItems, 0);
+    //}
 
-    private List<BillingSoftNavDto> BuildTree(List<BillingSoftNavDto> items, decimal parentId)
-    {
-        return items
-            .Where(n => n.ParentMenuId == parentId)
-            .OrderBy(n => n.Sorting)
-            .Select(n => new BillingSoftNavDto
-            {
-                MenuId = n.MenuId,
-                ParentMenuId = n.ParentMenuId,
-                MenuName = n.MenuName,
-                Url = n.Url,
-                Sorting = n.Sorting,
-                IsActive = n.IsActive,
-                ApplicationId = n.ApplicationId,
-                CreatorId = n.CreatorId,
-                CreateDate = n.CreateDate,
-                IsChecked = true,
-                children = BuildTree(items, n.MenuId)
-            })
-            .ToList();
-    }
+    //private List<BillingSoftNavDto> BuildTree(List<BillingSoftNavDto> items, decimal parentId)
+    //{
+    //    return items
+    //        .Where(n => n.ParentMenuId == parentId)
+    //        .OrderBy(n => n.Sorting)
+    //        .Select(n => new BillingSoftNavDto
+    //        {
+    //            MenuId = n.MenuId,
+    //            ParentMenuId = n.ParentMenuId,
+    //            MenuName = n.MenuName,
+    //            Url = n.Url,
+    //            Sorting = n.Sorting,
+    //            IsActive = n.IsActive,
+    //            ApplicationId = n.ApplicationId,
+    //            CreatorId = n.CreatorId,
+    //            CreateDate = n.CreateDate,
+    //            IsChecked = false,
+    //            children = BuildTree(items, n.MenuId)
+    //        })
+    //        .ToList();
+    //}
 }

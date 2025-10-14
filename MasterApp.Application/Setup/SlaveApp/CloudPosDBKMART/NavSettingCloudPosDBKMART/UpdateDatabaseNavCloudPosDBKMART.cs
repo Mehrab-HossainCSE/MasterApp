@@ -41,7 +41,7 @@ public class UpdateDatabaseNavCloudPosDBKMART
 
                 // 3. Insert all items (parents and children)
                 string insertQuery = @"
-                    INSERT INTO MENU_1 
+                    INSERT INTO MENU
                     (SERIAL, PARENT_ID, DESCRIPTION, URL, PER_ROLE, ENTRY_BY, ENTRY_DATE, ORDER_BY, FA_CLASS, MENU_TYPE, SHOW_EDIT_PERMISSION)
                     VALUES 
                     (@SERIAL, @PARENT_ID, @DESCRIPTION, @URL, @PER_ROLE, @ENTRY_BY, @ENTRY_DATE, @ORDER_BY, @FA_CLASS, @MENU_TYPE, @SHOW_EDIT_PERMISSION)

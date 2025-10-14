@@ -4,18 +4,11 @@ using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
 using MasterApp.Application.SlaveDto;
 using MasterApp.Application.SlaveDto.SorolSoftACMasterDB;
-using Newtonsoft.Json.Linq;
-using System.ComponentModel.Design;
-using System.Numerics;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Xml.Linq;
-using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace MasterApp.Application.Setup.MasterApp;
 
-public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnectionFactory _context, IEncryption encryption, UserCreate userCreate, ISorolSoftUserCreate 
-    sorolSoftUserCreate,IBillingSoftUserCreate billingSoftUserCreate, ICloudePosUserCreate cloudePosUserCreate, UpdateMasterAppProjectID updateMasterAppProjectID)
+public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnectionFactory _context, IEncryption encryption, UserCreate userCreate, ISorolSoftUserCreate
+    sorolSoftUserCreate, IBillingSoftUserCreate billingSoftUserCreate, ICloudePosUserCreate cloudePosUserCreate, UpdateMasterAppProjectID updateMasterAppProjectID)
 {
     public async Task<IResult> Handle(SSOUserCreateDto request)
     {
@@ -40,9 +33,9 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             {
                 try
                 {
-                  
+
                     if (projectId == 1035)
-                      {
+                    {
                         if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
                         {
                             return new ProjectUserCreationResult
@@ -53,7 +46,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             };
                         }
                         var decryptedPassword = encryption.Decrypt(projectConfig.Password);
-                       
+
 
                         var dtoToken = new SorolTokenDto
                         {
@@ -62,9 +55,9 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         };
 
                         if (dtoToken == null)
-                            return new ProjectUserCreationResult { ProjectId = projectId, Title= projectConfig.Title, Success = false, Message = "Project config not found" };
+                            return new ProjectUserCreationResult { ProjectId = projectId, Title = projectConfig.Title, Success = false, Message = "Project config not found" };
 
-                       
+
 
                         var token = await sorolSoftUserCreate.getSorolToken(dtoToken);
                         if (string.IsNullOrEmpty(token))
@@ -90,7 +83,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         };
 
                     }
-                  else if (projectId == 24)
+                    else if (projectId == 24)
                     {
                         return new ProjectUserCreationResult
                         {
@@ -100,7 +93,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         };
                     }
 
-                  else  if (projectId == 16)
+                    else if (projectId == 16)
                     {
                         if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
                         {
@@ -132,12 +125,12 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         var dto = new CloudPosUserDto
                         {
                             UserName = request.userName,
-                            Name=request.fullName,
-                           ApiKeyUser = dtoToken.username,
-                            Phone =request.mobileNo,
+                            Name = request.fullName,
+                            ApiKeyUser = dtoToken.username,
+                            Phone = request.mobileNo,
                             Address = request.address,
-                            City=request.City,
-                            Password= request.password
+                            City = request.City,
+                            Password = request.password
                         };
 
                         var result = await cloudePosUserCreate.CreateUserCloudePos(dto, apiKey);
@@ -153,7 +146,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                     }
 
 
-                    else  if (projectId == 30) // Example project VatPro
+                    else if (projectId == 30) // Example project VatPro
                     {
                         if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
                         {
@@ -165,7 +158,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             };
                         }
                         var decryptedPassword = encryption.Decrypt(projectConfig.Password);
-                      
+
                         var dtoToken = new VatProTokenDto
                         {
                             username = projectConfig.Username,
@@ -174,7 +167,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
 
                         if (dtoToken == null)
                             return new ProjectUserCreationResult { ProjectId = projectId, Title = projectConfig.Title, Success = false, Message = "Project config not found" };
-                    
+
                         var token = await vatProSoftUserCreate.getVatProToken(dtoToken);
                         if (string.IsNullOrEmpty(token))
                             return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Authentication failed / API unavailable" };
@@ -237,7 +230,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         var dto = new UserCreateDto
                         {
                             UserName = request.userName,
-                            CityCloudPos=request.City,
+                            CityCloudPos = request.City,
                             FullName = request.fullName,
                             Email = request.email,
                             DesignationID = request.designationID,
@@ -247,28 +240,28 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             CreateDate = DateTime.Now,
                             UpdateBy = "Admin",
                             UpdateDate = DateTime.Now,
-                            StatusBilling=request.StatusBilling,
+                            StatusBilling = request.StatusBilling,
                             Password = request.password,
                             ProjectListId = request.ProjectListId,
                             PasswordEncrypted = passwordEnc,
-                            RoleIdBilling= request.RoleIdBilling,
-                            ExpairsOnBilling=request.RoleIdBilling,
+                            RoleIdBilling = request.RoleIdBilling,
+                            ExpairsOnBilling = request.RoleIdBilling,
                             IsMobileAppUserBilling = request.IsMobileAppUser,
-                            IMEIBilling=request.IMEI,
+                            IMEIBilling = request.IMEI,
                             RoleIdSorol = request.RoleIdSorol,
-                            DES_IDVatPro=request.designationID,
-                            RoleIdVatPro=request.RoleId,
-                            NIDVatPro=request.NID,
-                            BranchIDVatPro= request.branch,
+                            DES_IDVatPro = request.designationID,
+                            RoleIdVatPro = request.RoleId,
+                            NIDVatPro = request.NID,
+                            BranchIDVatPro = request.branch,
                             CompanyIdSorol = request.companyIdSorol,
-                            BranchVatPro =request.branch,
+                            BranchVatPro = request.branch,
                         };
 
                         var localResult = await userCreate.HandleAsync(dto);
 
                         return new ProjectUserCreationResult
                         {
-                            ProjectId = projectId,                      
+                            ProjectId = projectId,
                             Title = projectConfig.Title,
                             Success = localResult.Succeeded,
                             Message = localResult.Messages.FirstOrDefault() ??
@@ -276,8 +269,8 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                                                              : "Failed to create user in MasterAppDB.")
                         };
                     }
-                   
-                    else if (projectId==26)
+
+                    else if (projectId == 26)
                     {
 
                         if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
@@ -293,22 +286,22 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         var dto = new BillingUserCreateDto
                         {
                             Username = request.userName,
-                            FullName=request.fullName,
+                            FullName = request.fullName,
                             PhoneNo = request.mobileNo,
                             Password = request.password,
-                            RoleId=request.RoleIdBilling,
-                            IsActive=request.StatusBilling.ToString(),
-                            ExpairsOn=request.ExpairsOn,
+                            RoleId = request.RoleIdBilling,
+                            IsActive = request.StatusBilling.ToString(),
+                            ExpairsOn = request.ExpairsOn,
                             IsMobileAppUser = request.IsMobileAppUser,
                             IMEI = request.IMEI,
                             PayrollUsername = request.userName,
                         };
-                         
+
                         var result = await billingSoftUserCreate.CreateUserBilling(dto);
 
                         return new ProjectUserCreationResult
                         {
-                            ProjectId = projectId,                           
+                            ProjectId = projectId,
                             Title = projectConfig.Title,
                             Success = result.Succeeded,
                             Message = result.Messages.FirstOrDefault() ??
@@ -319,7 +312,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                     {
                         return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Handler not implemented" };
                     }
-                   
+
 
                 }
                 catch (Exception ex)
@@ -329,7 +322,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             }).ToList();
 
             if (!projectIds.Contains(25))
-            {   
+            {
 
 
                 tasks.Add(Task.Run(async () =>
@@ -337,7 +330,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                     var passwordEnc = encryption.Encrypt(request.password);
                     var dto = new UserCreateDto
                     {
-                        UserName = request.userName,                       
+                        UserName = request.userName,
                         FullName = request.fullName,
                         Email = request.email,
                         DesignationID = request.designationID,
@@ -360,9 +353,9 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         RoleIdVatPro = request.RoleId,
                         NIDVatPro = request.NID,
                         BranchIDVatPro = request.branch,
-                        CityCloudPos=request.City,
+                        CityCloudPos = request.City,
                         BranchVatPro = request.branch,
-                        CompanyIdSorol=request.companyIdSorol,
+                        CompanyIdSorol = request.companyIdSorol,
                     };
 
                     var localResult = await userCreate.HandleAsync(dto);
@@ -387,12 +380,12 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
             };
             var successfulProjectIds = response.SuccessfulProjects
                .Where(p => projectIds.Contains(p.ProjectId))
-                .Select(p => p.ProjectId)                
+                .Select(p => p.ProjectId)
                 .ToList();
-           await updateMasterAppProjectID.UpdateMasterAppProjectListAsync(
-                request.userName,
-                successfulProjectIds
-            );
+            await updateMasterAppProjectID.UpdateMasterAppProjectListAsync(
+                 request.userName,
+                 successfulProjectIds
+             );
 
             return Result<ProjectUserCreationResponse>.Success(response, "User creation process completed");
         }

@@ -106,6 +106,8 @@ public static class DependencyInjection
         services.AddScoped<GetMasterRole>();
         services.AddScoped<GetNavBilling>();
         services.AddScoped<TempRoleCreate>();
+        services.AddScoped<GetNavCloudPosDBKMARTMediasoft>();
+        services.AddScoped<GetNavSorolMediaSoft>();
         //services.AddSingleton<IEncryption>(provider =>
         //{
         //    var config = provider.GetRequiredService<IConfiguration>();

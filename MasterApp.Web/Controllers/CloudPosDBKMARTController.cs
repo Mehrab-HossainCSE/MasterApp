@@ -25,6 +25,7 @@ public class CloudPosDBKMARTController : ControllerBase
     private readonly AssignUserMenuCloudPosDBKMART _assignUserMenuCloudPosDBKMART;
     private readonly UpdateDatabaseNavCloudPosDBKMART _updateDatabaseNavCloudPosDBKMART1;
     private readonly GetCompanyInfoCloudPosDBKMART _getCompanyInfoCloudPosDBKMART;
+    private readonly GetNavCloudPosDBKMARTMediasoft _getNavCloudPosDBKMARTMediasoft;
     public CloudPosDBKMARTController(CreateNavCloudPosDBKMART createNavCloudPosDBKMART,
         GetParentNavCloudPosDBKMART getParentNavCloudPosDBKMART,
         GetNavCloudPosDBKMART getNavCloudPosDBKMART,
@@ -38,7 +39,8 @@ public class CloudPosDBKMARTController : ControllerBase
         UpdateMenuIdToTheRoleCloudPosDBKMART updateMenuIdToTheRoleCloudPosDBKMART,
         AssignUserMenuCloudPosDBKMART assignUserMenuCloudPosDBKMART,
         UpdateDatabaseNavCloudPosDBKMART updateDatabaseNavCloudPosDBKMART1,
-        GetCompanyInfoCloudPosDBKMART getCompanyInfoCloudPosDBKMART)
+        GetCompanyInfoCloudPosDBKMART getCompanyInfoCloudPosDBKMART,
+        GetNavCloudPosDBKMARTMediasoft getNavCloudPosDBKMARTMediasoft)
     {
         _createNavCloudPosDBKMART = createNavCloudPosDBKMART;
         _getParentNavCloudPosDBKMART = getParentNavCloudPosDBKMART;
@@ -54,6 +56,7 @@ public class CloudPosDBKMARTController : ControllerBase
         _assignUserMenuCloudPosDBKMART = assignUserMenuCloudPosDBKMART;
         _updateDatabaseNavCloudPosDBKMART1 = updateDatabaseNavCloudPosDBKMART1;
         _getCompanyInfoCloudPosDBKMART = getCompanyInfoCloudPosDBKMART;
+        _getNavCloudPosDBKMARTMediasoft = getNavCloudPosDBKMARTMediasoft;
     }
 
     [HttpPost]
@@ -101,6 +104,16 @@ public class CloudPosDBKMARTController : ControllerBase
     public async Task<IActionResult> GetNavCloudPosDBKMART()
     {
         var result = await _getNavCloudPosDBKMART.GetNavsAsync();
+
+        if (result == null || !result.Any())
+            return NotFound("No parent menus found.");
+
+        return Ok(result);
+    }
+    [HttpPost]
+    public async Task<IActionResult> GetNavCloudPosDBKMARTMediasoft()
+    {
+        var result = await _getNavCloudPosDBKMARTMediasoft.GetNavsJsonAsync();
 
         if (result == null || !result.Any())
             return NotFound("No parent menus found.");

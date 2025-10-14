@@ -334,6 +334,12 @@ public class ProjectListController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> SSOUserCreateClient([FromBody] SSOUserCreateDto model, CancellationToken cancellationToken)
+    {
+        var result = await _ssoUserCreate.Handle(model);
+        return Ok(result);
+    }
 
     [HttpPost]
     public async Task<IActionResult> SSOUserUpdate([FromBody] SSOUserUpdateDto model, CancellationToken cancellationToken)

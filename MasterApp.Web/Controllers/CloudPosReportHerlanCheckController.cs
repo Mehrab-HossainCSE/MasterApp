@@ -28,7 +28,7 @@ public class CloudPosReportHerlanCheckController(GetNavCloudPosReportHerlanCheck
     [HttpPost]
     public async Task<IActionResult> GetNavCloudPosDBKMART()
     {
-        var result = await _getNavCloudPosReportHerlanCheck.GetNavsAsync();
+        var result = await _getNavCloudPosReportHerlanCheck.GetNavsJsonAsync();
 
         if (result == null || !result.Any())
             return NotFound("No parent menus found.");

@@ -34,7 +34,7 @@ namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPo
                     FA_CLASS,
                     MENU_TYPE,
                     SHOW_EDIT_PERMISSION
-                FROM MENU_1
+                FROM MENU
                 ORDER BY ORDER_BY, SERIAL";
 
             var dbMenuItems = (await connection.QueryAsync<NavDto>(sql)).ToList();

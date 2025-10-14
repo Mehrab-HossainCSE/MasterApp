@@ -28,7 +28,7 @@ public class BillingSoftwareController(
     [HttpPost]
     public async Task<IActionResult> GetNav()
     {
-        var result = await _getNavs.GetNavsAsync();
+        var result = await _getNavs.GetNavsJsonAsync();
 
         if (result == null || !result.Any())
             return NotFound("No parent menus found.");

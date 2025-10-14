@@ -25,3 +25,12 @@ public class SSOUserCreateDto
     public string RoleIdSorol { get; set; }
     public string? MenuList { get; set; }
 }
+
+public class SSOUserCreateClientDto
+{
+    public string userName { get; set; }
+    public string password { get; set; }
+    public int RoleId { get; set; }
+    public string ProjectListId { get; set; }
+
+}
