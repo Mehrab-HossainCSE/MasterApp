@@ -66,6 +66,49 @@ public class CloudePosUserCreate : ICloudePosUserCreate
         }
     }
 
+    public async Task<IResult> CreateMenuCloudePos(MenuCreateCoudPos dto, string apiKey)
+    {
+        var url = $"{_apiSettings.CloudPosBaseUrl}/api/Users/SaveExternalUserMenu";
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+            Content = JsonContent.Create(dto)
+        };
+
+        request.Headers.TryAddWithoutValidation("Authorization", $"{dto.ApiKeyUser}:{apiKey}");
+
+        var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+            return Result.Fail($"API call failed: {response.StatusCode}");
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        try
+        {
+            var apiResponse = JsonSerializer.Deserialize<ApiResponseUserCreateCloudePos>(
+                responseContent,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            );
+
+            if (apiResponse != null && apiResponse.Success)
+            {
+                return Result.Success(string.IsNullOrWhiteSpace(apiResponse.Message)
+                    ? "Menu created successfully"
+                    : apiResponse.Message);
+            }
+
+            return Result.Fail(apiResponse?.Message ?? "Failed to create Menu");
+        }
+        catch (JsonException)
+        {
+            var fallback = JsonSerializer.Deserialize<Dictionary<string, string>>(responseContent);
+            var message = fallback?["Message"] ?? "Unknown error from server";
+            return Result.Fail(message);
+        }
+    }
+
+
     public async Task<string> GetCloudePosApiKey(CloudPosApiKeyDto dto)
     {
         var url = $"{_apiSettings.CloudPosBaseUrl}/api/external/login?username={dto.username}&password={dto.password}";

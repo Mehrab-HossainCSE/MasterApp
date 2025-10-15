@@ -8,6 +8,7 @@ namespace MasterApp.Application.Interface;
 public interface ICloudePosUserCreate
 {
     Task<IResult> CreateUserCloudePos(CloudPosUserDto dto, string token);
+    Task<IResult> CreateMenuCloudePos(MenuCreateCoudPos dto, string token);
     Task<string> GetCloudePosApiKey(CloudPosApiKeyDto dto);
     Task<Result<CloudPosApiResponse>> GetUserByUsernameCloudPos(CloudPosApiKeyDto dto);
 }

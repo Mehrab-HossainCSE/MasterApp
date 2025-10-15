@@ -12,4 +12,5 @@ public interface ISorolSoftUserCreate
     Task<string> getSorolToken(SorolTokenDto dto);
     Task<GetAllUserSorolDto?> GetUserByUsername(string userName);
     Task<IResult> UpdateUserSorol(SorolUserUpdateDto dto, string token);
+   // Task<string> GetCompanySorol();
 }

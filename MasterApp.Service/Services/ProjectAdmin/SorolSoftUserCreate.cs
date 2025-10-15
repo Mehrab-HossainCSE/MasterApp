@@ -155,5 +155,9 @@ public class SorolSoftUserCreate : ISorolSoftUserCreate
         return await connection.QueryFirstOrDefaultAsync<GetAllUserSorolDto>(sql, new { UserName = userName });
     }
 
+    //public async Task<string> GetCompanySorol()
+    //{
+
+    //}
 
 }

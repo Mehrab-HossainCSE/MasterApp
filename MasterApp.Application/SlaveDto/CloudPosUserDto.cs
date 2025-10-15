@@ -18,3 +18,9 @@ public class CloudPosApiKeyDto
     public string? username { get; set; }
     public string? password { get; set; }
 }
+public class MenuCreateCoudPos
+{
+    public string UserName { get; set; }
+    public List<int> MenuIdList { get; set; }
+    public string? ApiKeyUser { get; set; }
+}

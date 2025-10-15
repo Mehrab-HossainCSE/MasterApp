@@ -6,8 +6,8 @@
     "LoginUrl": "http://192.168.1.138/cloudposWH/#/Login",
     "LogoUrl": "/ProjectLogo/project_b34d2d99.png",
     "IsActive": true,
-    "UserName": "ms",
-    "Password": "Xh3mwYDMsMb6XywR8kJ8sC8o4p2MsHNl0vz5S9VjdzdeekYD3gha5\u002BmdtaR0OtTRvuX59uYmwhik89BoLKN9GMVluUC55dvkNKU53laNvNaKCk0S4/G6ODtzH5/qhYlm6mpofTo5kJPBIX9BZ/LKqg=="
+    "UserName": "jdoe",
+    "Password": "0v68hBeV3k1xSl3woL9HudWTiRwcudjL7iy6CQYvTlg="
   },
   {
     "Id": 2,
@@ -30,16 +30,7 @@
     "UserName": null,
     "Password": null
   },
-  {
-    "Id": 4,
-    "Title": "VAT Pro",
-    "NavigateUrl": "project/vatPro-soft",
-    "LoginUrl": "http://localhost:4200/#/dashboard",
-    "LogoUrl": "/ProjectLogo/project_5b16dc6d.png",
-    "IsActive": true,
-    "UserName": "apiuser",
-    "Password": "hRk/Rvt/s0sXSKoag1FovIoTjt33S8bzLO2MrAkncUY="
-  },
+ 
   {
     "Id": 5,
     "Title": "Sorol-Soft",

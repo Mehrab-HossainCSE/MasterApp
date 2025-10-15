@@ -38,12 +38,13 @@ public class ProjectListController : ControllerBase
     private readonly MasterCreateRole _masterCreateRole;
     private readonly GetMasterRole _getMasterRole;
     private readonly TempRoleCreate _temRoleCreate;
+    private readonly SSOUserClientCreate _ssoUserClinetCreate;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
         LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, 
         GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate, SSOUserUpdate sSOUserUpdate,
        AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser, ClientAdminUserCreate ClientAdminUserCreate, MasterCreateRole masterCreateRole,
-       GetMasterRole getMasterRole, TempRoleCreate tempRoleCreate)
+       GetMasterRole getMasterRole, TempRoleCreate tempRoleCreate, SSOUserClientCreate sSOUserClientCreate)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -65,6 +66,7 @@ public class ProjectListController : ControllerBase
         _masterCreateRole = masterCreateRole;
         _getMasterRole = getMasterRole;
         _temRoleCreate = tempRoleCreate;
+        _ssoUserClinetCreate = sSOUserClientCreate;
     }
     [HttpGet]
     public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
@@ -335,9 +337,9 @@ public class ProjectListController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> SSOUserCreateClient([FromBody] SSOUserCreateDto model, CancellationToken cancellationToken)
+    public async Task<IActionResult> SSOUserCreateClient([FromBody] SSOUserCreateClientDto model, CancellationToken cancellationToken)
     {
-        var result = await _ssoUserCreate.Handle(model);
+        var result = await _ssoUserClinetCreate.Handle(model);
         return Ok(result);
     }
 
@@ -365,4 +367,5 @@ public class ProjectListController : ControllerBase
         var result = await _temRoleCreate.UpdateRoleWiseMenuAsync(model);
         return Ok(result);
     }
+
 }

@@ -1,5 +1,4 @@
-﻿
-using Dapper;
+﻿using Dapper;
 using MasterApp.Application.Interface;
 using MasterApp.Application.SlaveDto;
 
@@ -16,13 +15,17 @@ namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPo
 
         /// <summary>
         /// Get all menu items from database and build hierarchical tree.
+        /// PARENT_ID references the parent's SERIAL (not unique).
+        /// ID is the unique identifier.
+        /// We need to map PARENT_ID (SERIAL) to actual unique parent ID.
         /// </summary>
-        public async Task<List<NavDto>> GetNavsAsync()
+        public async Task<List<NavDtoCloudPos>> GetNavsAsync()
         {
             using var connection = _connectionFactory.CreateConnection("CloudPosDBKMART");
 
             const string sql = @"
                 SELECT 
+                    ID,
                     SERIAL,
                     PARENT_ID,
                     DESCRIPTION,
@@ -37,31 +40,52 @@ namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPo
                 FROM MENU
                 ORDER BY ORDER_BY, SERIAL";
 
-            var dbMenuItems = (await connection.QueryAsync<NavDto>(sql)).ToList();
+            var dbMenuItems = (await connection.QueryAsync<NavDtoCloudPos>(sql)).ToList();
 
-            // Clean up any self-referencing items
-            foreach (var item in dbMenuItems.Where(n => n.SERIAL == n.PARENT_ID))
+            // Step 1: Create a mapping from SERIAL to the list of IDs that have that SERIAL
+            // Since SERIAL is not unique, one SERIAL can map to multiple IDs
+            var serialToIdsMap = dbMenuItems
+                .GroupBy(x => x.SERIAL)
+                .ToDictionary(g => g.Key, g => g.Select(item => item.ID).ToList());
+
+            // Step 2: For each item, determine its actual parent ID
+            foreach (var item in dbMenuItems)
             {
-                item.PARENT_ID = 0;
+                if (item.PARENT_ID == 0)
+                {
+                    item.ActualParentID = 0; // Root level
+                }
+                else if (item.PARENT_ID.HasValue && serialToIdsMap.TryGetValue(item.PARENT_ID.Value, out var parentIds))
+                {
+                    // Take the first ID that matches the parent SERIAL
+                    // (If multiple exist, pick the first one)
+                    item.ActualParentID = parentIds.First();
+                }
+
+                else
+                {
+                    item.ActualParentID = 0; // If no parent found, treat as root
+                }
             }
 
-            // Build tree structure from flat DB data
+            // Step 3: Build tree using the resolved ActualParentID
             var tree = BuildTree(dbMenuItems, 0);
 
             return tree;
         }
 
         /// <summary>
-        /// Build tree structure recursively from flat list.
+        /// Build tree structure recursively using ActualParentID.
         /// </summary>
-        private List<NavDto> BuildTree(List<NavDto> allItems, decimal parentId)
+        private List<NavDtoCloudPos> BuildTree(List<NavDtoCloudPos> allItems, int parentId)
         {
             return allItems
-                .Where(x => x.PARENT_ID == parentId)
+                .Where(x => x.ActualParentID == parentId)
                 .OrderBy(x => x.ORDER_BY)
                 .ThenBy(x => x.SERIAL)
-                .Select(x => new NavDto
+                .Select(x => new NavDtoCloudPos
                 {
+                    ID = x.ID,
                     SERIAL = x.SERIAL,
                     PARENT_ID = x.PARENT_ID,
                     DESCRIPTION = x.DESCRIPTION,
@@ -73,14 +97,13 @@ namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPo
                     FA_CLASS = x.FA_CLASS,
                     MENU_TYPE = x.MENU_TYPE,
                     SHOW_EDIT_PERMISSION = x.SHOW_EDIT_PERMISSION,
-                    IsChecked = false, // all from DB are considered checked
-                    Children = BuildTree(allItems, x.SERIAL)
+                    IsChecked = false,
+                    Children = BuildTree(allItems, x.ID) // Use unique ID for children lookup
                 })
                 .ToList();
         }
     }
 }
-
 
 
 

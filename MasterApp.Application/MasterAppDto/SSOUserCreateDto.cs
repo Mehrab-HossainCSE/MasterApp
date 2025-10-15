@@ -34,3 +34,8 @@ public class SSOUserCreateClientDto
     public string ProjectListId { get; set; }
 
 }
+public class ProjectMenu
+{
+    public string projectId { get; set; }
+    public List<string> menuIds { get; set; }
+}

@@ -108,6 +108,7 @@ public static class DependencyInjection
         services.AddScoped<TempRoleCreate>();
         services.AddScoped<GetNavCloudPosDBKMARTMediasoft>();
         services.AddScoped<GetNavSorolMediaSoft>();
+        services.AddScoped<SSOUserClientCreate>();
         //services.AddSingleton<IEncryption>(provider =>
         //{
         //    var config = provider.GetRequiredService<IConfiguration>();
