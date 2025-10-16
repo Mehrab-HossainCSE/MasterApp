@@ -10,7 +10,7 @@ public class GetUseDto
     public string? shopID { get; set; } = "0";
     public string? employeeID { get; set; } = "0";
     public string? employeeName { get; set; }
-    public int? designationID { get; set; }
+    //public int? RoleId { get; set; }
     public string? mobileNo { get; set; }
     public string? address { get; set; }
     public string? ExpairsOn { get; set; }

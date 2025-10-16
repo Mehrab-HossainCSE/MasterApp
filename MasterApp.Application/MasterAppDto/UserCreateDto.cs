@@ -9,7 +9,7 @@ public class UserCreateDto
    
     public string? FullName { get; set; }
     public string? Email { get; set; }
-    public int? DesignationID { get; set; }
+    public int? RoleId { get; set; }
     public string? MobileNo { get; set; }
     public string? Address { get; set; }
     public string? CreateBy { get; set; }

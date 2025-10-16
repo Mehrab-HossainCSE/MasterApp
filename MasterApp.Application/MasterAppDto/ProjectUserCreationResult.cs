@@ -10,6 +10,7 @@ namespace MasterApp.Application.MasterAppDto;
 public class ProjectUserCreationResult
 {
     public int ProjectId { get; set; }
+    public string ProjectName { get; set; }
     public bool Success { get; set; }
     public string Message { get; set; }
     public String Title { get; set; }

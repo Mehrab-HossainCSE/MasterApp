@@ -32,7 +32,7 @@ public class UpdateMasterUser(IPasswordHash _passwordHash, IDbConnectionFactory 
 
                 FullName = string.IsNullOrEmpty(userDto.FullName) ? existingUser.FullName : userDto.FullName,
                 Email = string.IsNullOrEmpty(userDto.Email) ? existingUser.Email : userDto.Email,
-                DesignationID = userDto?.DesignationID ?? existingUser.DesignationID,
+                RoleId = userDto?.DesignationID ?? existingUser.RoleId,
                 MobileNo = string.IsNullOrEmpty(userDto.MobileNo) ? existingUser.MobileNo : userDto.MobileNo,
                 Address = string.IsNullOrEmpty(userDto.Address) ? existingUser.Address : userDto.Address,
 
@@ -76,7 +76,7 @@ public class UpdateMasterUser(IPasswordHash _passwordHash, IDbConnectionFactory 
                     SET  
                         FullName               = @FullName, 
                         Email                  = @Email, 
-                        DesignationID          = @DesignationID, 
+                        RoleId                 = @RoleId, 
                         MobileNo               = @MobileNo, 
                         Address                = @Address, 
                         PasswordHash           = @PasswordHash, 
@@ -106,7 +106,7 @@ public class UpdateMasterUser(IPasswordHash _passwordHash, IDbConnectionFactory 
                 updatedUser.UserName,
                 updatedUser.FullName,
                 updatedUser.Email,
-                updatedUser.DesignationID,
+                updatedUser.RoleId,
                 updatedUser.MobileNo,
                 updatedUser.Address,
 

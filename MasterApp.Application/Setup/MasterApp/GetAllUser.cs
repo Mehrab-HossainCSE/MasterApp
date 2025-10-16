@@ -21,7 +21,7 @@ public class GetAllUser(IDbConnectionFactory _dbConnectionFactory)
                       
                        FullName,
                        Email,
-                       CAST(NULLIF(DesignationID, '') AS INT) as DesignationID,
+                       RoleId,
                        MobileNo,
                        Address,
                        

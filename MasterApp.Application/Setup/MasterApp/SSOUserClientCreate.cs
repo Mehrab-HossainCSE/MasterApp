@@ -41,11 +41,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
             // Step 2: Deserialize JSON into C# object
             var menuListFromDatabase = JsonSerializer.Deserialize<List<ProjectMenu>>(menuListString);
 
-            Console.WriteLine("Deserialized object:");
-            Console.WriteLine(JsonSerializer.Serialize(menuListFromDatabase, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            }));
+           
 
 
             // Run all project tasks in parallel
@@ -61,6 +57,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                             return new ProjectUserCreationResult
                             {
                                 ProjectId = projectId,
+                                ProjectName = "Sorol",
                                 Success = false,
                                 Message = "Project config not found"
                             };
@@ -75,35 +72,44 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                         };
 
                         if (dtoToken == null)
-                            return new ProjectUserCreationResult { ProjectId = projectId, Title = projectConfig.Title, Success = false, Message = "Project config not found" };
+                            return new ProjectUserCreationResult { ProjectId = projectId, ProjectName = "Sorol", Title = projectConfig.Title, Success = false, Message = "Project config not found" };
 
 
 
                         var token = await sorolSoftUserCreate.getSorolToken(dtoToken);
                         if (string.IsNullOrEmpty(token))
-                            return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Authentication failed / API unavailable" };
+                            return new ProjectUserCreationResult { ProjectId = projectId, ProjectName = "Sorol", Success = false, Message = "Authentication failed / API unavailable" };
 
+                        var companyInfo = await sorolSoftUserCreate.GetCompanySorol(token);
+                        if(companyInfo == null || !companyInfo.Any())
+                        {
+                            return new ProjectUserCreationResult { ProjectId = projectId, ProjectName = "Sorol", Success = false, Message = "Failed to retrieve company info from Sorol" };
+                        }
                         // ✅ Extract only menus for projectId == "5"
                         var projectMenu = menuListFromDatabase?.FirstOrDefault(x => x.projectId == "5");
                         var menuIds = projectMenu?.menuIds ?? new List<string>();
-
+                        // Add leading '-' to the first menuId
+                        var menuIdsString = menuIds.Count > 0
+                            ? "-" + menuIds[0] + (menuIds.Count > 1 ? "," + string.Join(",", menuIds.Skip(1)) : "")
+                            : "";
                         var dto = new SorolUserCreateDto
                         {
                             Username = request.userName,
                             Designation = request.RoleId.ToString(),
                             Password = request.password,
-                            CompanyId = "admin",
-                            Menulist = menuIds.ToString(),
+                            CompanyId = companyInfo,
+                            Menulist = menuIdsString,
                         };
 
                         var result = await sorolSoftUserCreate.CreateUserSorol(dto, token);
 
                         return new ProjectUserCreationResult
                         {
+                            ProjectName = "Sorol",
                             ProjectId = projectId,
                             Success = result.Succeeded,
                             Message = result.Messages.FirstOrDefault() ??
-                                      (result.Succeeded ? "User created successfully" : "Failed to create user")
+                                      (result.Succeeded ? "Sorol User created successfully" : "Sorol Failed to create user")
                         };
 
                     }
@@ -111,6 +117,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                     {
                         return new ProjectUserCreationResult
                         {
+                            ProjectName = "MIS",
                             ProjectId = projectId,
                             Success = true,
                             Message = "MIS User created successfully"
@@ -123,6 +130,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                         {
                             return new ProjectUserCreationResult
                             {
+                                ProjectName = "CloudPos",
                                 ProjectId = projectId,
                                 Success = false,
                                 Message = "Project config not found"
@@ -138,13 +146,13 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                         };
 
                         if (dtoToken == null)
-                            return new ProjectUserCreationResult { ProjectId = projectId, Title = projectConfig.Title, Success = false, Message = "Project config not found" };
+                            return new ProjectUserCreationResult { ProjectId = projectId, ProjectName = "CloudPos", Title = projectConfig.Title, Success = false, Message = "Project config not found" };
 
 
 
                         var apiKey = await cloudePosUserCreate.GetCloudePosApiKey(dtoToken);
                         if (string.IsNullOrEmpty(apiKey))
-                            return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Authentication failed / API unavailable" };
+                            return new ProjectUserCreationResult { ProjectId = projectId, ProjectName = "CloudPos", Success = false, Message = "Authentication failed / API unavailable" };
 
                         var dto = new CloudPosUserDto
                         {
@@ -163,6 +171,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                             return new ProjectUserCreationResult
                             {
                                 ProjectId = projectId,
+                                ProjectName = "CloudPos",
                                 Success = false,
                                 Message = result.Messages.FirstOrDefault() ?? "Failed to create user in CloudPOS"
                             };
@@ -180,6 +189,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                             return new ProjectUserCreationResult
                             {
                                 ProjectId = projectId,
+                                ProjectName = "CloudPos",
                                 Success = true,
                                 Message = "User and menu created successfully"
                             };
@@ -189,6 +199,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                             return new ProjectUserCreationResult
                             {
                                 ProjectId = projectId,
+                                ProjectName = "CloudPos",
                                 Success = false,
                                 Message = menuResult.Messages.FirstOrDefault() ?? "User created but failed to create menu"
                             };
@@ -206,6 +217,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                             return new ProjectUserCreationResult
                             {
                                 ProjectId = projectId,
+                                ProjectName = "Billing",
                                 Success = false,
                                 Message = "Project config not found"
                             };
@@ -230,6 +242,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                         return new ProjectUserCreationResult
                         {
                             ProjectId = projectId,
+                            ProjectName = "Billing",
                             Title = projectConfig.Title,
                             Success = result.Succeeded,
                             Message = result.Messages.FirstOrDefault() ??
@@ -238,14 +251,14 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                     }
                     else
                     {
-                        return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = "Handler not implemented" };
+                        return new ProjectUserCreationResult { ProjectName = "Billing", Success = false, Message = "Handler not implemented" };
                     }
 
 
                 }
                 catch (Exception ex)
                 {
-                    return new ProjectUserCreationResult { ProjectId = projectId, Success = false, Message = $"Exception: {ex.Message}" };
+                    return new ProjectUserCreationResult { ProjectName = "Billing", Success = false, Message = $"Exception: {ex.Message}" };
                 }
             }).ToList();
 
@@ -260,7 +273,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                     {
                         UserName = request.userName,
                         FullName = request.userName,
-                      
+                        RoleId = request.RoleId,
                         CreateBy = "Admin",
                         CreateDate = DateTime.Now,
                         UpdateBy = "Admin",
@@ -277,6 +290,7 @@ public class SSOUserClientCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDb
                     return new ProjectUserCreationResult
                     {
                         ProjectId = 25,
+                        ProjectName = "MasterApp",
                         Success = localResult.Succeeded,
                         Message = localResult.Messages.FirstOrDefault() ??
                                   (localResult.Succeeded ? "User created in MasterAppDB successfully." : "Failed to create user in MasterAppDB.")

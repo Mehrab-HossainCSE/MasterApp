@@ -359,7 +359,7 @@ public class SSOUserUpdate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                 CityCloudPos = request.City,
                 FullName = request.fullName,
                 Email = request.email,
-                DesignationID = request.designationID,
+                //DesignationID = request.designationID,
                 MobileNo = request.mobileNo,
                 Address = request.address,
                 CreateBy = "Admin",

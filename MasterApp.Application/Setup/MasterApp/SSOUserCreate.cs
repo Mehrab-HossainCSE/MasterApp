@@ -233,7 +233,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                             CityCloudPos = request.City,
                             FullName = request.fullName,
                             Email = request.email,
-                            DesignationID = request.designationID,
+                            //DesignationID = request.designationID,
                             MobileNo = request.mobileNo,
                             Address = request.address,
                             CreateBy = "Admin",
@@ -333,7 +333,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                         UserName = request.userName,
                         FullName = request.fullName,
                         Email = request.email,
-                        DesignationID = request.designationID,
+                       
                         MobileNo = request.mobileNo,
                         Address = request.address,
                         CreateBy = "Admin",
@@ -384,7 +384,7 @@ public class SSOUserCreate(IVatProSoftUserCreate vatProSoftUserCreate, IDbConnec
                 .ToList();
             await updateMasterAppProjectID.UpdateMasterAppProjectListAsync(
                  request.userName,
-                 successfulProjectIds
+successfulProjectIds
              );
 
             return Result<ProjectUserCreationResponse>.Success(response, "User creation process completed");

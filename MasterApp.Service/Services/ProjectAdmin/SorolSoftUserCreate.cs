@@ -155,9 +155,96 @@ public class SorolSoftUserCreate : ISorolSoftUserCreate
         return await connection.QueryFirstOrDefaultAsync<GetAllUserSorolDto>(sql, new { UserName = userName });
     }
 
-    //public async Task<string> GetCompanySorol()
-    //{
+    public async Task<string> GetCompanySorol(string token)
+    {
+        var url = $"{_apiSettings.SorolBaseUrl}api/GetCompany"; // ✅ Correct endpoint
 
-    //}
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return $"API call failed: {response.StatusCode}";
+        }
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        try
+        {
+            // ✅ Parse JSON and extract the first company's cShortName
+            using var doc = JsonDocument.Parse(responseContent);
+            var root = doc.RootElement;
+
+            if (root.ValueKind != JsonValueKind.Array || root.GetArrayLength() == 0)
+            {
+                return "No company found";
+            }
+
+            var firstShortName = root[0].GetProperty("cShortName").GetString();
+            return firstShortName ?? "Unknown";
+        }
+        catch (JsonException)
+        {
+            return "Failed to parse company list from API";
+        }
+    }
+
+    public async Task<IResult> UpdatePasswordSorol(SorolUserUpdateDto dto, string token)
+    {
+        try
+        {
+            var url = $"{_apiSettings.SorolBaseUrl}api/UpdatePassWord";
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = JsonContent.Create(dto)
+            };
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.SendAsync(request);
+
+            // Step 1: Handle HTTP-level failure
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMsg = $"API call failed: {(int)response.StatusCode} {response.ReasonPhrase}";
+                return Result.Fail(errorMsg);
+            }
+
+            // Step 2: Parse API response body
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponseSorolCreateUser>();
+
+            if (apiResponse == null)
+            {
+                return Result.Fail("Invalid response from server");
+            }
+
+            // Step 3: Check API 'status' and return meaningful result
+            if (apiResponse.status)
+            {
+                // ✅ Success
+                return Result.Success(
+                    string.IsNullOrWhiteSpace(apiResponse.message)
+                        ? "Password updated successfully"
+                        : apiResponse.message
+                );
+            }
+            else
+            {
+                // ❌ API returned failure
+                return Result.Fail(
+                    string.IsNullOrWhiteSpace(apiResponse.message)
+                        ? "Failed to update password"
+                        : apiResponse.message
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            // Step 4: Handle unexpected errors gracefully
+            return Result.Fail($"Exception occurred: {ex.Message}");
+        }
+    }
 
 }

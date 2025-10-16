@@ -39,12 +39,13 @@ public class ProjectListController : ControllerBase
     private readonly GetMasterRole _getMasterRole;
     private readonly TempRoleCreate _temRoleCreate;
     private readonly SSOUserClientCreate _ssoUserClinetCreate;
+    private readonly ChangePasswordSSOClient _changePasswordSSOClient;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
         LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, 
         GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate, SSOUserUpdate sSOUserUpdate,
        AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser, ClientAdminUserCreate ClientAdminUserCreate, MasterCreateRole masterCreateRole,
-       GetMasterRole getMasterRole, TempRoleCreate tempRoleCreate, SSOUserClientCreate sSOUserClientCreate)
+       GetMasterRole getMasterRole, TempRoleCreate tempRoleCreate, SSOUserClientCreate sSOUserClientCreate,ChangePasswordSSOClient changePasswordSSOClient)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -67,6 +68,7 @@ public class ProjectListController : ControllerBase
         _getMasterRole = getMasterRole;
         _temRoleCreate = tempRoleCreate;
         _ssoUserClinetCreate = sSOUserClientCreate;
+        _changePasswordSSOClient = changePasswordSSOClient;
     }
     [HttpGet]
     public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
@@ -367,5 +369,10 @@ public class ProjectListController : ControllerBase
         var result = await _temRoleCreate.UpdateRoleWiseMenuAsync(model);
         return Ok(result);
     }
-
+    [HttpPost]
+    public async Task<IActionResult> SSOUChangePasswordClient([FromBody] ChangPasswordDto model, CancellationToken cancellationToken)
+    {
+        var result = await _changePasswordSSOClient.Handle(model);
+        return Ok(result);
+    }
 }

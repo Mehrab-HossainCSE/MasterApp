@@ -141,24 +141,24 @@ namespace MasterApp.Application.Setup.MasterApp
 
             try
             {
-                if (projectId == 1)
-                {
-                    await ProcessCloudPosProject(dto, roleName);
-                    result.IsSuccess = true;
-                    result.Message = "Role and permissions created successfully";
-                }
-                else if (projectId == 4)
+                //if (projectId == 1)
+                //{
+                //    await ProcessCloudPosProject(dto, roleName);
+                //    result.IsSuccess = true;
+                //    result.Message = "Role and permissions created successfully";
+                //}
+                 if (projectId == 4)
                 {
                     await ProcessBillingProject(dto, roleName, billingSoftUserCreate);
                     result.IsSuccess = true;
                     result.Message = "Role and permissions created successfully";
                 }
-                else if (projectId == 6)
-                {
-                    await ProcessSorolSoftProject(dto, roleName);
-                    result.IsSuccess = true;
-                    result.Message = "Role and permissions created successfully";
-                }
+                //else if (projectId == 6)
+                //{
+                //    await ProcessSorolSoftProject(dto, roleName);
+                //    result.IsSuccess = true;
+                //    result.Message = "Role and permissions created successfully";
+                //}
                 // Add more project handlers here
                  //else if (projectId == 7)
                  //{
