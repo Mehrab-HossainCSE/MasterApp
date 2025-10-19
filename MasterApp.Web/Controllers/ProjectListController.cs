@@ -40,12 +40,13 @@ public class ProjectListController : ControllerBase
     private readonly TempRoleCreate _temRoleCreate;
     private readonly SSOUserClientCreate _ssoUserClinetCreate;
     private readonly ChangePasswordSSOClient _changePasswordSSOClient;
+    private readonly GetRoleUsers _getRoleUsers;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
         LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, 
         GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate, SSOUserUpdate sSOUserUpdate,
-       AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser, ClientAdminUserCreate ClientAdminUserCreate, MasterCreateRole masterCreateRole,
-       GetMasterRole getMasterRole, TempRoleCreate tempRoleCreate, SSOUserClientCreate sSOUserClientCreate,ChangePasswordSSOClient changePasswordSSOClient)
+        AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser, ClientAdminUserCreate ClientAdminUserCreate, MasterCreateRole masterCreateRole,
+        GetMasterRole getMasterRole, TempRoleCreate tempRoleCreate, SSOUserClientCreate sSOUserClientCreate,ChangePasswordSSOClient changePasswordSSOClient, GetRoleUsers getRoleUsers)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -69,6 +70,7 @@ public class ProjectListController : ControllerBase
         _temRoleCreate = tempRoleCreate;
         _ssoUserClinetCreate = sSOUserClientCreate;
         _changePasswordSSOClient = changePasswordSSOClient;
+        _getRoleUsers = getRoleUsers;
     }
     [HttpGet]
     public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
@@ -361,6 +363,12 @@ public class ProjectListController : ControllerBase
     public async Task<IActionResult> GetRoleMaster()
     {
         var result = await _getMasterRole.GetAllRolesAsync();
+        return Ok(result);
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetRoleUser()
+    {
+        var result = await _getRoleUsers.GetAllRolesAsync();
         return Ok(result);
     }
     [HttpPost]

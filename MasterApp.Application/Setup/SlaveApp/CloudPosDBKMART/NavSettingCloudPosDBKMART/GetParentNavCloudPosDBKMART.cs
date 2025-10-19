@@ -1,27 +1,55 @@
 ﻿using Dapper;
 using MasterApp.Application.Interface;
 using MasterApp.Application.SlaveDto;
+using System.Text.Json;
 
 namespace MasterApp.Application.Setup.SlaveApp.CloudPosDBKMART.NavSettingCloudPosDBKMART;
 
 public class GetParentNavCloudPosDBKMART
 {
-    private readonly IDbConnectionFactory _connectionFactory;
+    private readonly string _jsonFilePath;
 
     public GetParentNavCloudPosDBKMART(IDbConnectionFactory connectionFactory)
     {
-        _connectionFactory = connectionFactory;
+        _jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Menu", "menuData.json");
     }
 
     public async Task<IEnumerable<ParentCloudPosDBKMARTNavDto>> GetParentsAsync()
     {
-        var sql = @"
-            SELECT DISTINCT SERIAL, DESCRIPTION
-            FROM MENU
-            WHERE PARENT_ID = 0";
+        if (!File.Exists(_jsonFilePath))
+            return Enumerable.Empty<ParentCloudPosDBKMARTNavDto>();
 
-        using var connection = _connectionFactory.CreateConnection("CloudPosDBKMART");
+        var jsonContent = await File.ReadAllTextAsync(_jsonFilePath);
 
-        return await connection.QueryAsync<ParentCloudPosDBKMARTNavDto>(sql);
+        // If file is empty or whitespace, return empty list
+        if (string.IsNullOrWhiteSpace(jsonContent))
+            return Enumerable.Empty<ParentCloudPosDBKMARTNavDto>();
+
+        List<ParentCloudPosDBKMARTNavDto>? allMenus = null;
+
+        try
+        {
+            allMenus = JsonSerializer.Deserialize<List<ParentCloudPosDBKMARTNavDto>>(
+                jsonContent,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+        }
+        catch (JsonException)
+        {
+            // Log or handle invalid JSON here if needed
+            return Enumerable.Empty<ParentCloudPosDBKMARTNavDto>();
+        }
+
+        if (allMenus == null)
+            return Enumerable.Empty<ParentCloudPosDBKMARTNavDto>();
+
+        // Return only parent items (PARENT_ID = 0)
+        return allMenus
+            .Where(m => m.PARENT_ID == 0)
+            .GroupBy(m => m.SERIAL)
+            .Select(g => g.First())
+            .ToList();
     }
 }

@@ -110,6 +110,7 @@ public static class DependencyInjection
         services.AddScoped<GetNavSorolMediaSoft>();
         services.AddScoped<SSOUserClientCreate>();
         services.AddScoped<ChangePasswordSSOClient>();
+        services.AddScoped<GetRoleUsers>();
         //services.AddSingleton<IEncryption>(provider =>
         //{
         //    var config = provider.GetRequiredService<IConfiguration>();
