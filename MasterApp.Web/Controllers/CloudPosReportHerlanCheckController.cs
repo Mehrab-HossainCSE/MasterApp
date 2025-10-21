@@ -23,8 +23,7 @@ public class CloudPosReportHerlanCheckController(GetNavCloudPosReportHerlanCheck
     AssigUserMenuCloudPosReportHerlanCheck _assigUserMenuCloudPosReportHerlanCheck
     ) : ControllerBase
 {
-    
-    
+        
     [HttpPost]
     public async Task<IActionResult> GetNavCloudPosDBKMART()
     {

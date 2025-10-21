@@ -111,6 +111,8 @@ public static class DependencyInjection
         services.AddScoped<SSOUserClientCreate>();
         services.AddScoped<ChangePasswordSSOClient>();
         services.AddScoped<GetRoleUsers>();
+        services.AddScoped<UpdateMasterAppRole>();
+        services.AddScoped<SSOUserClientUpdate>();
         //services.AddSingleton<IEncryption>(provider =>
         //{
         //    var config = provider.GetRequiredService<IConfiguration>();

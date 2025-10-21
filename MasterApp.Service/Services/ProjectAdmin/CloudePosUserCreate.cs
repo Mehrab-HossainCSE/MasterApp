@@ -1,11 +1,8 @@
-﻿using Dapper;
-using MasterApp.Application.Common.Models;
+﻿using MasterApp.Application.Common.Models;
 using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
 using MasterApp.Application.SlaveDto;
-using MasterApp.Application.SlaveDto.SorolSoftACMasterDB;
 using Microsoft.Extensions.Options;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 

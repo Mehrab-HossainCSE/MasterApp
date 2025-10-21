@@ -41,12 +41,14 @@ public class ProjectListController : ControllerBase
     private readonly SSOUserClientCreate _ssoUserClinetCreate;
     private readonly ChangePasswordSSOClient _changePasswordSSOClient;
     private readonly GetRoleUsers _getRoleUsers;
+    private readonly SSOUserClientUpdate _sSOUserClientUpdate;
     public ProjectListController(CreateProject createProjectHandler,
         IWebHostEnvironment webHostEnvironment, GetProjectList getProjectList,
         LoginCommand loginCommand, UpdateProject updateProjectList, DeleteProject deleteProject, GetNavProjectByUser getNavProjectByUser, 
         GetAllUser getAllUser, UserCreate userCreate, UserProjectPermission userProjectPermission, UpdateUserInfo updateUserInfo,SSOUserCreate ssoUserCreate, SSOUserUpdate sSOUserUpdate,
         AddProjectToJson addProjectToJson, UpdateJsonProject updateJsonProject, GetNavByUserId getNavByUser, ClientAdminUserCreate ClientAdminUserCreate, MasterCreateRole masterCreateRole,
-        GetMasterRole getMasterRole, TempRoleCreate tempRoleCreate, SSOUserClientCreate sSOUserClientCreate,ChangePasswordSSOClient changePasswordSSOClient, GetRoleUsers getRoleUsers)
+        GetMasterRole getMasterRole, TempRoleCreate tempRoleCreate, SSOUserClientCreate sSOUserClientCreate,ChangePasswordSSOClient changePasswordSSOClient, GetRoleUsers getRoleUsers,
+        SSOUserClientUpdate sSOUserClientUpdate)
     {
         _createProjectHandler = createProjectHandler;
         _webHostEnvironment = webHostEnvironment;
@@ -71,6 +73,7 @@ public class ProjectListController : ControllerBase
         _ssoUserClinetCreate = sSOUserClientCreate;
         _changePasswordSSOClient = changePasswordSSOClient;
         _getRoleUsers = getRoleUsers;
+        _sSOUserClientUpdate = sSOUserClientUpdate;
     }
     [HttpGet]
     public async Task<IActionResult> GetNavProjectList([FromQuery] string UserID)
@@ -347,6 +350,12 @@ public class ProjectListController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> SSOUserUpdateClient([FromBody] SSOUserCreateClientDto model, CancellationToken cancellationToken)
+    {
+        var result = await _sSOUserClientUpdate.Handle(model);
+        return Ok(result);
+    }
     [HttpPost]
     public async Task<IActionResult> SSOUserUpdate([FromBody] SSOUserUpdateDto model, CancellationToken cancellationToken)
     {

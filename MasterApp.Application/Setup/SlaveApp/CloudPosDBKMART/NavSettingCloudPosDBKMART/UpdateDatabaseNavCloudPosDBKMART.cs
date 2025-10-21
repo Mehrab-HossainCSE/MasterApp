@@ -34,7 +34,7 @@ public class UpdateDatabaseNavCloudPosDBKMART
             try
             {
                 // 1. Truncate existing data
-                await connection.ExecuteAsync("TRUNCATE TABLE MENU_1", transaction: transaction);
+                await connection.ExecuteAsync("TRUNCATE TABLE MENU", transaction: transaction);
 
                 // 2. Flatten the hierarchical data - THIS IS THE KEY FIX
                 var allMenuItems = FlattenMenuItems(navDtos);
