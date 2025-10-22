@@ -2,93 +2,101 @@
 using MasterApp.Application.Interface;
 using MasterApp.Application.MasterAppDto;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Text.Json;
 
 namespace MasterApp.Application.Setup.MasterApp;
 
-public class UpdateJsonProject(IEncryption _encryption)
+public class UpdateJsonProject(IEncryption _encryption, IOptions<ApplicationUsers> _applicationUser)
 {
     public async Task<IResult> HandleUpdate(UpdateProjectCommand request)
     {
-        try
+        if (_applicationUser.Value.IsMediaSoftUser)
         {
-            // JSON file path
-            string jsonFilePath = Path.Combine(request.WebRootPath, "ProjectList", "Project.json");
-
-            if (!File.Exists(jsonFilePath))
-                return Result.Fail("Project storage file not found.");
-
-            // Read existing JSON
-            var json = await File.ReadAllTextAsync(jsonFilePath);
-            var projects = JsonSerializer.Deserialize<List<ProjectJsonDtos>>(json) ?? new();
-
-            // Find existing project
-            var existingProject = projects.FirstOrDefault(p => p.Id == request.Id);
-            if (existingProject == null)
-                return Result.Fail("Project not found.");
-
-            string uniqueFileName = existingProject.LogoUrl ?? string.Empty; // Keep old logo by default
-
-            // If a new logo is provided
-            if (request.LogoFile != null)
+            try
             {
-                if (!IsValidImageFile(request.LogoFile))
-                    return Result.Fail("Invalid image file. Only jpg, jpeg, png, gif files under 5MB are allowed.");
+                // JSON file path
+                string jsonFilePath = Path.Combine(request.WebRootPath, "ProjectList", "Project.json");
 
-                // Delete old logo if exists
-                if (!string.IsNullOrEmpty(existingProject.LogoUrl))
+                if (!File.Exists(jsonFilePath))
+                    return Result.Fail("Project storage file not found.");
+
+                // Read existing JSON
+                var json = await File.ReadAllTextAsync(jsonFilePath);
+                var projects = JsonSerializer.Deserialize<List<ProjectJsonDtos>>(json) ?? new();
+
+                // Find existing project
+                var existingProject = projects.FirstOrDefault(p => p.Id == request.Id);
+                if (existingProject == null)
+                    return Result.Fail("Project not found.");
+
+                string uniqueFileName = existingProject.LogoUrl ?? string.Empty; // Keep old logo by default
+
+                // If a new logo is provided
+                if (request.LogoFile != null)
                 {
-                    string oldFilePath = Path.Combine(request.WebRootPath, existingProject.LogoUrl.TrimStart('/'));
-                    if (File.Exists(oldFilePath))
-                        File.Delete(oldFilePath);
+                    if (!IsValidImageFile(request.LogoFile))
+                        return Result.Fail("Invalid image file. Only jpg, jpeg, png, gif files under 5MB are allowed.");
+
+                    // Delete old logo if exists
+                    if (!string.IsNullOrEmpty(existingProject.LogoUrl))
+                    {
+                        string oldFilePath = Path.Combine(request.WebRootPath, existingProject.LogoUrl.TrimStart('/'));
+                        if (File.Exists(oldFilePath))
+                            File.Delete(oldFilePath);
+                    }
+
+                    // Save new file
+                    string uploadsFolder = Path.Combine(request.WebRootPath, "ProjectLogo");
+                    if (!Directory.Exists(uploadsFolder))
+                        Directory.CreateDirectory(uploadsFolder);
+
+                    string guidPart = Guid.NewGuid().ToString("N").Substring(0, 8);
+                    uniqueFileName = $"/ProjectLogo/project_{guidPart}{Path.GetExtension(request.LogoFile.FileName)}";
+                    string filePath = Path.Combine(uploadsFolder, Path.GetFileName(uniqueFileName));
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        await request.LogoFile.CopyToAsync(fileStream);
                 }
 
-                // Save new file
-                string uploadsFolder = Path.Combine(request.WebRootPath, "ProjectLogo");
-                if (!Directory.Exists(uploadsFolder))
-                    Directory.CreateDirectory(uploadsFolder);
+                // Handle password encryption
+                string? encryptedPassword = existingProject.Password; // keep old by default
+                if (!string.IsNullOrEmpty(request.Password))
+                {
+                    if (string.IsNullOrWhiteSpace(existingProject.Password))
+                    {
+                        encryptedPassword = _encryption.Encrypt(request.Password);
+                    }
+                    else if (existingProject.Password != request.Password)
+                    {
+                        encryptedPassword = _encryption.Encrypt(request.Password);
+                    }
+                }
 
-                string guidPart = Guid.NewGuid().ToString("N").Substring(0, 8);
-                uniqueFileName = $"/ProjectLogo/project_{guidPart}{Path.GetExtension(request.LogoFile.FileName)}";
-                string filePath = Path.Combine(uploadsFolder, Path.GetFileName(uniqueFileName));
+                // Update fields
+                existingProject.Title = request.Title;
+                existingProject.NavigateUrl = request.NavigateUrl;
+                existingProject.LoginUrl = request.LoginUrl;
+                existingProject.LogoUrl = uniqueFileName;
+                existingProject.IsActive = request.IsActive;
+                existingProject.UserName = string.IsNullOrEmpty(request.UserName) ? existingProject.UserName : request.UserName;
+                existingProject.Password = encryptedPassword;
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    await request.LogoFile.CopyToAsync(fileStream);
+                // Write back to JSON
+                var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+                await File.WriteAllTextAsync(jsonFilePath, JsonSerializer.Serialize(projects, jsonOptions));
+
+                return Result.Success();
             }
-
-            // Handle password encryption
-            string? encryptedPassword = existingProject.Password; // keep old by default
-            if (!string.IsNullOrEmpty(request.Password))
+            catch (Exception ex)
             {
-                if (string.IsNullOrWhiteSpace(existingProject.Password))
-                {
-                    encryptedPassword = _encryption.Encrypt(request.Password);
-                }
-                else if (existingProject.Password != request.Password)
-                {
-                    encryptedPassword = _encryption.Encrypt(request.Password);
-                }
+                return Result.Fail($"An error occurred while updating the project: {ex.Message}");
             }
-
-            // Update fields
-            existingProject.Title = request.Title;
-            existingProject.NavigateUrl = request.NavigateUrl;
-            existingProject.LoginUrl = request.LoginUrl;
-            existingProject.LogoUrl = uniqueFileName;
-            existingProject.IsActive = request.IsActive;
-            existingProject.UserName = string.IsNullOrEmpty(request.UserName) ? existingProject.UserName : request.UserName;
-            existingProject.Password = encryptedPassword;
-
-            // Write back to JSON
-            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-            await File.WriteAllTextAsync(jsonFilePath, JsonSerializer.Serialize(projects, jsonOptions));
-
-            return Result.Success();
         }
-        catch (Exception ex)
+        else
         {
-            return Result.Fail($"An error occurred while updating the project: {ex.Message}");
+            return Result.Fail("Unauthorized: Only MediaSoft users can update projects.");
         }
     }
 

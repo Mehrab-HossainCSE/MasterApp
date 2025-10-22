@@ -92,7 +92,7 @@ public class SSOUserClientUpdate(IDbConnectionFactory _context, IEncryption encr
                         {
                             Username = request.userName,
                             Designation = request.RoleId.ToString(),
-                            Password = request.password,
+                            Password = "",
                             CompanyId = companyInfo,
                             Menulist = menuIdsString,
                         };

@@ -20,7 +20,7 @@ namespace MasterApp.Application.Setup.MasterApp
         private readonly IBillingSoftUserCreate _billingSoftUserCreate;
         private readonly ICloudePosUserCreate _cloudePosUserCreate;
         private readonly IEncryption _encryption;
-
+        
         public ChangePasswordSSOClient(
             IDbConnectionFactory context,
             IPasswordHash passwordHash,
@@ -136,6 +136,66 @@ namespace MasterApp.Application.Setup.MasterApp
                 {
                     case 1:
                         // CloudPOS API call here
+                        if (!tokenDictionary.TryGetValue(projectId, out var projectConfig))
+                        {
+                            return new ProjectUserCreationResult
+                            {
+                                ProjectName = "CloudPos",
+                                ProjectId = projectId,
+                                Success = false,
+                                Message = "Project config not found"
+                            };
+                        }
+                        var decryptedPassword = _encryption.Decrypt(projectConfig.Password);
+
+
+                        var dtoToken = new CloudPosApiKeyDto
+                        {
+                            username = projectConfig.Username,
+                            password = decryptedPassword
+                        };
+
+                        if (dtoToken == null)
+                            return new ProjectUserCreationResult { ProjectId = projectId, ProjectName = "CloudPos", Title = projectConfig.Title, Success = false, Message = "Project config not found" };
+
+
+
+                        var apiKey = await _cloudePosUserCreate.GetCloudePosApiKey(dtoToken);
+
+                        if (string.IsNullOrEmpty(apiKey))
+                            return new ProjectUserCreationResult { ProjectId = projectId, ProjectName = "CloudPos", Success = false, Message = "Authentication failed / API unavailable" };
+
+
+                        var dto = new ChangeCloudPosPasswordDto
+                        {
+                            UserName = userName,                           
+                            ApiKeyUser = dtoToken.username,
+                            NewPassword = newPassword,                           
+                        };
+
+                        var menuResult = await _cloudePosUserCreate.UpdatePasswordCloudePos(dto, apiKey);
+
+                        if (menuResult.Succeeded)
+                        {
+                            return new ProjectUserCreationResult
+                            {
+                                ProjectId = projectId,
+                                ProjectName = "CloudPos",
+                                Success = true,
+                                Message = " password Update successfully"
+                            };
+                        }
+                        else
+                        {
+                            return new ProjectUserCreationResult
+                            {
+                                ProjectId = projectId,
+                                ProjectName = "CloudPos",
+                                Success = false,
+                                Message = menuResult.Messages.FirstOrDefault() ?? "Password Update  failed "
+                            };
+                        }
+
                         break;
 
                     case 2:

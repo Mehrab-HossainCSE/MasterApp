@@ -24,3 +24,11 @@ public class MenuCreateCoudPos
     public List<int> MenuIdList { get; set; }
     public string? ApiKeyUser { get; set; }
 }
+
+public class ChangeCloudPosPasswordDto
+{
+    public string UserName { get; set; }
+
+    public string? ApiKeyUser { get; set; }
+    public string NewPassword { get; set; }
+}

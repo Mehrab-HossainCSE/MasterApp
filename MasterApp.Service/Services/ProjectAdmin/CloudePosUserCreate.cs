@@ -160,9 +160,9 @@ public class CloudePosUserCreate : ICloudePosUserCreate
     }
 
 
-    public async Task<IResult> UpdatePasswordCloudePos(MenuCreateCoudPos dto, string apiKey)
+    public async Task<IResult> UpdatePasswordCloudePos(ChangeCloudPosPasswordDto dto, string apiKey)
     {
-        var url = $"{_apiSettings.CloudPosBaseUrl}/api/Users/SaveExternalUserMenu";
+        var url = $"{_apiSettings.CloudPosBaseUrl}/api/Users/ChangePassword";
 
         using var request = new HttpRequestMessage(HttpMethod.Post, url)
         {
@@ -188,11 +188,11 @@ public class CloudePosUserCreate : ICloudePosUserCreate
             if (apiResponse != null && apiResponse.Success)
             {
                 return Result.Success(string.IsNullOrWhiteSpace(apiResponse.Message)
-                    ? "Menu created successfully"
+                    ? "Password Update successfully"
                     : apiResponse.Message);
             }
 
-            return Result.Fail(apiResponse?.Message ?? "Failed to create Menu");
+            return Result.Fail(apiResponse?.Message ?? "Failed to Upate Password");
         }
         catch (JsonException)
         {

@@ -11,4 +11,5 @@ public interface ICloudePosUserCreate
     Task<IResult> CreateMenuCloudePos(MenuCreateCoudPos dto, string token);
     Task<string> GetCloudePosApiKey(CloudPosApiKeyDto dto);
     Task<Result<CloudPosApiResponse>> GetUserByUsernameCloudPos(CloudPosApiKeyDto dto);
+    Task<IResult> UpdatePasswordCloudePos(ChangeCloudPosPasswordDto dto, string apiKey);
 }
